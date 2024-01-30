@@ -1,0 +1,28 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.logo-font {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+}
+
+.background-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /* Place it behind other content */
+    background-image: linear-gradient(to top, rgba(38, 120, 184, 0.5), rgba(255, 255, 255, 0.90)), url('/media/bookshelf_bg.jpg');
+    background-size: cover;
+    background-position-x: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.fas {
+    font-size: 1.5em;
+    color: black;
+}
