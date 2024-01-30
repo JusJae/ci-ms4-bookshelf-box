@@ -1,9 +1,29 @@
+:root {
+    --primary-color: #2678b8;
+    --secondary-color: #b66426;
+    --tertiary-color: #b82626;
+    --primary-font: 'Montserrat', sans-serif;
+    --secondary-font: 'Roboto', sans-serif;
+    --third-font: 'Merriweather', serif;
+
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--secondary-font);
+}
+
+main {
+    overflow-y: auto;
 }
 
 .logo-font {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--primary-font);
     font-weight: 800;
 }
 
@@ -25,4 +45,14 @@ body {
 .fas {
     font-size: 1.5em;
     color: black;
+}
+
+.fab {
+    font-size: 1.5em;
+    color: #fff;
+}
+
+.btn-floating {
+    cursor: pointer;
+    background-color: var(--secondary-color) !important;
 }
