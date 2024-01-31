@@ -1,10 +1,10 @@
 {% load static %} 
 {% block extra_css%}
 <!-- MDB -->
-        <link
+        {% comment %} <link
           href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.min.css"
           rel="stylesheet"
-        />
+        /> {% endcomment %}
 {% endblock %}
 
  <!-- Footer -->
@@ -49,7 +49,7 @@
       <section class="">
         <form action="">
           <!--Grid row-->
-          <div class="row d-flex justify-content-center">
+          <div class="row d-flex justify-content-center px-2">
             <!--Grid column-->
             <div class="col-auto">
               <p class="pt-md-2">
@@ -59,19 +59,19 @@
             <!--Grid column-->
 
             <!--Grid column-->
-            <div class="col-md-6 col-8">
+            <div class="col-md-4 col-8">
               <!-- Email input -->
-              <div data-mdb-input-init class="form-outline mb-4">
-                <input type="email" id="form5Example24" class="form-control">
-                <label class="form-label" for="form5Example24">Email address</label>
+              <div class="form-outline mb-1">
+                <input type="email" id="form5Example24" placeholder="Email Address" class="form-control  border-dark">
+                <label class="form-label" for="form5Example24"></label>
               </div>
             </div>
             <!--Grid column-->
 
             <!--Grid column-->
-            <div class="col-md-6 col-4">
+            <div class="col-md-4">
               <!-- Submit button -->
-              <button data-mdb-ripple-init type="submit" class="btn btn-outline mb-4">
+              <button type="submit" class="btn btn-secondary border-dark">
                 Subscribe
               </button>
             </div>
@@ -95,15 +95,8 @@
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
       © 2024 Copyright:
-      <a class="text-reset fw-bold" href="">BookshelfBox.com</a>
+      <a class="text-reset fw-bold text-decoration-none" href="">BookshelfBox.com</a>
     </div>
     <!-- Copyright -->
   </footer>
   <!-- Footer -->
-
-  {% block extra_js%}
-  <!-- MDB -->
-    <script
-      type="text/javascript"
-      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
-  {% endblock %}
