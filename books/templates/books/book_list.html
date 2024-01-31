@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% for book in books %}
+<div>
+    <h2>{{ book.title }}</h2>
+    <p>Author: {{ book.author }}</p>
+    <p>Category: {{ book.category.name }}</p>
+    <p>Price: {{ book.price }}</p>
+    <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width:100px; height:auto;">
+    {% comment %} <p><a href="{% url 'book-detail' book.id %}">View details</a></p> {% endcomment %}
+</div>
+{% endfor %}
