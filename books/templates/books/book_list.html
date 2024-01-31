@@ -1,13 +1,28 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% for book in books %}
-<div>
-    <h2>{{ book.title }}</h2>
-    <p>Author: {{ book.author }}</p>
-    <p>Category: {{ book.category.name }}</p>
-    <p>Price: {{ book.price }}</p>
-    <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width:100px; height:auto;">
-    {% comment %} <p><a href="{% url 'book-detail' book.id %}">View details</a></p> {% endcomment %}
+{% block content %}
+<main class="flex-shrink-0">
+<div class="container mt-4">
+    <div class="row">
+        {% for book in books %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}" style="height: 300px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text">Price: £{{ book.price }}</p>
+                    <a href="{% url 'book-detail' book.id %}" class="btn btn-primary">View details</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No books found.</p>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-{% endfor %}
+</main>
+{% endblock %} 
+

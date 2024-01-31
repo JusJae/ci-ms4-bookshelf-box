@@ -4,6 +4,7 @@ from .models import Book, Category
 
 class BookAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'title',
         'category',
         'rating',
@@ -12,7 +13,7 @@ class BookAdmin(admin.ModelAdmin):
         'reviews',
     )
 
-    ordering = ('title',)
+    ordering = ('id',)
 
 
 class CategoryAdmin(admin.ModelAdmin):

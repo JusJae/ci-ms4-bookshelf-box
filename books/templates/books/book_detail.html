@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ book.image_url }}" class="img-fluid" alt="{{ book.title }}">
+        </div>
+        <div class="col-md-6">
+            <h2>{{ book.title }}</h2>
+            <p><strong>Category:</strong> {{ book.category }}</p>
+            <p><strong>Price:</strong> £{{ book.price }}</p>
+            <p><strong>Description:</strong> {{ book.description }}</p>
+            <!-- Include additional fields as desired -->
+            <a href="{% url 'books' %}" class="btn btn-primary">Back to list</a>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

@@ -18,7 +18,7 @@ body {
     font-family: var(--secondary-font);
 }
 
-main {
+html, body {
     overflow-y: auto;
 }
 
@@ -55,4 +55,19 @@ main {
 .btn-floating {
     cursor: pointer;
     background-color: var(--secondary-color) !important;
+}
+
+.card-img-top {
+    height: 200px;
+    /* Fixed height for all images */
+    object-fit: cover;
+    /* Cover the entire card image area */
+}
+
+/* Responsive styling for smaller devices */
+@media (max-width: 767px) {
+    .card-img-top {
+        height: auto;
+        /* Height becomes auto on small devices */
+    }
 }
