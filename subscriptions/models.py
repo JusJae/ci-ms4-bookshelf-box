@@ -10,7 +10,7 @@ class SubscriptionOption(models.Model):
         ('twelve_months', '12-months'),
     ]
     category = models.ForeignKey(
-        'categories.Category', on_delete=models.CASCADE)
+        'books.Category', on_delete=models.CASCADE)
     number_of_books = models.IntegerField()
     subscription_type = models.CharField(
         max_length=20, choices=subscription_types, default='one-off')

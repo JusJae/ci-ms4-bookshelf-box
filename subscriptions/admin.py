@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SubscriptionOption, Category
+from .models import SubscriptionOption
 
 
 class SubscriptionOptionAdmin(admin.ModelAdmin):
@@ -8,5 +8,4 @@ class SubscriptionOptionAdmin(admin.ModelAdmin):
     search_fields = ('category', 'subscription_type')
 
 
-admin.site.register(Category)
 admin.site.register(SubscriptionOption, SubscriptionOptionAdmin)
