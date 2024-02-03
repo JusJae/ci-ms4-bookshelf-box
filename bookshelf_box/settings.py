@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'bookshelf_box',
     'home',
     'books',
+    'subscriptions',
 ]
 
 MIDDLEWARE = [
