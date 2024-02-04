@@ -36,7 +36,7 @@ def display_books(request):
     selected_books_ids = request.session.get('selected_books_ids', [])
     selected_books = Book.objects.filter(id__in=selected_books_ids)
     total_price = request.session.get('total_price', 0)
-    return render(request, 'display_books.html', {
+    return render(request, 'subscriptions/display_books.html', {
         'selected_books': selected_books,
         'total_price': total_price
     })
