@@ -6,10 +6,12 @@
     {% if selected_books %}
     <ul>
         {% for book in selected_books %}
-        <li>{{ book.title }} - Price: ${{ book.price }}</li>
+        <h4>{{ book.title }}</h4>
+        <img src="{{ book.image_url }}" class="list-unstyled" alt="{{ book.title }}" style="height: 200px; object-fit: cover;">
+        <p>Price: £{{ book.price }}</p>
         {% endfor %}
     </ul>
-    <h3>Total Price: ${{ total_price }}</h3>
+    <h3>Total Price: £{{ total_price }}</h3>
     <form action="" method="post">
         {% csrf_token %}
         <input type="hidden" name="subscription_option_id" value="{{ subscription_option_id }}">
