@@ -35,13 +35,22 @@ html, body {
     height: 100%;
     z-index: -1;
     /* Place it behind other content */
-    background-image: linear-gradient(to top, rgba(38, 120, 184, 0.5), rgba(255, 255, 255, 0.90)), url('/media/bookshelf_bg.jpg');
-    background-size: cover;
+    background-image: linear-gradient(to top, rgba(38, 120, 184, 0.5), rgba(255, 255, 255, 0.90)), url('/media/bookshelf.jpg');
+    background-size: 100% 100%;
     background-position-x: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
+.overlay {
+    background: linear-gradient(to top, rgba(38, 120, 184, 0.5), rgba(255, 255, 255, 0.90));
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: -1;
+}
 .fas {
     font-size: 1.5em;
     color: black;
