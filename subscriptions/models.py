@@ -1,6 +1,8 @@
 from django.db import models
+from django.conf import settings
 from decimal import Decimal
 import random
+from datetime import timedelta
 from books.models import Book
 
 
@@ -21,22 +23,59 @@ class SubscriptionOption(models.Model):
     # Base price per book
     base_price_per_book = Decimal('10.00')
 
-    def get_random_books(self):
-        books_in_category = Book.objects.filter(category=self.category)
-        if books_in_category.exists():
-            return random.sample(list(books_in_category), min(len(books_in_category), self.number_of_books))
+    def __str__(self):
+        return f"{self.category} - {self.subscription_type} - {self.number_of_books} books"
+
+
+class UserSubscriptionOption(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    subscription_option = models.ForeignKey(
+        SubscriptionOption, on_delete=models.CASCADE, related_name='user_subscriptions')
+    selected_books = models.ManyToManyField(Book, related_name='subscriptions')
+    start_date = models.DateField(auto_now_add=True)
+    end_date = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    calculated_price = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
+
+    def set_end_date(self):
+        if self.subscription_option.subscription_type == 'one-off':
+            self.end_date = self.start_date
+        elif self.subscription_option.subscription_type == 'three_months':
+            self.end_date = self.start_date + timedelta(days=90)
+        elif self.subscription_option.subscription_type == 'six_months':
+            self.end_date = self.start_date + timedelta(days=180)
+        elif self.subscription_option.subscription_type == 'twelve_months':
+            self.end_date = self.start_date + timedelta(days=365)
         else:
-            return []
+            raise ValueError("Unrecognized subscription type.")
 
-    def calculate_price(self):
-        selected_books = self.get_random_books()
+    # def get_random_books(self):
+    #     books_in_category = Book.objects.filter(category=self.category)
+    #     if books_in_category.exists():
+    #         return random.sample(list(books_in_category), min(len(books_in_category), self.number_of_books))
+    #     else:
+    #         return []
 
-        # Calculate initial and actual prices
-        initial_price = self.base_price_per_book * \
-            Decimal(self.number_of_books)
+    def select_books(self):
+        books_in_category = Book.objects.filter(
+            category=self.subscription_option.category)
+        if books_in_category.exists():
+            selected_books = random.sample(list(books_in_category), min(
+                self.subscription_option.number_of_books, len(books_in_category)))
+            self.selected_books.set(selected_books)
+
+    def calculate_and_save_price(self):
+        # Get selected books
+        selected_books = self.selected_books.all()
+
+        # Calculate initial price based on base price per book times number of books
+        initial_price = self.subscription_option.base_price_per_book * Decimal(self.subscription_option.number_of_books)
+
+        # Calculate actual price as the sum of prices of selected books
         actual_price = sum(book.price for book in selected_books)
 
-        # Use the higher of the initial or actual price
+        # Use the higher of initial or actual price
         total_price = max(initial_price, actual_price)
 
         # Apply discount based on subscription type
@@ -46,9 +85,19 @@ class SubscriptionOption(models.Model):
             'six_months': Decimal('0.8'),  # 20% discount
             'twelve_months': Decimal('0.7'),  # 30% discount
         }
-        rate = discount_rate.get(self.subscription_type, Decimal('1.0'))
-        total_price *= rate
-        return total_price
+        rate = discount_rate.get(
+            self.subscription_option.subscription_type, Decimal('1.0'))
+
+        # Calculate the final price after applying the discount
+        self.calculated_price = total_price * rate
+
+        # Save the updated calculated_price field only
+        self.save(update_fields=['calculated_price'])
+
+    def save(self, *args, **kwargs):
+        if not self.end_date:
+            self.set_end_date()
+        super(UserSubscriptionOption, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.category} - {self.subscription_type}"
+        return f"Subscription for {self.user.username} - {self.subscription_option}"
