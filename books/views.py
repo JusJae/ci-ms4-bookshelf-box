@@ -8,9 +8,12 @@ from .models import Book
 def book_list(request):
     """ A view to show all books, including sorting and search queries """
 
-    books = Book.objects.all()
-    query = None
+    category_name = request.GET.get('category_name')
+    books = Book.objects.all()  # Moved this line up for simplification
+    if category_name:
+        books = books.filter(category__category=category_name)
 
+    query = None
     if request.GET:
         if 'q' in request.GET:
             query = request.GET['q']
