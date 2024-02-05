@@ -21,7 +21,9 @@ def create_subscription(request):
                 user=request.user, subscription_option=subscription_option)
             user_subscription.save()
 
+            # TODO: Correct the form submission message as it is not showing
             messages.success(request, 'Subscription created successfully.')
+            # TODO: Fix redirect on for submission to view subscription details as the page loads on manual entry of /subscriptions/id
             return redirect('view_subscription', pk=user_subscription.pk)
         else:
             messages.error(
