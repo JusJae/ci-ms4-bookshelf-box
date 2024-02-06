@@ -5,7 +5,8 @@
 <div class="background-mask"></div>
 <main>
 <div class="container-fluid">
-	<div class="row my-5 mx-auto">
+	<!-- Hero Carousel -->
+	<div class="row my-4 mx-auto">
 		<div class="col-md-12">
 			<div
 				id="carouselExampleIndicators"
@@ -29,6 +30,7 @@
 						data-bs-slide-to="2"
 						aria-label="Slide 3"></button>
 				</div>
+				<!-- Carousel Inner -->
 				<div class="carousel-inner rounded">
 					<div class="carousel-item active">
 						<img
@@ -90,35 +92,41 @@
 			</div>
 		</div>
 	</div>
+	<!-- CTA -->
 	<div class="row text-center border border-dark rounded p-4 m-2 bg-light">
 		<div class="col-md-12">
-			<h2 class="text-center text-black logo-font">Bookshelf Box</h2>
-			<h3 class=" text-muted text-center p-3">Curated book service delivered to your door each month.</h3>
+			<h2 class="text-center text-black cta-header">Bookshelf Box</h2>
+			{% comment %} <div class="container h-60 w-50 mb-2">
+				<img class="cta-img h-100 w-100 border rounded mt-1" src="{{ MEDIA_URL }}bookshelf_box_logo.png" alt="Bookshelf Logo">
+			</div> {% endcomment %}
+			<h3 class=" text-muted text-center p-3">Curated book service delivered to your door each month</h3>
 			<button
 				type="button"
-				class="btn btn-info btn-block btn-lg">
+				class="cta-btn btn btn-block btn-lg"
+				onclick="location.href='{% url 'subscriptions' %}'">
 				<h4 class="p-md-1 mb-0">Get Started</h4>
 			</button>
 		</div>
 	</div>
+	<!-- Features -->
 	<div class="row">
 		<div class="col-md-6">
-			<div class="row text-center border border-dark rounded p-5 m-2 bg-white">
+			<div class="row text-center border border-dark rounded p-4 m-2 bg-white">
 				<div class="col-md-12">
-					<h3 class="text-black">How It Works</h3>
+					<h3 class="home-header text-black">How It Works</h3>
 					<button
 						type="button"
-						class="btn btn-outline-info mt-md-2">
+						class="btn btn-lg home-btn mt-md-2">
 						Find Out
 					</button>
 				</div>
 			</div>
-			<div class="row text-center border border-dark rounded p-5 m-2  bg-white">
+			<div class="row text-center border border-dark rounded p-4 m-2  bg-white">
 				<div class="col-md-12">
-					<h3 class="text-black">Books</h3>
+					<h3 class="home-header text-black">Books</h3>
 					<button
 						type="button"
-						class="btn btn-outline-info mt-md-2"
+						class="btn btn-lg home-btn mt-md-2"
 						onclick="location.href='{% url 'books' %}'">
 						Explore More
 					</button>
@@ -126,22 +134,22 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-			<div class="row text-center border border-dark rounded p-5 m-2 bg-white">
+			<div class="row text-center border border-dark rounded p-4 m-2 bg-white">
 				<div class="col-md-12">
-					<h3 class="text-black">Why Choose Us?</h3>
+					<h3 class="home-header text-black">Why Choose Us?</h3>
 					<button
 						type="button"
-						class="btn btn-outline-info mt-md-2">
+						class="btn btn-lg home-btn mt-md-2">
 						Find Out
 					</button>
 				</div>
 			</div>
-			<div class="row text-center border border-dark rounded p-5 m-2  bg-white">
+			<div class="row text-center border border-dark rounded p-4 m-2  bg-white">
 				<div class="col-md-12">
-					<h3 class="text-black">Subscription Plans</h3>
+					<h3 class="home-header text-black">Subscription Plans</h3>
 					<button
 						type="button"
-						class="btn btn-outline-info mt-md-2">
+						class="btn btn-lg home-btn mt-md-2">
 						Explore More
 					</button>
 				</div>

@@ -6,9 +6,9 @@
     <nav class="navbar navbar-expand-lg bg-transparent">
         <div class="container-fluid">
             <a class="navbar-brand logo-font" href="{% url 'home' %}">
-    <img src="{{ MEDIA_URL }}bookshelf_box_logo.png"  alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-    Bookshelf Box
-    </a>
+                <img src="{{ MEDIA_URL }}bookshelf_box_logo.png"  alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                Bookshelf Box
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -18,14 +18,14 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'home' %}">
                             <div class="text-center">
-                                <div><i class="fas fa-home fa-lg"></i></div>
+                                <div class="nav-icons"><i class="fa-solid fa-home fa-lg"></i></div>
                                 <p class="my-0">Home</p>
                             </div></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="text-center">
-                                <div><i class="fas fa-box-open fa-lg"></i></div>
+                                <div class="nav-icons"><i class="fa-solid fa-book fa-lg"></i></div>
                                 <p class="my-0">Books</p>
                             </div>
                         </a>
@@ -39,14 +39,14 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"><div class="text-center">
-                                <div><i class="fas fa-info-circle fa-lg"></i></div>
+                                <div class="nav-icons"><i class="fa-solid fa-info-circle fa-lg"></i></div>
                                 <p class="my-0">About</p>
                             </div></a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="text-center">
-                                <div><i class="fas fa-box-open fa-lg"></i></div>
+                                <div class="nav-icons"><i class="fa-solid fa-box-open fa-lg"></i></div>
                                 <p class="my-0">Subscriptions</p>
                             </div>
                         </a>
@@ -60,7 +60,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="text-center">
-                                <div><i class="fas fa-user fa-lg"></i></div>
+                                <div class="nav-icons"><i class="fa-solid fa-user fa-lg"></i></div>
                                 <p class="my-0">My Account</p>
                             </div>
                         </a>
@@ -77,26 +77,25 @@
                             {% endif %}
                         </ul>
                     </li>
-                    <form method="GET" action="{% url 'books' %}" class="d-flex" role="search">
-                        <input class="form-control me-2 border-dark" type="text" name="q" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-dark" type="submit">Search</button>
-                    </form>
                     <li class="nav-item">
                         <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="#">
                             <div class="text-center">
-                                <div><i class="fas fa-shopping-bag fa-lg"></i></div>
+                                <div class="nav-icons"><i class="fa-solid fa-shopping-bag fa-lg"></i></div>
                                 <p class="my-0">
                                     {% if grand_total %}
-                                        ${{ grand_total|floatformat:2 }}
+                                        £{{ grand_total|floatformat:2 }}
                                     {% else %}
-                                        $0.00
+                                        £0.00
                                     {% endif %}
                                 </p>
                             </div>
                         </a>
                     </li>
+                    <form method="GET" action="{% url 'books' %}" class="d-flex" role="search">
+                        <input class="form-control me-2 border-dark" type="text" name="q" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-dark" type="submit">Search</button>
+                    </form>
                 </ul>
-                
             </div>
         </div>
     </nav>
