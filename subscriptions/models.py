@@ -3,6 +3,7 @@ from django.conf import settings
 from decimal import Decimal
 import random
 from datetime import timedelta
+from django.utils import timezone
 from books.models import Book
 
 
@@ -24,7 +25,12 @@ class SubscriptionOption(models.Model):
     base_price_per_book = Decimal('10.00')
 
     def __str__(self):
-        return f"{self.category} - {self.subscription_type} - {self.number_of_books} books"
+        human_readable_subscription_type = self.get_subscription_type_display()
+        return (
+            f"Category: {self.category} | "
+            f"{human_readable_subscription_type} | "
+            f"Books: {self.number_of_books}"
+        )
 
 
 class UserSubscriptionOption(models.Model):
@@ -50,13 +56,6 @@ class UserSubscriptionOption(models.Model):
         else:
             raise ValueError("Unrecognized subscription type.")
 
-    # def get_random_books(self):
-    #     books_in_category = Book.objects.filter(category=self.category)
-    #     if books_in_category.exists():
-    #         return random.sample(list(books_in_category), min(len(books_in_category), self.number_of_books))
-    #     else:
-    #         return []
-
     def select_books(self):
         books_in_category = Book.objects.filter(
             category=self.subscription_option.category)
@@ -64,6 +63,7 @@ class UserSubscriptionOption(models.Model):
             selected_books = random.sample(list(books_in_category), min(
                 self.subscription_option.number_of_books, len(books_in_category)))
             self.selected_books.set(selected_books)
+            print("Selected books: ", selected_books)
 
     def calculate_and_save_price(self):
         # Get selected books
@@ -95,6 +95,9 @@ class UserSubscriptionOption(models.Model):
         self.save(update_fields=['calculated_price'])
 
     def save(self, *args, **kwargs):
+        # If start date is not set, set it to the current date
+        if not self.start_date:
+            self.start_date = timezone.now().date()
         if not self.end_date:
             self.set_end_date()
         super(UserSubscriptionOption, self).save(*args, **kwargs)

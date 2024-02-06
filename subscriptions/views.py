@@ -14,16 +14,17 @@ def create_subscription(request):
         if form.is_valid():
             # Save the subscription option
             subscription_option = form.save()
-            # set the start date
-            subscription_option.start_date = timezone.now().date()
+
             # Create a UserSubscription instance linking the subs option to the user
             user_subscription = UserSubscriptionOption(
                 user=request.user, subscription_option=subscription_option)
             user_subscription.save()
+            # get the books for the user subscription
+            user_subscription.select_books()
+            # calculate the price and save it
+            user_subscription.calculate_and_save_price()
 
-            # TODO: Correct the form submission message as it is not showing
             messages.success(request, 'Subscription created successfully.')
-            # TODO: Fix redirect on for submission to view subscription details as the page loads on manual entry of /subscriptions/id
             return redirect('view_subscription', pk=user_subscription.pk)
         else:
             messages.error(
