@@ -1,20 +1,37 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
-from .models import Book
+from django.db.models.functions import Lower
+from .models import Book, Category
 
 
 # book_list
 def book_list(request):
     """ A view to show all books, including sorting and search queries """
-
-    category_name = request.GET.get('category_name')
-    books = Book.objects.all()  # Moved this line up for simplification
-    if category_name:
-        books = books.filter(category__category=category_name)
-
+    books = Book.objects.all()
     query = None
+    sort = None
+    direction = None
+    categories = Category.objects.all()
+
     if request.GET:
+        if 'sort' in request.GET:
+            sortkey = request.GET['sort']
+            sort = sortkey
+            direction = request.GET.get('direction', 'asc')
+
+            if sortkey == 'name':
+                sortkey = 'lower_name' if direction == 'asc' else '-lower_name'
+                # Assuming 'title' is the field name for book names
+                books = books.annotate(lower_name=Lower('title'))
+            elif sortkey in ['category', 'price']:
+                sortkey = f'{sortkey}' if direction == 'asc' else f'-{sortkey}'
+            books = books.order_by(sortkey)
+
+        if 'category' in request.GET:
+            category_name = request.GET['category'].split(',')
+            books = books.filter(category__category__in=category_name)
+
         if 'q' in request.GET:
             query = request.GET['q']
             if not query:
@@ -26,9 +43,13 @@ def book_list(request):
                 description__icontains=query)
             books = books.filter(queries)
 
+    current_sorting = f'{sort}_{direction}'
+
     context = {
         'books': books,
         'search_term': query,
+        'categories': categories,  # Add categories to context
+        'current_sorting': current_sorting,
     }
 
     return render(request, 'books/book_list.html', context)

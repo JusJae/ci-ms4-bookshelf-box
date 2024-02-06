@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load rating_filters %}
 
 {% block content %}
     <main class="flex-shrink-0">
@@ -13,10 +14,12 @@
             </div>
             <div class="col-md-6">
                 <h2>{{ book.title }}</h2>
-                <p><strong>Category:</strong> {{ book.category }}</p>
+                <p class="card-text">
+                    <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }} %}">Category: {{ book.category }}</a>
+                </p>
                 <p><strong>Price:</strong> £{{ book.price }}</p>
                 <p><strong>Description:</strong> {{ book.description }}</p>
-                <!-- Include additional fields as desired -->
+                <p class="card-text">Rating: {{ book.rating|stars }}</p>
                 <a href="{% url 'books' %}" class="btn btn-primary">Back to list</a>
             </div>
         </div>
