@@ -3,19 +3,26 @@
 
 {% block content %}
     <div class="overlay"></div>
-    <div class="container mb-2">
-        <div class="row">
-            <div class="col">
-                <hr>
-                <h2 class="logo-font mb-4">Box Content</h2>
-                <hr>
+    <main>
+        <div class="container mb-2">
+            <div class="row">
+                <div class="col">
+                    <hr>
+                    <h2 class="logo-font mb-4">Box Content</h2>
+                    <hr>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    {% if box_items %}
+                    <div class="table-responsive rounded"></div>
+                    {% else %}
+                    <div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">No items in the box</h4>
+                        <p>Please add items to the box.</p>
+                    </div>
+                    {% endif %}
             </div>
         </div>
-
-        <div class="row">
-            <div class="col">
-                
-            </div>
-        </div>
-    </div>
+    </main>
 {% endblock %}
