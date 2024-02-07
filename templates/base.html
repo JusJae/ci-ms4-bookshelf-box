@@ -45,13 +45,21 @@
     <script src="https://kit.fontawesome.com/3ee7b5871c.js" crossorigin="anonymous"></script>
     {% endblock %}
 
-
-    <title>Bookshelf Box{% block title%}{% endblock %}</title>
+    <title>Bookshelf Box {% block title%}{% endblock %}</title>
   </head>
+  
   <body class="d-flex flex-column h-100">
   <!-- Navbar -->
   {% include 'includes/navbar.html' %}
-      
+    <!-- Offers Banner -->
+    <header>
+      <div id="offers-banner" class="row">
+        <div class="col bg-dark-subtle">
+          <h4 class="text-center mb-0">Free delivery on all subscription orders over £{{ free_delivery_threshold }}!</h4>
+        </div>
+      </div>
+    </header>
+
   <!-- Alert Messages -->
   {% if messages %}
   <div class="message-container"></div>
