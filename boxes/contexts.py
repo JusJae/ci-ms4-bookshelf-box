@@ -9,7 +9,11 @@ def box_content(request):
     box_count = 0
     subscription_type = None
     if request.user.is_authenticated:
-        subscription_type = request.user.user_subscription
+        if hasattr(request.user, 'subscription_option'):
+            subscription_type = request.user.subscription_option.subscription_type
+        else:
+            # Handle the case when the user does not have a subscription option
+            subscription_type = "one-off"
     # Assuming the subscription type is stored in the user object
 
     if subscription_type != "one-off" and total >= settings.FREE_DELIVERY_THRESHOLD:
