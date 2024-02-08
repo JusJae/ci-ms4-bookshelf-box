@@ -3,20 +3,25 @@
 {% block title %}Create Subscription{% endblock %}
 
 {% block page_header %}
-    <div>
+    <div class="container mt-3 mb-2 text-center">
+        <hr>
         <h2>Create Subscription</h2>
+        <hr>
     </div>
 {% endblock %}
 
 {% block content %}
-<main class="container">
+<div class="overlay"></div>
+<main class="container text-center">
+    <div class="col-12 col-lg-6">
+        <p class="lead">Select your subscription options below</p>
+    </div>
 
     <div class="col-12 col-lg-6">
         <form method="POST" action="" id="create-subscription-form">
             {% csrf_token %}
             {{ form | crispy }}
-            <button type="submit" class="btn btn-primary" id="create-subscription-form">Create Subscription</button>
-
+            <button type="submit" class="btn btn-lg cta-btn mt-3" id="create-subscription-form">Create Subscription</button>
         </form>
     </div>
 </main>
