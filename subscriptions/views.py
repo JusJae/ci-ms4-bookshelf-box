@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 from .forms import SubscriptionOptionForm
 from subscriptions.models import UserSubscriptionOption
 
@@ -35,6 +34,7 @@ def create_subscription(request):
     return render(request, 'subscriptions/create_subscription.html', {'form': form})
 
 
+@login_required
 def view_subscription(request, pk):
     user_subscription = get_object_or_404(UserSubscriptionOption, pk=pk)
     return render(request, 'subscriptions/view_subscription.html', {'user_subscription': user_subscription})
