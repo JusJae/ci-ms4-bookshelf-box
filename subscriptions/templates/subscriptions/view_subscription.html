@@ -3,36 +3,58 @@
 {% block title %}Your Subscription{% endblock %}
 
 {% block page_header %}
-    <div class="container mb-3">
+    <div class="container my-3  text-center">
+        <hr>
         <h2>Your Subscription</h2>
+        <hr>
     </div>
 {% endblock %}
 
 {% block content %}
 <div class="overlay"></div>
 <main class="container">
-    <div class="container border border-black rounded bg-white p-3">
+    <div class="container border border-black rounded bg-white p-3 mb-5 text-center">
         {% if user_subscription %}
-            <p><strong>Subscription Option:</strong> {{ user_subscription.subscription_option }}</p>
-            <p><strong>Selected Books:</strong></p>
-            <ul>
+            <div class="border rounded mb-2 pt-2 bg-dark-subtle" >
+                <h3>Subscription Option:</h3>
+                <p>{{ user_subscription.subscription_option }}</p>
+            </div>
+            <h4>Your Books:</h4>
+            <ul class="p-0">
                 {% for book in user_subscription.selected_books.all %}
-                <li class="list-unstyled">{{ book.title }}</li>
-                <img src="{{ book.image_url }}" class="img-fluid" alt="{{ book.title }}">
+                <li class="list-unstyled my-2">
+                    <h5 class="mb-0">{{ book.title }}</h5>
+                    <img src="{{ book.image_url }}" class="img-fluid mb-1" alt="{{ book.title }}">
+                </li>
                 {% endfor %}
             </ul>
-            <p><strong>Start Date:</strong> {{ user_subscription.start_date }}</p>
-            <p><strong>End Date:</strong> {{ user_subscription.end_date }}</p>
-            <p><strong>Price:</strong> £{{ user_subscription.calculated_price }}</p>
+            <h4>Start Date:</h4> <p>{{ user_subscription.start_date }}</p>
+            <h4>End Date:</h4> <p>{{ user_subscription.end_date }}</p>
+            <h4>Price:</h4> <p>£{{ user_subscription.calculated_price }}</p>
             <!-- TODO: need to correct button so that it adds to the users box content and payments -->
-            <form action="" method="post">
+            
+            <form action="{% url 'add_to_box' user_subscription.id %}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="subscription_option_id" value="{{ subscription_option_id }}">
-                <!-- <input type="hidden" name="add_to_box" value=""> -->
-                <button type="submit" class="btn btn-primary">Add to Box</button>
+                <div class="form-row">
+                    <div class="col-12 mb-2">
+                        <input type="submit" class="btn btn-lg cta-btn rounded text-uppercase" value="Add to Box">
+                    </div>
+                    <div class="col-12">
+                        <input type="hidden" name="redirect_url" value="{{ request.path }}">
+                        <a href="{% url 'subscriptions' %}" class="btn btn-lg home-btn rounded">
+                            <span>Explore More Subscriptions</span>
+                        </a>
+                    </div>
+                    
+                </div>
             </form>
         {% else %}
-        <p>No books selected.</p>
+        <h4>No books selected.</h4>
+        <div class="col">
+            <a href="{% url 'subscriptions' %}" class="btn btn-lg home-btn rounded">
+                <span>Explore More Subscriptions</span>
+            </a>
+        </div>
         {% endif %}
     </div>
 </main>
