@@ -13,17 +13,48 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col ">
                     {% if box_items %}
-                    <div class="table-responsive rounded">
-                        {{ box_items }}
-                    </div>
+                        <table class="table table-responsive table-bordered rounded-3">
+                            <thead class="text-center align-middle">
+                                <tr>
+                                    <th scope="col">Subscription Option</th>
+                                    <th scope="col">Selected Books</th>
+                                    <th scope="col">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                {% for item in box_items %}
+                                <tr>
+                                    <td>{{ item.subscription.subscription_option }}</td>
+                                    <td>
+                                        {% for book in item.selected_books %}
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
+                                                {{ book.title }}
+                                            </div>
+                                        {% endfor %}
+                                    </td>
+                                    <td>£{{ item.subscription.calculated_price }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3">Your shopping bag is empty.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        
+
                     {% else %}
                     <div class="alert alert-info" role="alert">
                         <h4 class="alert-heading">No items in the box</h4>
                         <p>Please add items to the box.</p>
                     </div>
+                    
                     {% endif %}
+                </div>
             </div>
         </div>
     </main>
