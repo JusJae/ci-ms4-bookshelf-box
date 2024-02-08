@@ -6,36 +6,36 @@
     <main>
         <div class="container mb-2">
             <div class="row">
-                <div class="col">
+                <div class="col text-center">
                     <hr>
                     <h2 class="logo-font mb-4">Box Content</h2>
                     <hr>
                 </div>
             </div>
-            <div class="row">
-                <div class="col ">
+            <div class="row mx-2">
+                <div class="border box-table rounded bg-white table-responsive">
                     {% if box_items %}
-                        <table class="table table-responsive table-bordered rounded-3">
+                        <table class="rounded-3">
                             <thead class="text-center align-middle">
                                 <tr>
-                                    <th scope="col">Subscription Option</th>
+                                    <th class="p-2" scope="col">Subscription Option</th>
                                     <th scope="col">Selected Books</th>
                                     <th scope="col">Price</th>
                                 </tr>
                             </thead>
-                            <tbody class="align-middle">
+                            <tbody class=" table-group-divider align-middle">
                                 {% for item in box_items %}
                                 <tr>
                                     <td>{{ item.subscription.subscription_option }}</td>
-                                    <td>
+                                    <td class="border-left">
                                         {% for book in item.selected_books %}
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center p-2">
                                                 <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
                                                 {{ book.title }}
                                             </div>
                                         {% endfor %}
                                     </td>
-                                    <td>£{{ item.subscription.calculated_price }}</td>
+                                    <td class="border-left">£{{ item.subscription.calculated_price }}</td>
                                 </tr>
                                 {% empty %}
                                 <tr>

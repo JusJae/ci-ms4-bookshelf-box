@@ -176,9 +176,14 @@ p {
 }
 
 .box-table {
-    border: 1px solid var(--bs-dark);
+    border: 1px solid var(--bs-dark)!important;
     border-radius: 0.25rem !important;
 
+}
+
+.border-left {
+    border-left: 1px solid var(--bs-dark)!important;
+    padding-left: .35rem;
 }
 
 /* Responsive styling for smaller devices */
