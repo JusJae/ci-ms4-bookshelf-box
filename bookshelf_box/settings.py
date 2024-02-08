@@ -83,7 +83,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'boxes.contexts.box_content',
+                'boxes.contexts.box_contents',
             ],
             'builtins': [
                 'crispy_forms.templatetags.crispy_forms_tags',

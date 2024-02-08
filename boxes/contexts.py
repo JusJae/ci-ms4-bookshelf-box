@@ -1,8 +1,10 @@
 from decimal import Decimal
 from django.conf import settings
+from django.shortcuts import get_object_or_404
+from subscriptions.models import UserSubscriptionOption
 
 
-def box_content(request):
+def box_contents(request):
 
     box_items = []
     total = 0
@@ -12,9 +14,19 @@ def box_content(request):
         if hasattr(request.user, 'subscription_option'):
             subscription_type = request.user.subscription_option.subscription_type
         else:
-            # Handle the case when the user does not have a subscription option
             subscription_type = "one-off"
-    # Assuming the subscription type is stored in the user object
+    else:
+        subscription_type = "one-off"
+    box = request.session.get('box', {})
+
+    for subscription_id in box:
+        subscription = get_object_or_404(UserSubscriptionOption, pk=subscription_id)
+        total += subscription.calculated_price
+        box_count += 1
+        box_items.append({
+            'subscription_id': subscription_id,
+            'subscription': subscription,
+        })
 
     if subscription_type != "one-off" and total >= settings.FREE_DELIVERY_THRESHOLD:
         delivery = 0
