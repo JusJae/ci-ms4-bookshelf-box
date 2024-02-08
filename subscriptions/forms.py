@@ -25,10 +25,12 @@ class SubscriptionOptionForm(forms.ModelForm):
             'number_of_books': 'Number of Books',
             'subscription_type': 'Subscription Type',
         }
+        # TODO: Add placeholder to the category field as well as titles for each field
+        # https://stackoverflow.com/questions/11391308/django-forms-how-to-set-a-placeholder-for-the-first-option-in-a-select-box
 
         self.fields['category'].widget.attrs['autofocus'] = True
         for field_name, field in self.fields.items():
             if field_name in placeholders:
                 field.widget.attrs['placeholder'] = placeholders[field_name]
-            field.widget.attrs['class'] = 'form-control border-black rounded'
+            field.widget.attrs['class'] = 'form-control border-black rounded my-2'
             field.label = False
