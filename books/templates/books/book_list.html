@@ -2,79 +2,79 @@
 {% load static %}
 {% load rating_filters %}
 
+{% block page_header %}
+    <div class="container mt-3 mb-2 text-center">
+        <hr>
+        <h2 class="header-font">Books</h2>
+        <hr>
+    </div>
+{% endblock %}
 
 {% block content %}
 <div class="overlay"></div>
 <main class="flex-shrink-0">
-<div class="container mt-4">
-    <div class="row">
-            <div class="col">
-                <hr>
-                <h2 class="logo-font mb-4">Books</h2>
-                <hr>
+    <div class="container mt-4">
+        <!-- Category Badges -->
+        <div class="row">
+            <div class="col mb-3 text-center">
+                {% for category in categories %}
+                    <a class="category-badge text-decoration-none" href="{% url 'books' %}?category={{ category.category }}">
+                        <span class="badge text-bg-secondary">{{ category.category }}</span>
+                    </a>
+                {% endfor %}
             </div>
         </div>
-    <!-- Category Badges -->
-    <div class="row">
-        <div class="col mb-3 text-center">
-            {% for category in categories %}
-                <a class="category-badge text-decoration-none" href="{% url 'books' %}?category={{ category.category }}">
-                    <span class="badge text-bg-secondary">{{ category.category }}</span>
-                </a>
+
+        <!-- Sorting Dropdown -->
+        <div class="row">
+            <div class="product-container col-12">
+                <div class="row mt-1 mb-2">
+                    <!-- Sorting Dropdown on the right -->
+                    <div class="col-12 col-md-6 my-auto order-md-last d-flex justify-content-center justify-content-md-end">
+                        <div class="sort-select-wrapper w-50">
+                            <select id="sort-selector" class="custom-select custom-select-sm rounded border">
+                                <option value="{% url 'books' %}" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...</option>
+                                <option value="{% url 'books' %}?sort=price&direction=asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price (low to high)</option>
+                                <option value="{% url 'books' %}?sort=price&direction=desc" {% if current_sorting == 'price_desc' %}selected{% endif %}>Price (high to low)</option>
+                                <option value="{% url 'books' %}?sort=name&direction=asc" {% if current_sorting == 'name_asc' %}selected{% endif %}>Title (A-Z)</option>
+                                <option value="{% url 'books' %}?sort=name&direction=desc" {% if current_sorting == 'name_desc' %}selected{% endif %}>Title (Z-A)</option>
+                                <option value="{% url 'books' %}?sort=category&direction=asc" {% if current_sorting == 'category_asc' %}selected{% endif %}>Category (A-Z)</option>
+                                <option value="{% url 'books' %}?sort=category&direction=desc" {% if current_sorting == 'category_desc' %}selected{% endif %}>Category (Z-A)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-first">
+                        <p class="text-muted mt-3 text-center text-md-left">
+                            <span class="small"><a class="text-black"href="{% url 'books' %}">Reset Books</a> | </span>
+                            Showing {{ books|length }} Books{% if search_term %} found for <strong>"{{ search_term }}"</strong>{% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Books Display -->
+        <div class="row">
+            {% for book in books %}
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card border-black">
+                    <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}" style="height: 300px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">
+                            <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }} %}">Category: {{ book.category }}</a></p>
+                        <p class="card-text">Rating: {{ book.rating|stars }}</p>
+                        <a href="{% url 'book_detail' book.id %}" class="btn btn-info">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p>No books found.</p>
+            </div>
             {% endfor %}
         </div>
     </div>
-
-    <!-- Sorting Dropdown -->
-    <div class="row">
-        <div class="product-container col-12">
-            <div class="row mt-1 mb-2">
-                <!-- Sorting Dropdown on the right -->
-                <div class="col-12 col-md-6 my-auto order-md-last d-flex justify-content-center justify-content-md-end">
-                    <div class="sort-select-wrapper w-50">
-                        <select id="sort-selector" class="custom-select custom-select-sm rounded border">
-                            <option value="{% url 'books' %}" {% if current_sorting == 'None_None' %}selected{% endif %}>Sort by...</option>
-                            <option value="{% url 'books' %}?sort=price&direction=asc" {% if current_sorting == 'price_asc' %}selected{% endif %}>Price (low to high)</option>
-                            <option value="{% url 'books' %}?sort=price&direction=desc" {% if current_sorting == 'price_desc' %}selected{% endif %}>Price (high to low)</option>
-                            <option value="{% url 'books' %}?sort=name&direction=asc" {% if current_sorting == 'name_asc' %}selected{% endif %}>Title (A-Z)</option>
-                            <option value="{% url 'books' %}?sort=name&direction=desc" {% if current_sorting == 'name_desc' %}selected{% endif %}>Title (Z-A)</option>
-                            <option value="{% url 'books' %}?sort=category&direction=asc" {% if current_sorting == 'category_asc' %}selected{% endif %}>Category (A-Z)</option>
-                            <option value="{% url 'books' %}?sort=category&direction=desc" {% if current_sorting == 'category_desc' %}selected{% endif %}>Category (Z-A)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 order-md-first">
-                    <p class="text-muted mt-3 text-center text-md-left">
-                        <span class="small"><a class="text-black"href="{% url 'books' %}">Reset Books</a> | </span>
-                        Showing {{ books|length }} Books{% if search_term %} found for <strong>"{{ search_term }}"</strong>{% endif %}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Books Display -->
-    <div class="row">
-        {% for book in books %}
-        <div class="col-md-4 col-sm-6 mb-3">
-            <div class="card border-black">
-                <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}" style="height: 300px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ book.title }}</h5>
-                    <p class="card-text">
-                        <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }} %}">Category: {{ book.category }}</a></p>
-                    <p class="card-text">Rating: {{ book.rating|stars }}</p>
-                    <a href="{% url 'book_detail' book.id %}" class="btn btn-info">View Details</a>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <p>No books found.</p>
-        </div>
-        {% endfor %}
-    </div>
-</div>
 </main>
 {% endblock %} 
 {% block extra_js %}

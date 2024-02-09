@@ -83,6 +83,11 @@ p {
     font-size: 1.25em;
 }
 
+.header-font {
+    font-family: var(--primary-font) !important;
+    font-weight: 700 !important;
+}
+
 .background-mask {
     position: fixed;
     top: 0;

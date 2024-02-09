@@ -2,32 +2,36 @@
 {% load static %}
 {% load rating_filters %}
 
+{% block page_header %}
+    <div class="container mt-3 mb-2 text-center">
+        <hr>
+        <h2 class="header-font">Book Details</h2>
+        <hr>
+    </div>
+{% endblock %}
+
 {% block content %}
-    <main class="flex-shrink-0">
-        <div class="row">
-            <div class="col">
-                <hr>
-                <h2 class="logo-font mb-4">Book Details</h2>
-                <hr>
+<div class="overlay"></div>
+<main class="flex-shrink-0">
+    <div class="container mt-4">
+        <div class="container card mb-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ book.image_url }}" class="img-fluid" alt="{{ book.title }}">
+                </div>
+                <div class="col-md-6">
+                    <h2>{{ book.title }}</h2>
+                    <p class="card-text">
+                        <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }} %}">Category: {{ book.category }}</a>
+                    </p>
+                    <p><strong>Price:</strong> £{{ book.price }}</p>
+                    <p><strong>Description:</strong> {{ book.description }}</p>
+                    <p class="card-text">Rating: {{ book.rating|stars }}</p>
+                    <a href="{% url 'books' %}" class="btn btn-primary mb-3">Back to list</a>
+                </div>
             </div>
         </div>
-        <div class="container card ">
-        <div class="row">
-            <div class="col-md-6">
-                <img src="{{ book.image_url }}" class="img-fluid" alt="{{ book.title }}">
-            </div>
-            <div class="col-md-6">
-                <h2>{{ book.title }}</h2>
-                <p class="card-text">
-                    <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }} %}">Category: {{ book.category }}</a>
-                </p>
-                <p><strong>Price:</strong> £{{ book.price }}</p>
-                <p><strong>Description:</strong> {{ book.description }}</p>
-                <p class="card-text">Rating: {{ book.rating|stars }}</p>
-                <a href="{% url 'books' %}" class="btn btn-primary">Back to list</a>
-            </div>
-        </div>
-        </div>
-    </main>
+    </div>
+</main>
 
 {% endblock %}
