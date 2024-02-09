@@ -27,9 +27,8 @@ SECRET_KEY = 'django-insecure-rt&6-5x^!tizf#cud#x1$xz@(!*bwa#=3j^wwr9q#v4y)w$m*)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '8000-jusjae-cims4bookshelfbo-50l36tnoqxy.ws-eu107.gitpod.io', 'localhost',
-    ]
+ALLOWED_HOSTS = ['*',]
+# Need to be changed to the actual domain name when deploying
 
 # Application definition
 
