@@ -2,17 +2,20 @@ from django import forms
 from .models import SubscriptionOption
 
 
-# class SubscriptionOptionForm(forms.ModelForm):
-#     class Meta:
-#         model = SubscriptionOption
-#         fields = ['category', 'number_of_books', 'subscription_type']
-#         widgets = {
-#             'category': forms.Select(attrs={'class': 'form-control'}),
-#             'number_of_books': forms.NumberInput(attrs={'class': 'form-control'}),
-#             'subscription_type': forms.Select(attrs={'class': 'form-control'}),
-#         }
-
 class SubscriptionOptionForm(forms.ModelForm):
+    BOOK_CHOICES = (
+        (1, '1'),
+        (2, '2'),
+        (3, '3'),
+    )
+
+    number_of_books = forms.ChoiceField(
+        choices=BOOK_CHOICES,
+        widget=forms.RadioSelect,
+        label="Number of Books",
+        initial='1'
+    )
+
     class Meta:
         model = SubscriptionOption
         fields = ['category', 'number_of_books', 'subscription_type']
@@ -22,15 +25,16 @@ class SubscriptionOptionForm(forms.ModelForm):
 
         placeholders = {
             'category': 'Select Category',
-            'number_of_books': 'Number of Books',
             'subscription_type': 'Subscription Type',
         }
-        # TODO: Add placeholder to the category field as well as titles for each field
-        # https://stackoverflow.com/questions/11391308/django-forms-how-to-set-a-placeholder-for-the-first-option-in-a-select-box
 
-        self.fields['category'].widget.attrs['autofocus'] = True
-        for field_name, field in self.fields.items():
-            if field_name in placeholders:
-                field.widget.attrs['placeholder'] = placeholders[field_name]
-            field.widget.attrs['class'] = 'form-control border-black rounded my-2'
-            field.label = False
+        self.fields['category'].widget = forms.Select(
+            choices=[('', placeholders['category'])] +
+            list(self.fields['category'].choices)[1:],
+            attrs={'class': 'form-control text-center'}
+        )
+        self.fields['subscription_type'].widget = forms.Select(
+            choices=[('', placeholders['subscription_type'])] +
+            list(self.fields['subscription_type'].choices)[1:],
+            attrs={'class': 'form-control text-center'}
+        )

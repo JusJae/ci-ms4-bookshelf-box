@@ -179,6 +179,52 @@ p {
     object-fit: cover;
     /* Cover the entire card image area */
 }
+#div_id_number_of_books>div {
+    background-color: #fff;
+    padding: 0.3rem;
+    border-radius: 0.25rem;
+}
+
+#div_id_number_of_books .form-check {
+    display: inline-block !important;
+    margin-right: 1rem;
+}
+
+#div_id_number_of_books .form-check-input {
+    margin-right: 0.25rem;
+}
+
+#div_id_number_of_books .form-check input {
+    background-color: var(--bs-dark);
+}
+
+.requiredField {
+    text-transform: capitalize;
+    font-size: large;
+    font-weight: 700;
+    margin-bottom: .3rem;
+}
+
+/* select#id_category.form-control.select {
+    color: grey !important;
+}
+
+select#id_category.form-control.select::after {
+    color: black !important;
+} */
+
+.select-grey {
+    color: grey !important;
+}
+
+.select-black {
+    color: black !important;
+}
+
+
+.form-group {
+    margin-bottom: 1rem;
+}
 
 .box-table {
     border: 1px solid var(--bs-dark)!important;

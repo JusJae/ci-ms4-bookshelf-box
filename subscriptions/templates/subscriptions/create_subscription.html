@@ -13,11 +13,11 @@
 {% block content %}
 <div class="overlay"></div>
 <main class="container text-center">
-    <div class="container">
-        <div class="col-12 col-lg-6">
+    <div class="container ">
+        <div class="col-12">
             <p class="lead">Select your subscription options below</p>
         </div>
-        <div class="col-12 col-lg-6">
+        <div class="col-12 ">
             <form method="POST" action="" id="create-subscription-form">
                 {% csrf_token %}
                 {{ form | crispy }}
@@ -26,4 +26,37 @@
         </div>
     </div>
 </main>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function updateSelectColor(selectElement) {
+        // Function to check the selection and update color
+        function checkAndUpdateColor() {
+            // Change the color to black if a non-placeholder option is selected
+            if(selectElement.value) {
+                selectElement.style.color = 'black';
+            } else {
+                selectElement.style.color = 'grey';
+            }
+        }
+
+        // Listen for changes on the select element
+        selectElement.addEventListener('change', checkAndUpdateColor);
+
+        // Initial color update based on current selection
+        checkAndUpdateColor();
+    }
+
+    // Get the select elements
+    var categorySelect = document.querySelector('select#id_category.form-control.select');
+    var subscriptionTypeSelect = document.querySelector('select#id_subscription_type.form-control.select');
+
+    // Update color for both selects
+    if (categorySelect) updateSelectColor(categorySelect);
+    if (subscriptionTypeSelect) updateSelectColor(subscriptionTypeSelect);
+});
+</script>
+
+
 {% endblock %}
+
+
