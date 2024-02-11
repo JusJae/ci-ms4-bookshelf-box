@@ -7,17 +7,19 @@ from subscriptions.models import UserSubscriptionOption
 
 @login_required
 def create_subscription(request):
-    print("Method: ", request.method)
-    if request.method == 'POST':
+    if request.method == 'GET':
+        form = SubscriptionOptionForm()  # Ensure this does not default to a specific SubscriptionOption
+
+    elif request.method == 'POST':
         form = SubscriptionOptionForm(request.POST)
         if form.is_valid():
             # Save the subscription option
             subscription_option = form.save()
-
-            # Create a UserSubscription instance linking the subs option to the user
-            user_subscription = UserSubscriptionOption(
-                user=request.user, subscription_option=subscription_option)
+            print("Debug - SubscriptionOption ID being assigned:", subscription_option.id)
+            user_subscription = UserSubscriptionOption(user=request.user, subscription_option=subscription_option)
+            print("Debug - Before saving UserSubscriptionOption, SubscriptionOption ID:", user_subscription.subscription_option.id)
             user_subscription.save()
+            print("Debug - After saving UserSubscriptionOption, SubscriptionOption ID:", user_subscription.subscription_option.id)
             # get the books for the user subscription
             user_subscription.select_books()
             # calculate the price and save it
