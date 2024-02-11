@@ -14,8 +14,8 @@
     <main>
         <div class="container mb-2">
             <div class="row mx-2">
-                <div class="border box-table rounded bg-white table-responsive">
-                    {% if box_items %}
+                {% if box_items %}
+                    <div class="border box-table rounded bg-white table-responsive"> 
                         <table class="rounded-3">
                             <thead class="text-center align-middle">
                                 <tr>
@@ -45,17 +45,13 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-
-                        
-
-                    {% else %}
+                    </div>
+                {% else %}
                     <div class="alert alert-info" role="alert">
                         <h4 class="alert-heading">No items in the box</h4>
                         <p>Please add items to the box.</p>
                     </div>
-                    
-                    {% endif %}
-                </div>
+                {% endif %}
             </div>
         </div>
     </main>
