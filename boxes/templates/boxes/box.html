@@ -22,29 +22,32 @@
                                     <th class="p-2" scope="col">Subscription Option</th>
                                     <th scope="col">Selected Books</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
                                 </tr>
                             </thead>
                             <tbody class=" table-group-divider align-middle">
                                 {% for item in box_items %}
-                                <tr>
-                                    <td>{{ item.subscription.subscription_option }}</td>
-                                    <td class="border-left">
-                                        {% for book in item.selected_books %}
-                                            <div class="d-flex align-items-center p-2">
-                                                <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
-                                                {{ book.title }}
-                                            </div>
-                                        {% endfor %}
-                                    </td>
-                                    <td class="border-left">£{{ item.subscription.calculated_price }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="3">Your shopping bag is empty.</td>
-                                </tr>
+                                    <tr>
+                                        <td>{{ item.subscription.subscription_option }}</td>
+                                        <td class="border-left">
+                                            {% for book in item.selected_books %}
+                                                <div class="d-flex align-items-center p-2">
+                                                    <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
+                                                    {{ book.title }}
+                                                </div>
+                                            {% endfor %}
+                                        </td>
+                                        <td class="border-left">£{{ item.subscription.calculated_price }}</td>
+                                        <td class="border-left">{{ item.subscription.start_date }}</td>
+                                        <td class="border-left">{{ item.subscription.end_date }}</td>
+                                    </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                    </div>
+                    <div class="">
+                        <a href="{% url 'checkout' %}" class="btn btn-primary mt-3">Checkout</a>
                     </div>
                 {% else %}
                     <div class="alert alert-info" role="alert">

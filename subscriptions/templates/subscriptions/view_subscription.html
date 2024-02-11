@@ -31,8 +31,7 @@
             <h4>Start Date:</h4> <p>{{ user_subscription.start_date }}</p>
             <h4>End Date:</h4> <p>{{ user_subscription.end_date }}</p>
             <h4>Price:</h4> <p>£{{ user_subscription.calculated_price }}</p>
-            <!-- TODO: need to correct button so that it adds to the users box content and payments -->
-            
+
             <form action="{% url 'add_to_box' user_subscription.id %}" method="POST">
                 {% csrf_token %}
                 <div class="form-row">
