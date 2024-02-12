@@ -46,9 +46,18 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="">
-                        <a href="{% url 'checkout' %}" class="btn btn-primary mt-3">Checkout</a>
-                    </div>
+                    {% comment %} <div class="">
+                        <a href="" class="btn btn-primary mt-3">Checkout</a>
+                    </div> {% endcomment %}
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col-12 mb-2">
+                                <input type="submit" class="btn btn-lg cta-btn rounded text-uppercase" value="Checkout">
+                            </div>
+                            
+                        </div>
+                    </form>
                 {% else %}
                     <div class="alert alert-info" role="alert">
                         <h4 class="alert-heading">No items in the box</h4>
