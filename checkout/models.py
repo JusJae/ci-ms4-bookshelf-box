@@ -52,7 +52,7 @@ class Order(models.Model):
             order number if it hasn't been set already """
         if not self.order_number:
             self.order_number = self._generate_order_number()
-        super().save(*args, **kwargs)
+        super(Order, self).save(*args, **kwargs)
 
     def __str__(self):
         """ Return the order number as a string """
@@ -68,7 +68,15 @@ class OrderLineItem(models.Model):
         on_delete=models.SET_NULL, related_name='lineitems')
     selected_books = models.ManyToManyField(
         'books.Book', related_name='lineitems')
-    # subscription_option = models.ForeignKey(
-    #     'subscriptions.SubscriptionOption', null=True, blank=True,
-    #     on_delete=models.SET_NULL, related_name='lineitems')
     lineitem_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
+
+    def save(self, *args, **kwargs):
+        """ Override the original save method to set the lineitem total and update the order total """
+        if not self.id:
+            self.lineitem_total = self.user_subscription_option.calculated_price
+        super(OrderLineItem, self).save(*args, **kwargs)
+        self.order.update_total()
+
+    def __str__(self):
+        """ Return the subscription order number as a string """
+        return f'Subscription {self.user_subscription_order} on order {self.order.order_number}'
