@@ -19,15 +19,15 @@ def box_contents(request):
             if subscription_option:  # Check if subscription_option is not None
                 subscription_type = subscription_option.subscription_type
             # Enhanced debugging prints
-                print("Debug - Subscription Option ID:", subscription_option.id)
-                print("Debug - Subscription Type:", subscription_type)
-            else:
-                print("Debug - No subscription option found.")
-        else:
-            print("Debug - No active user subscriptions found.")
-    else:
-        print("Debug - User not authenticated.")
-        
+    #             print("Debug - Subscription Option ID:", subscription_option.id)
+    #             print("Debug - Subscription Type:", subscription_type)
+    #         else:
+    #             print("Debug - No subscription option found.")
+    #     else:
+    #         print("Debug - No active user subscriptions found.")
+    # else:
+    #     print("Debug - User not authenticated.")
+
     box = request.session.get('box', {})
 
     for subscription_id in box:

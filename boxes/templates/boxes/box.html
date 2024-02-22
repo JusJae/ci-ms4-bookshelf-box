@@ -46,10 +46,10 @@
                             </tbody>
                         </table>
                     </div>
-                    {% comment %} <div class="">
-                        <a href="" class="btn btn-primary mt-3">Checkout</a>
-                    </div> {% endcomment %}
-                    <form action="" method="POST">
+                    <div class="">
+                        <a href="{% url 'checkout' %}" class="btn btn-primary mt-3">Checkout</a>
+                    </div>
+                    {% comment %} <form action="" method="POST">
                         {% csrf_token %}
                         <div class="form-row">
                             <div class="col-12 mb-2">
@@ -57,11 +57,12 @@
                             </div>
                             
                         </div>
-                    </form>
+                    </form> {% endcomment %}
                 {% else %}
                     <div class="alert alert-info" role="alert">
                         <h4 class="alert-heading">No items in the box</h4>
                         <p>Please add items to the box.</p>
+                        
                     </div>
                 {% endif %}
             </div>
