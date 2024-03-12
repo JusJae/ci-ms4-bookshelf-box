@@ -30,6 +30,22 @@
     {% block extra_css %}
     {% endblock %}
 
+    {% block core_js %}
+    <!-- Bootstrap5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+      <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/3ee7b5871c.js" crossorigin="anonymous"></script>
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+  {% endblock %}
     
     <title>Bookshelf Box {% block title%}{% endblock %}</title>
   </head>
@@ -70,20 +86,7 @@
   <!-- Footer -->
   {% include 'includes/footer.html' %}
 
-  {% block core_js %}
-    <!-- Bootstrap5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-        crossorigin="anonymous"></script>
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-      <!-- FontAwesome -->
-    <script src="https://kit.fontawesome.com/3ee7b5871c.js" crossorigin="anonymous"></script>
-  {% endblock %}
+  
 
   {% block extra_js %}
   {% endblock %}
