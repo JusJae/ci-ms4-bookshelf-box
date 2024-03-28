@@ -122,19 +122,16 @@ class UserSubscriptionOption(models.Model):
             self.is_active = False
 
     def calculate_and_save_price(self):
-        # base price per subscription plan and then the price is determined on whether they choose one-off, monthly or three months to get a discount
-        
-        # # Get selected books
-        # selected_books = self.selected_books.all()
+        # Set base prices for subscription plans
+        base_prices = {
+            'basic': Decimal('20.00'),  # 2 books
+            'standard': Decimal('35.00'),  # 3 books
+            'premium': Decimal('55.00'),  # 4 books
+        }
 
-        # # Calculate initial price based on base price per book times number of books
-        # initial_price = self.subscription_option.base_price_per_book * Decimal(self.subscription_option.number_of_books)
-
-        # # Calculate actual price as the sum of prices of selected books
-        # actual_price = sum(book.price for book in selected_books)
-
-        # # Use the higher of initial or actual price
-        # total_price = max(initial_price, actual_price)
+        # Get the base price for the current subscription plan
+        plan_price = base_prices.get(
+            self.subscription_option.plan, Decimal('0.00'))
 
         # Apply discount based on subscription type
         discount_rate = {
@@ -142,11 +139,13 @@ class UserSubscriptionOption(models.Model):
             'monthly': Decimal('0.9'),  # 10% discount
             'three_months': Decimal('0.8'),  # 20% discount
         }
+
+        # Get the rate for the current subscription type
         rate = discount_rate.get(
-            self.subscription_type, Decimal('1.0'))
+            self.subscription_option.subscription_type, Decimal('1.0'))
 
         # Calculate the final price after applying the discount
-        self.calculated_price = total_price * rate
+        self.calculated_price = plan_price * rate
 
         # Save the updated calculated_price field only
         self.save(update_fields=['calculated_price'])
