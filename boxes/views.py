@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from subscriptions.models import SubscriptionOption, UserSubscriptionOption
+from subscriptions.models import UserSubscriptionOption
 from django.contrib.auth.decorators import login_required
 
 

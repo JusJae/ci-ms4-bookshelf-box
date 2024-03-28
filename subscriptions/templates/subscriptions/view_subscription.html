@@ -30,7 +30,7 @@
             </ul>
             <h4>Start Date:</h4> <p>{{ user_subscription.start_date }}</p>
             <h4>End Date:</h4> <p>{{ user_subscription.end_date }}</p>
-            <h4>Price:</h4> <p>£{{ user_subscription.calculated_price }}</p>
+            <h4>Price:</h4> <p>£{{ user_subscription.price }}</p>
 
             <form action="{% url 'add_to_box' user_subscription.id %}" method="POST">
                 {% csrf_token %}

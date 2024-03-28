@@ -15,9 +15,10 @@ from .models import SubscriptionPlan, UserSubscriptionOption
 
 class SubscriptionPlanAdmin(admin.ModelAdmin):
     # Fields to display in the admin list view
-    list_display = ('name', 'number_of_books', 'plan', 'price')
-    list_filter = ('plan',)  # Fields to filter by in the sidebar
-    search_fields = ('name', 'plan')  # Fields to search in the admin
+    list_display = ('name', 'number_of_books', 'price')
+    list_filter = ('name',)  # Fields to filter by in the sidebar
+    # Fields to search in the admin
+    search_fields = ('name', 'number_of_books')
 
     # This method ensures that the price is set when a SubscriptionPlan is saved via the Django Admin
     def save_model(self, request, obj, form, change):

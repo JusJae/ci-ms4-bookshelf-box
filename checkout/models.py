@@ -10,6 +10,7 @@ from subscriptions.models import UserSubscriptionOption
 
 class Order(models.Model):
     """ A model to store order information """
+    #  user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='orders')
     order_number = models.CharField(max_length=32, null=False, editable=False)
     full_name = models.CharField(max_length=50, null=False, blank=False)
     email = models.EmailField(max_length=254, null=False, blank=False)
@@ -73,7 +74,7 @@ class OrderLineItem(models.Model):
     def save(self, *args, **kwargs):
         """ Override the original save method to set the lineitem total and update the order total """
         if not self.id:
-            self.lineitem_total = self.user_subscription_option.calculated_price
+            self.lineitem_total = self.user_subscription_option.price
         super(OrderLineItem, self).save(*args, **kwargs)
         self.order.update_total()
 

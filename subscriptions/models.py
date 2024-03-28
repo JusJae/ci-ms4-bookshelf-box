@@ -16,8 +16,8 @@ class SubscriptionPlan(models.Model):
     name = models.CharField(
         max_length=50, choices=PLAN_CHOICES, default='basic')
     number_of_books = models.IntegerField()
-    plan = models.CharField(
-        max_length=20, choices=PLAN_CHOICES, default='basic')
+    # plan = models.CharField(
+    #     max_length=20, choices=PLAN_CHOICES)
     price = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
 
@@ -71,12 +71,12 @@ class UserSubscriptionOption(models.Model):
         ('three_months', 'Every 3 Months')
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
-    category = models.ForeignKey('books.Category', on_delete=models.CASCADE)
+    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE, default=1)
+    category = models.ForeignKey('books.Category', on_delete=models.CASCADE, null=True)
     selected_books = models.ManyToManyField(Book, blank=True)
     subscription_type = models.CharField(max_length=100, choices=SUBSCRIPTION_TYPES, default='one-off')
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True)
+        max_digits=10, decimal_places=2, null=True, blank=True, default=0.00)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -145,10 +145,10 @@ class UserSubscriptionOption(models.Model):
             self.subscription_option.subscription_type, Decimal('1.0'))
 
         # Calculate the final price after applying the discount
-        self.calculated_price = plan_price * rate
+        self.price = plan_price * rate
 
-        # Save the updated calculated_price field only
-        self.save(update_fields=['calculated_price'])
+        # Save the updated price field only
+        self.save(update_fields=['price'])
 
     def save(self, *args, **kwargs):
         # If start date is not set, set it to the current date
