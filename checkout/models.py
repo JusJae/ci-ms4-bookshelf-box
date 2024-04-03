@@ -79,4 +79,4 @@ class OrderLineItem(models.Model):
 
     def __str__(self):
         """ Return the subscription order number as a string """
-        return f'Subscription {self.user_subscription_order} on order {self.order.order_number}'
+        return f'Subscription for order {self.order.order_number}'
