@@ -101,6 +101,17 @@ def checkout_success(request, order_number):
     save_info = request.session.get('save_info')
     # we get the order from the previous view
     order = get_object_or_404(Order, order_number=order_number)
+    subscriptions_books = {}
+
+    for lineitem in order.lineitems.all():
+        print(lineitem)
+        print(subscriptions_books.title, subscriptions_books.price)
+
+        subscription_identifier = lineitem.user_subscription_option.subscription_option.subscription_type
+        if subscription_identifier not in subscriptions_books:
+            subscriptions_books[subscription_identifier] = []
+
+        subscriptions_books[subscription_identifier].extend(list(lineitem.user_subscription_option.selected_books.all()))
     # will need to add in code that has been copied for user profile info
     # we display a success message to the user
     messages.success(request, f'Order successfully processed! \
@@ -115,6 +126,7 @@ def checkout_success(request, order_number):
     template = 'checkout/checkout_success.html'
     context = {
         'order': order,
+        'subscriptions_books': subscriptions_books,
     }
 
     return render(request, template, context)
