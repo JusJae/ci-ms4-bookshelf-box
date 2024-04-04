@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-rt&6-5x^!tizf#cud#x1$xz@(!*bwa#=3j^wwr9q#v4y)w$m*)
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost', '8000-jusjae-cims4bookshelfbo-t7odsbr8byf.ws-eu108.gitpod.io']
+    'localhost', '8000-jusjae-cims4bookshelfbo-t7odsbr8byf.ws-eu108.gitpod.io', '8000-jusjae-cims4bookshelfbo-t7odsbr8byf.ws-eu110.gitpod.io']
 # Need to be changed to the actual domain name when deploying
 
 # Application definition
@@ -178,6 +178,7 @@ STANDARD_DELIVERY_PERCENTAGE = 10
 STRIPE_CURRENCY = 'gbp'
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', '')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', '')
+STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET', '')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
