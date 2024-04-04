@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .webhooks import webhook
 
@@ -6,5 +6,6 @@ urlpatterns = [
     path('', views.checkout, name='checkout'),
     path('checkout_success/<order_number>', views.checkout_success, name='checkout_success'), 
     # path('cache_checkout_data/', views.cache_checkout_data, name='cache_checkout_data'),
-    path('wh/', webhook, name='webhook'),
+    path('wh', webhook, name='webhook'),
+    path('books/', include(('books.urls', 'books'), namespace='books')),
 ]
