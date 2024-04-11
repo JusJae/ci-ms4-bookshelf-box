@@ -64,8 +64,10 @@
 					</div>
 					<div class="col-12 col-md-8 text-md-right">
 						<p class="small mb-0">Selected Books:</p>
-						{% for book in item.selected_books.all %}
-							<p>{{ book.title }} - £{{ book.price }}</p>
+						{% for subscription, books in subscriptions_books.items %}
+							{% for book in books %}
+								<p>{{ book.title }} - £{{ book.price }}</p>
+							{% endfor %}
 						{% empty %}
 							<p>No books selected.</p>
 						{% endfor %}

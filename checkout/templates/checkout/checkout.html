@@ -122,24 +122,23 @@
                                 <div class="mb-3" id="card-element" ></div>
                                 <!-- Used to display form errors. -->
                                 <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
-                                <!-- Pass the client secret to the view so we get the payment intent id -->
                                 <input type="hidden" value="{{ client_secret }}" name="client_secret">
                             </fieldset>
 
                         <div class="submit-button text-center mt-5 mb-2">
-                            <a href="{% url 'view_box' %}" class="btn rounded">
+                            <a href="{% url 'view_box' %}" class="btn cta-btn rounded">
                                 <span class="icon">
                                     <i class="fas fa-chevron-left"></i>
                                 </span>
                                 <span class="font-weight-bold">Adjust Box</span>
                             </a>
-                            <button id="submit-button" class="btn rounded">
+                            <button id="submit-button" class="btn border bg-white rounded">
                                 <span class="font-weight-bold">Complete Order</span>
                                 <span class="icon">
                                     <i class="fas fa-lock"></i>
                                 </span>
                             </button>
-                            <p class="small text-danger my-0">
+                            <p class="card small text-danger my-0">
                                 <span class="icon">
                                     <i class="fas fa-exclamation-circle"></i>
                                 </span>
