@@ -10,9 +10,8 @@ from books.models import Book
 class SubscriptionOption(models.Model):
     SUBSCRIPTION_TYPES = [
         ('one-off', 'One-off'),
+        ('monthly', 'Monthly'),  # Not implemented yet
         ('three_months', '3-months'),
-        ('six_months', '6-months'),
-        ('twelve_months', '12-months'),
     ]
     category = models.ForeignKey('books.Category', on_delete=models.CASCADE)
     number_of_books = models.IntegerField()
@@ -47,12 +46,10 @@ class UserSubscriptionOption(models.Model):
     def set_end_date(self):
         if self.subscription_option.subscription_type == 'one-off':
             self.end_date = self.start_date
+        elif self.subscription_option.subscription_type == 'monthly':
+            self.end_date = self.start_date + timedelta(days=30)
         elif self.subscription_option.subscription_type == 'three_months':
             self.end_date = self.start_date + timedelta(days=90)
-        elif self.subscription_option.subscription_type == 'six_months':
-            self.end_date = self.start_date + timedelta(days=180)
-        elif self.subscription_option.subscription_type == 'twelve_months':
-            self.end_date = self.start_date + timedelta(days=365)
         else:
             raise ValueError("Unrecognized subscription type.")
 
@@ -66,24 +63,42 @@ class UserSubscriptionOption(models.Model):
             print("Selected books: ", selected_books)
 
     def calculate_and_save_price(self):
-        # Get selected books
-        selected_books = self.selected_books.all()
+        # # Get selected books
+        # selected_books = self.selected_books.all()
 
-        # Calculate initial price based on base price per book times number of books
-        initial_price = self.subscription_option.base_price_per_book * Decimal(self.subscription_option.number_of_books)
+        # # Calculate initial price based on base price per book times number of books
+        # initial_price = self.subscription_option.base_price_per_book * Decimal(self.subscription_option.number_of_books)
 
-        # Calculate actual price as the sum of prices of selected books
-        actual_price = sum(book.price for book in selected_books)
+        # # Calculate actual price as the sum of prices of selected books
+        # actual_price = sum(book.price for book in selected_books)
 
-        # Use the higher of initial or actual price
-        total_price = max(initial_price, actual_price)
+        # # Use the higher of initial or actual price
+        # total_price = max(initial_price, actual_price)
+
+        # Mapping of category prices
+        category_prices = {
+            'Childrens': Decimal('7.50'),
+            'Classics': Decimal('15.0'),
+            'Fantasy': Decimal('12.50'),
+            'Fiction': Decimal('10.00'),
+            'Horror': Decimal('15.00'),
+            'Humor': Decimal('10.00'),
+            'Non-Fiction': Decimal('12.50'),
+            'Young Adult': Decimal('10.00'),
+        }
+
+        category_name = self.subscription_option.category.category
+
+        price_per_book = category_prices.get(category_name, Decimal('10.00'))
+
+        number_of_books = self.subscription_option.number_of_books
+        total_price = price_per_book * number_of_books
 
         # Apply discount based on subscription type
         discount_rate = {
             'one-off': Decimal('1.0'),  # no discount
-            'three_months': Decimal('0.9'),  # 10% discount
-            'six_months': Decimal('0.8'),  # 20% discount
-            'twelve_months': Decimal('0.7'),  # 30% discount
+            'monthly': Decimal('0.9'),  # 10% discount, not implemented yet
+            'three_months': Decimal('0.95'),  # 5% discount
         }
         rate = discount_rate.get(
             self.subscription_option.subscription_type, Decimal('1.0'))
