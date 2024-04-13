@@ -4,8 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import SubscriptionOptionForm
 from .models import UserSubscriptionOption
-from profiles.models import get_or_create_stripe_customer
-
+from profiles.models import create_or_update_user_profile
 
 import stripe
 
@@ -28,7 +27,7 @@ def create_subscription(request):
             user_subscription.calculate_and_save_price()
 
             # Ensure the user has a Stripe customer ID
-            customer_id = get_or_create_stripe_customer(request.user)
+            customer_id = create_or_update_user_profile(request.user, request.user, False)
             if not customer_id:
                 messages.error(request, "Stripe customer creation failed.")
                 return redirect('view_subscription', pk=user_subscription.pk)
@@ -36,13 +35,12 @@ def create_subscription(request):
             stripe.api_key = settings.STRIPE_SECRET_KEY
             try:
                 if subscription_option.subscription_type != "one-off":
-                    price_id = subscription_option.get_stripe_price_id()
-                    subscription = stripe.Subscription.create(
+                    stripe.Subscription.create(
                         customer=customer_id,
-                        items=[{"price": price_id}],
+                        items=[{"price": subscription_option.stripe_price_id}],
                         expand=["latest_invoice.payment_intent"]
                     )
-                    messages.success(request, "Subscription started successfully.")
+                    return messages.success(request, "Subscription started successfully.")
                 else:
                     messages.success(request, "One-off order created successfully.")
             except Exception as e:
