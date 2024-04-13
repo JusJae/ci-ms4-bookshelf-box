@@ -27,100 +27,6 @@ class StripeWH_Handler:
             content=f'Unhandled Webhook received: {event["type"]}',
             status=200)
 
-    # def handle_payment_intent_succeeded(self, event):
-    #     """
-    #     Handle the payment_intent.succeeded webhook from Stripe
-    #     """
-    #     intent = event.data.object
-    #     pid = intent.id
-    #     box = intent.metadata.get('box', {})
-    #     save_info = intent.metadata.get('save_info', False)
-    #     stripe_charge = stripe.Charge.retrieve(intent.latest_charge)
-    #     username = intent.metadata.get('username', 'AnonymousUser')
-
-    #     billing_details = stripe_charge.billing_details
-    #     shipping_details = intent.shipping
-    #     grand_total = round(stripe_charge.amount / 100, 2)
-
-    #     # Clean data in the shipping details
-    #     if shipping_details and shipping_details.address:
-    #         for field, value in shipping_details.address.items():
-    #             if value == "":
-    #                 shipping_details.address[field] = None
-
-    #     # Update profile information if save_info was checked
-    #     if username != 'AnonymousUser':
-    #         try:
-    #             profile = UserProfile.objects.get(user__username=username)
-    #             if save_info:
-    #                 # if it was, we update the profile information
-    #                 profile.default_phone_number = shipping_details.phone
-    #                 profile.default_country = shipping_details.address.country
-    #                 profile.default_postcode = shipping_details.address.postal_code
-    #                 profile.default_town_or_city = shipping_details.address.city
-    #                 profile.default_street_address1 = shipping_details.address.line1  # noqa
-    #                 profile.default_street_address2 = shipping_details.address.line2  # noqa
-    #                 profile.default_county = shipping_details.address.state
-    #                 profile.save()
-    #         except UserProfile.DoesNotExist:
-    #             profile = None
-    #             print(f"UserProfile for username {username} not found.")
-    #         # username = intent.metadata.get('username')
-    #         # print("username from metadata:", username)
-    #         # if username != 'AnonymousUser':
-    #         #     # if the user is not anonymous, we get the profile
-    #         #     profile = UserProfile.objects.get(user__username=username)
-    #         #     # we check if the save info was checked
-
-    #     order_exists = False
-    #     attempt = 1
-    #     while not order_exists and attempt <= 5:
-    #         try:
-    #             order = Order.objects.get(
-    #                 stripe_pid=pid,
-    #                 grand_total=grand_total
-    #             )
-    #             order_exists = True
-    #             print("Order found:", order)
-    #             break
-    #         except Order.DoesNotExist:
-    #             attempt += 1
-    #             time.sleep(1)
-
-    #     if not order_exists:
-    #         try:
-    #             order = Order.objects.create(
-    #                 full_name=shipping_details.name,
-    #                 email=billing_details.email,
-    #                 phone_number=shipping_details.phone,
-    #                 country=shipping_details.address.country,
-    #                 postcode=shipping_details.address.postal_code,
-    #                 town_or_city=shipping_details.address.city,
-    #                 street_address1=shipping_details.address.line1,
-    #                 street_address2=shipping_details.address.line2 or '',
-    #                 county=shipping_details.address.state or '',
-    #                 grand_total=grand_total,
-    #                 original_box=box,
-    #                 stripe_pid=pid,
-    #             )
-    #             for item_id in box.keys():  # json.loads(box).items():
-    #                 subscription = UserSubscriptionOption.objects.get(
-    #                     id=item_id)
-    #                 order_line_item = OrderLineItem(
-    #                     order=order,
-    #                     user_subscription_option=subscription
-    #                 )
-    #                 order_line_item.save()
-    #                 if 'books' in box[item_id]:
-    #                     book_ids = box[item_id]['books']
-    #                     order_line_item.selected_books.set(book_ids)
-    #         except Exception as e:
-    #             if order:
-    #                 order.delete()
-    #             return HttpResponse(content=f'Webhook received: {event["type"]} | ERROR: {e}', status=500)
-
-    #     return HttpResponse(content=f'Webhook received: {event["type"]} | SUCCESS: Created order in database', status=200)
-
     def handle_payment_intent_succeeded(self, event):
         """
         Handle the payment_intent.succeeded webhook from Stripe
@@ -160,7 +66,6 @@ class StripeWH_Handler:
             except UserProfile.DoesNotExist:
                 profile = None
                 print(f"UserProfile for username {username} not found.")
-
 
         order_exists = False  # we set the order exists variable to false
         attempt = 1  # we set the attempt variable to 1
