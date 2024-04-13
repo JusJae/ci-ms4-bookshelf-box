@@ -1,32 +1,53 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import SubscriptionOptionForm
-from subscriptions.models import UserSubscriptionOption
+from .models import UserSubscriptionOption
+from profiles.models import get_or_create_stripe_customer
+
+
+import stripe
 
 
 @login_required
 def create_subscription(request):
     if request.method == 'GET':
-        form = SubscriptionOptionForm()  # Ensure this does not default to a specific SubscriptionOption
+        form = SubscriptionOptionForm()
 
     elif request.method == 'POST':
         form = SubscriptionOptionForm(request.POST)
         if form.is_valid():
-            # Save the subscription option
-            subscription_option = form.save()
-            print("Debug - SubscriptionOption ID being assigned:", subscription_option.id)
+            subscription_option = form.save(commit=False)
+            subscription_option.user = request.user
+            subscription_option.save()
+
             user_subscription = UserSubscriptionOption(user=request.user, subscription_option=subscription_option)
-            print("Debug - Before saving UserSubscriptionOption, SubscriptionOption ID:", user_subscription.subscription_option.id)
             user_subscription.save()
-            print("Debug - After saving UserSubscriptionOption, SubscriptionOption ID:", user_subscription.subscription_option.id)
-            # get the books for the user subscription
             user_subscription.select_books()
-            # calculate the price and save it
             user_subscription.calculate_and_save_price()
 
-            messages.success(request, 'Subscription created successfully.')
-            return redirect('view_subscription', pk=user_subscription.pk)
+            # Ensure the user has a Stripe customer ID
+            customer_id = get_or_create_stripe_customer(request.user)
+            if not customer_id:
+                messages.error(request, "Stripe customer creation failed.")
+                return redirect('view_subscription', pk=user_subscription.pk)
+
+            stripe.api_key = settings.STRIPE_SECRET_KEY
+            try:
+                if subscription_option.subscription_type != "one-off":
+                    price_id = subscription_option.get_stripe_price_id()
+                    subscription = stripe.Subscription.create(
+                        customer=customer_id,
+                        items=[{"price": price_id}],
+                        expand=["latest_invoice.payment_intent"]
+                    )
+                    messages.success(request, "Subscription started successfully.")
+                else:
+                    messages.success(request, "One-off order created successfully.")
+            except Exception as e:
+                messages.error(request, f"Subscription creation failed: {e}")
+                return redirect('view_subscription', pk=user_subscription.pk)
         else:
             messages.error(
                 request, 'Subscription creation failed. Please ensure the form is valid.')
