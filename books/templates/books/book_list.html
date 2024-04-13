@@ -78,6 +78,7 @@
 </main>
 {% endblock %} 
 {% block extra_js %}
+    {{ block.super }}
     <script type="text/javascript">
     $(document).ready(function() {
         $('#sort-selector').change(function() {
