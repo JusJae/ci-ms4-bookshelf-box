@@ -22,11 +22,19 @@ def cache_checkout_data(request):
         pid = json_data.get('client_secret').split('_secret')[0]
         save_info = json_data.get('save_info', False)
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        stripe.PaymentIntent.modify(pid, metadata={
+
+        username = request.user.username if request.user.is_authenticated else "AnonymousUser"
+
+        metadata = {
             'box': json.dumps(request.session.get('box', {})),
             'save_info': save_info,
-            'username': request.user,
-        })
+            'username': username,
+        }
+
+        if 'subscription_id' in request.session:
+            metadata['subscription_id'] = request.session['subscription_id']
+
+        stripe.PaymentIntent.modify(pid, metadata=metadata)
         return HttpResponse(status=200)
     except Exception as e:
         messages.error(request, 'Sorry, your payment cannot be \

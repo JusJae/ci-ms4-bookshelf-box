@@ -1,4 +1,7 @@
 from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
 
 from .models import Order, OrderLineItem
 from subscriptions.models import UserSubscriptionOption
@@ -7,6 +10,7 @@ from profiles.models import UserProfile
 import time
 import json
 import stripe
+import traceback
 
 
 class StripeWH_Handler:
@@ -14,8 +18,23 @@ class StripeWH_Handler:
 
     def __init__(self, request):
         self.request = request
-        # we assign the request as an attribute of the class
-        # so it can be accessed from stripe events
+
+    def _send_confirmation_email(self, order):
+        """Send the user a confirmation email"""
+
+        cust_email = order.email
+        subject = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_subject.txt',
+            {'order': order})
+        body = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_body.txt',
+            {'order': order, 'contact_email': settings.DEFAULT_FROM_EMAIL})
+        send_mail(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [cust_email]
+        )
 
     def handle_event(self, event):
         """
@@ -28,9 +47,7 @@ class StripeWH_Handler:
             status=200)
 
     def handle_payment_intent_succeeded(self, event):
-        """
-        Handle the payment_intent.succeeded webhook from Stripe
-        """
+        """ Handle the payment_intent.succeeded webhook from Stripe """
         intent = event.data.object
         pid = intent.id
         box = intent.metadata.get('box', {})
@@ -39,48 +56,48 @@ class StripeWH_Handler:
         username = intent.metadata.get('username', 'AnonymousUser')
 
         billing_details = stripe_charge.billing_details
-        shipping_details = intent.shipping
+        shipping_details = intent.shipping or {}
         grand_total = round(stripe_charge.amount / 100, 2)
 
-        # Clean data in the shipping details
-        if shipping_details and shipping_details.address:
-            for field, value in shipping_details.address.items():
-                if value == "":
-                    shipping_details.address[field] = None
+        address = {}
+
+        if 'address' in shipping_details:
+            address = shipping_details['address']
+        for field, value in address.items():
+            if value == "":
+                address[field] = None
 
         # Update profile information if save_info was checked
         profile = None
         if username != 'AnonymousUser':
-            try:
-                profile = UserProfile.objects.get(user__username=username)
-                if save_info:
-                    # if it was, we update the profile information
-                    profile.default_phone_number = shipping_details.phone
-                    profile.default_country = shipping_details.address.country
-                    profile.default_postcode = shipping_details.address.postal_code
-                    profile.default_town_or_city = shipping_details.address.city
-                    profile.default_street_address1 = shipping_details.address.line1  # noqa
-                    profile.default_street_address2 = shipping_details.address.line2  # noqa
-                    profile.default_county = shipping_details.address.state
-                    profile.save()
-            except UserProfile.DoesNotExist:
-                profile = None
-                print(f"UserProfile for username {username} not found.")
+            profile = UserProfile.objects.get(user__username=username)
+            # we check if the save info was checked
+            if save_info:
+                profile.default_phone_number = shipping_details.get('phone')
+                profile.default_country = address.get('country')
+                profile.default_postcode = address.get('postal_code')
+                profile.default_town_or_city = address.get('city')
+                profile.default_street_address1 = address.get('line1')
+                profile.default_street_address2 = address.get('line2')
+                profile.default_county = address.get('state')
+                profile.save()
 
         order_exists = False  # we set the order exists variable to false
         attempt = 1  # we set the attempt variable to 1
         while attempt <= 5:  # as long as the attempt is <=5
             try:
+                # if not shipping_details.name or not billing_details.email:
+                #     raise ValueError("Required shipping or billing information missing.")
                 order = Order.objects.get(
-                    full_name__iexact=shipping_details.name,
+                    full_name__iexact=shipping_details.get('name', ''),
                     email__iexact=billing_details.email,
-                    phone_number__iexact=shipping_details.phone,
-                    country__iexact=shipping_details.address.country,
-                    postcode__iexact=shipping_details.address.postal_code,
-                    town_or_city__iexact=shipping_details.address.city,
-                    street_address1__iexact=shipping_details.address.line1,
-                    street_address2__iexact=shipping_details.address.line2,
-                    county__iexact=shipping_details.address.state,
+                    phone_number__iexact=shipping_details.get('phone', ''),
+                    country__iexact=address.get('country', ''),
+                    postcode__iexact=address.get('postal_code', ''),
+                    town_or_city__iexact=address.get('city', ''),
+                    street_address1__iexact=address.get('line1', ''),
+                    street_address2__iexact=address.get('line2', ''),
+                    county__iexact=address.get('state', ''),
                     grand_total=grand_total,
                     original_box=box,
                     stripe_pid=pid,
@@ -105,21 +122,22 @@ class StripeWH_Handler:
             order = None
             try:
                 order = Order.objects.create(
-                    full_name=shipping_details.name,
+                    full_name=address.get('name', ''),
                     user_profile=profile,
-                    email=billing_details.email,
-                    phone_number=shipping_details.phone,
-                    country=shipping_details.address.country,
-                    postcode=shipping_details.address.postal_code,
-                    town_or_city=shipping_details.address.city,
-                    street_address1=shipping_details.address.line1,
-                    street_address2=shipping_details.address.line2,
-                    county=shipping_details.address.state,
+                    email=billing_details.get('email', ''),
+                    phone_number=shipping_details.get('phone', ''),
+                    country=address.get('country', ''),
+                    postcode=address.get('postal_code', ''),
+                    town_or_city=address.get('city', ''),
+                    street_address1=address.get('line1', ''),
+                    street_address2=address.get('line2', ''),
+                    county=address.get('state', ''),
                     grand_total=0,
                     original_box=box,
                     stripe_pid=pid,
                 )
-                for item_id in box.keys():  # json.loads(box).items():
+                
+                for item_id in json.loads(box).items():  # box.keys():
                     subscription = UserSubscriptionOption.objects.get(
                         id=item_id)
                     order_line_item = OrderLineItem(
@@ -144,3 +162,29 @@ class StripeWH_Handler:
         return HttpResponse(
             content=f'Webhook received: {event["type"]}',
             status=200)
+
+    def handle_subscription_created(self, event):
+        subscription = event['data']['object']
+        print(f"Subscription {subscription['id']} created for customer {subscription['customer']}")
+        return HttpResponse(status=200)
+
+    def handle_subscription_updated(event):
+        subscription = event['data']['object']
+        # Update subscription details in your database
+        print(f"Subscription {subscription['id']} has been updated.")
+        return HttpResponse(status=200)
+
+    def handle_subscription_deleted(event):
+        subscription = event['data']['object']
+        # Clean up or adjust your database following a subscription cancellation
+        print(f"Subscription {subscription['id']} has been cancelled.")
+        return HttpResponse(status=200)
+
+    def create_order_from_intent(intent):
+        order = Order.objects.create(
+            stripe_pid=intent['id'],
+            full_name="Obtained from intent or customer record",
+            total=intent['amount_received'] / 100,
+            status='completed',
+        )
+        return order
