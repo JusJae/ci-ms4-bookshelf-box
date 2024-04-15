@@ -31,11 +31,10 @@ if not SECRET_KEY:
     raise ValueError("The SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost', '8000-jusjae-cims4bookshelfbo-t7odsbr8byf.ws-eu108.gitpod.io', '8000-jusjae-cims4bookshelfbo-t7odsbr8byf.ws-eu110.gitpod.io']
-# Need to be changed to the actual domain name when deploying
+    'localhost', 'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com']
 
 # Application definition
 
