@@ -4,9 +4,11 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import SubscriptionOptionForm
 from .models import UserSubscriptionOption
-from profiles.models import create_or_update_user_profile
+from profiles.models import UserProfile
 
 import stripe
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 @login_required
@@ -27,16 +29,20 @@ def create_subscription(request):
             user_subscription.calculate_and_save_price()
 
             # Ensure the user has a Stripe customer ID
-            customer_id = create_or_update_user_profile(request.user, request.user, False)
-            if not customer_id:
-                messages.error(request, "Stripe customer creation failed.")
-                return redirect('view_subscription', pk=user_subscription.pk)
+            user_profile = get_object_or_404(UserProfile, user=request.user)
+            if not user_profile.stripe_customer_id:
+                try:
+                    customer = stripe.Customer.create(email=request.user.email)
+                    user_profile.stripe_customer_id = customer.id
+                    user_profile.save()
+                except stripe.error.StripeError as e:
+                    messages.error(request, f"Stripe customer creation failed: {e}")
+                    return redirect('view_subscription', pk=user_subscription.pk)
 
-            stripe.api_key = settings.STRIPE_SECRET_KEY
             try:
                 if subscription_option.subscription_type != "one-off":
                     subscription = stripe.Subscription.create(
-                        customer=customer_id,
+                        customer=user_profile.stripe_customer_id,
                         items=[{"price": subscription_option.stripe_price_id}],
                         expand=["latest_invoice.payment_intent"]
                     )
