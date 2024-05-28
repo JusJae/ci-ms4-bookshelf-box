@@ -37,7 +37,7 @@ class UserProfile(models.Model):
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     """ Create or update the user profile and create a stripe customer."""
     stripe.api_key = settings.STRIPE_SECRET_KEY
-    
+
     if created:
         user_profile = UserProfile.objects.create(user=instance)
         if not user_profile.stripe_customer_id:

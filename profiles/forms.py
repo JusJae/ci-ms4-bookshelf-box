@@ -5,7 +5,7 @@ from .models import UserProfile
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        exclude = ('user',)
+        exclude = ('user', 'stripe_customer_id', 'has_active_subscription')
 
     def __init__(self, *args, **kwargs):
         """ Add placeholders and classes, remove auto-generated
@@ -21,7 +21,6 @@ class UserProfileForm(forms.ModelForm):
             'default_town_or_city': 'Town or City',
             'default_postcode': 'Postcode',
             'default_county': 'County, State or Locality',
-            'has_active_subscription': 'Has Active Subscription',
         }
 
         self.fields['default_phone_number'].widget.attrs['autofocus'] = True
