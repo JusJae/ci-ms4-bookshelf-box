@@ -17,6 +17,8 @@ import json
 
 @require_POST
 def cache_checkout_data(request):
+    """ A view to cache the checkout data """
+
     try:
         json_data = json.loads(request.body.decode('utf-8'))
         pid = json_data.get('client_secret').split('_secret')[0]
