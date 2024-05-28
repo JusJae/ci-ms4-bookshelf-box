@@ -28,16 +28,17 @@ def profile(request):
     orders = profile.orders.all()
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
+    has_active_subscription = False
     if profile.stripe_customer_id:
         subscriptions = stripe.Subscription.list(customer=profile.stripe_customer_id, status='active')
-        profile.has_active_subscription = any(subscriptions.data)
+        has_active_subscription = any(subscriptions.data)
 
     template = 'profiles/profile.html'
     context = {
         'form': form,
         'orders': orders,
         'on_profile_page': True,
-        'has_active_subscription': profile.has_active_subscription,
+        'has_active_subscription': has_active_subscription,
     }
 
     return render(request, template, context)
