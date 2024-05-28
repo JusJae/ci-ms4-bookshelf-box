@@ -10,7 +10,9 @@ from profiles.models import UserProfile
 import time
 import json
 import stripe
-import time
+
+import sendgrid
+from sendgrid.helpers.mail import Mail, Email, To, Content
 
 
 class StripeWH_Handler:
@@ -29,12 +31,25 @@ class StripeWH_Handler:
         body = render_to_string(
             'checkout/confirmation_emails/confirmation_email_body.txt',
             {'order': order, 'contact_email': settings.DEFAULT_FROM_EMAIL})
-        send_mail(
-            subject,
-            body,
-            settings.DEFAULT_FROM_EMAIL,
-            [cust_email]
+
+        message = Mail(
+            from_email=Email(settings.DEFAULT_FROM_EMAIL),
+            to_email=To(cust_email),
+            subject=subject,
+            plain_text_content=Content('text.plain', body),
         )
+
+        try:
+            sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+            response = sg.send(message)
+            if response.status_code == 202:
+                return HttpResponse(
+                content=f'Webhook received: {event["type"]} | SUCCESS: Email sent',status=200)
+            else:
+                return HttpResponse(
+                    content=f'Webhook received: {event["type"]} | ERROR: Failed to send email', status=500)
+        except Exception as e:
+            return HttpResponse(content=f'Webhook received: {event["type"]} | ERROR: {e}', status=500)
 
     def handle_event(self, event):
         """

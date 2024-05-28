@@ -200,13 +200,15 @@ STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET', '')
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'bookshelf-box@example.com'
 # else:
+#     SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+
 #     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #     EMAIL_USE_TLS = True
 #     EMAIL_PORT = 587
-#     EMAIL_HOST = 'smtp.gmail.com'
-#     EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-#     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
-#     DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
+#     EMAIL_HOST = 'smtp.sendgrid.net'
+#     EMAIL_HOST_USER = 'apikey'
+#     EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
