@@ -10,7 +10,7 @@ from profiles.models import UserProfile
 import time
 import json
 import stripe
-import traceback
+import time
 
 
 class StripeWH_Handler:
@@ -73,6 +73,7 @@ class StripeWH_Handler:
             profile = UserProfile.objects.get(user__username=username)
             # we check if the save info was checked
             if save_info:
+                profile.full_name = shipping_details.get('name')
                 profile.default_phone_number = shipping_details.get('phone')
                 profile.default_country = address.get('country')
                 profile.default_postcode = address.get('postal_code')
@@ -136,8 +137,8 @@ class StripeWH_Handler:
                     original_box=box,
                     stripe_pid=pid,
                 )
-                
-                for item_id in json.loads(box).items():  # box.keys():
+
+                for item_id, item_data in json.loads(box).items():  # box.keys():
                     subscription = UserSubscriptionOption.objects.get(
                         id=item_id)
                     order_line_item = OrderLineItem(
@@ -145,8 +146,8 @@ class StripeWH_Handler:
                         user_subscription_option=subscription
                     )
                     order_line_item.save()
-                    if 'books' in box[item_id]:
-                        book_ids = box[item_id]['books']
+                    if 'books' in item_data:
+                        book_ids = item_data['books']
                         order_line_item.selected_books.set(book_ids)
             except Exception as e:
                 if order:
@@ -165,19 +166,42 @@ class StripeWH_Handler:
 
     def handle_subscription_created(self, event):
         subscription = event['data']['object']
-        print(f"Subscription {subscription['id']} created for customer {subscription['customer']}")
+        customer_id = subscription['customer']
+        stripe_subscription_id = subscription['id']
+        try:
+            user_subscription = UserSubscriptionOption.objects.get(user__userprofile__stripe_customer_id=customer_id)
+            user_subscription.stripe_subscription_id = stripe_subscription_id
+            user_subscription.save()
+            print(f"Subscription {stripe_subscription_id} created for customer {customer_id}")
+        except UserSubscriptionOption.DoesNotExist:
+            print(f"No matching UserSubscriptionOption found for customer {customer_id}")
         return HttpResponse(status=200)
 
     def handle_subscription_updated(event):
         subscription = event['data']['object']
+        stripe_subscription_id = subscription['id']
         # Update subscription details in your database
-        print(f"Subscription {subscription['id']} has been updated.")
+        try:
+            user_subscription = UserSubscriptionOption.objects.get(stripe_subscription_id=stripe_subscription_id)
+            user_subscription.calculate_and_save_price()
+            user_subscription.is_active = True
+            user_subscription.save()
+            print(f"Subscription {stripe_subscription_id} has been updated.")
+        except UserSubscriptionOption.DoesNotExist:
+            print(f"No matching UserSubscriptionOption found for subscription {stripe_subscription_id}")
         return HttpResponse(status=200)
 
     def handle_subscription_deleted(event):
         subscription = event['data']['object']
+        stripe_subscription_id = subscription['id']
         # Clean up or adjust your database following a subscription cancellation
-        print(f"Subscription {subscription['id']} has been cancelled.")
+        try:
+            user_subscription = UserSubscriptionOption.objects.get(stripe_subscription_id=stripe_subscription_id)
+            user_subscription.is_active = False
+            user_subscription.save()
+            print(f"Subscription {stripe_subscription_id} has been cancelled.")
+        except UserSubscriptionOption.DoesNotExist:
+            print(f"No matching UserSubscriptionOption found for subscription {stripe_subscription_id}")
         return HttpResponse(status=200)
 
     def create_order_from_intent(intent):

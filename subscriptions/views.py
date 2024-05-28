@@ -35,20 +35,23 @@ def create_subscription(request):
             stripe.api_key = settings.STRIPE_SECRET_KEY
             try:
                 if subscription_option.subscription_type != "one-off":
-                    stripe.Subscription.create(
+                    subscription = stripe.Subscription.create(
                         customer=customer_id,
                         items=[{"price": subscription_option.stripe_price_id}],
                         expand=["latest_invoice.payment_intent"]
                     )
-                    return messages.success(request, "Subscription started successfully.")
+                    user_subscription.stripe_subscription_id = subscription.id
+                    user_subscription.save()
+                    messages.success(request, "Subscription started successfully.")
+                    return redirect('view_subscription', pk=user_subscription.pk)
                 else:
                     messages.success(request, "One-off order created successfully.")
-            except Exception as e:
+                    return redirect('view_subscription', pk=user_subscription.pk)
+            except stripe.error.StripeError as e:
                 messages.error(request, f"Subscription creation failed: {e}")
                 return redirect('view_subscription', pk=user_subscription.pk)
         else:
-            messages.error(
-                request, 'Subscription creation failed. Please ensure the form is valid.')
+            messages.error(request, 'Subscription creation failed. Please ensure the form is valid.')
     else:
         form = SubscriptionOptionForm()
 

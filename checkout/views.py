@@ -78,7 +78,7 @@ def checkout(request):
             order.save()
 
             try:
-                for subscription_id in box:
+                for subscription_id, details in box:
                     subscription = UserSubscriptionOption.objects.get(
                         pk=subscription_id)
                     order_line_item = OrderLineItem(
@@ -87,8 +87,10 @@ def checkout(request):
                         lineitem_total=subscription.calculated_price
                     )
                     order_line_item.save()
+                    if 'books' in details:
+                        order_line_item.selected_books.set(details['books'])
 
-            except subscription.DoesNotExist:
+            except UserSubscriptionOption.DoesNotExist:
                 messages.error(request, 'There was an error with your order. \
                         Please try again later.')
                 order.delete()
