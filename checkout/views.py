@@ -20,9 +20,13 @@ def cache_checkout_data(request):
     """ A view to cache the checkout data """
 
     try:
-        json_data = json.loads(request.body.decode('utf-8'))
-        pid = json_data.get('client_secret').split('_secret')[0]
-        save_info = json_data.get('save_info', False)
+
+        print("Rar request body:", request.body)
+
+        # json_data = json.loads(request.body.decode('utf-8'))
+        pid = request.POST.get('client_secret').split('_secret')[0]
+        save_info = request.POST.get('save_info', False) == 'true'
+        subscription_type = request.POST.get('subscription_type', 'one-off')
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
         username = request.user.username if request.user.is_authenticated else "AnonymousUser"
@@ -31,6 +35,7 @@ def cache_checkout_data(request):
             'box': json.dumps(request.session.get('box', {})),
             'save_info': save_info,
             'username': username,
+            'subscription_type': subscription_type
         }
 
         if 'subscription_id' in request.session:
@@ -40,6 +45,9 @@ def cache_checkout_data(request):
 
         stripe.PaymentIntent.modify(pid, metadata=metadata)
         return HttpResponse(status=200)
+    except json.JSONDecodeError as e:
+        print(f"JSON decode error in cache_checkout_data: {e}")
+        return HttpResponse(content=f"JSON decode error: {e}", status=400)
     except Exception as e:
         print(f"Error in cache_checkout_data: {e}")
         messages.error(request, 'Sorry, your payment cannot be \

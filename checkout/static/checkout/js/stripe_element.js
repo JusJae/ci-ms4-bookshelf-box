@@ -60,10 +60,13 @@ form.addEventListener("submit", function (ev) {
 	
 	var saveInfo = Boolean($("#id-save-info").attr("checked"));
 	var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+	var subscriptionType = document.querySelector('select[name="subscription"]').value;
+
 	var postData = {
 		csrfmiddlewaretoken: csrfToken,
 		client_secret: clientSecret,
 		save_info: saveInfo,
+		subscription_type: subscriptionType,
 	};
 	var url = "/checkout/cache_checkout_data/";
 
