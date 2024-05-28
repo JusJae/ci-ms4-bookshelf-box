@@ -14,20 +14,20 @@ from boxes.contexts import box_contents
 import stripe
 import json
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 @require_POST
 def cache_checkout_data(request):
     """ A view to cache the checkout data """
 
     try:
-
         print("Rar request body:", request.body)
 
         # json_data = json.loads(request.body.decode('utf-8'))
         pid = request.POST.get('client_secret').split('_secret')[0]
         save_info = request.POST.get('save_info', False) == 'true'
         subscription_type = request.POST.get('subscription_type', 'one-off')
-        stripe.api_key = settings.STRIPE_SECRET_KEY
 
         username = request.user.username if request.user.is_authenticated else "AnonymousUser"
 
@@ -44,10 +44,9 @@ def cache_checkout_data(request):
         print(f"Debug = Modfying payment intent {pid} with metadata: {metadata}")
 
         stripe.PaymentIntent.modify(pid, metadata=metadata)
+        print{f"Debug: Modifying payment intent {pid} with metadata: {metadata}"}
+
         return HttpResponse(status=200)
-    except json.JSONDecodeError as e:
-        print(f"JSON decode error in cache_checkout_data: {e}")
-        return HttpResponse(content=f"JSON decode error: {e}", status=400)
     except Exception as e:
         print(f"Error in cache_checkout_data: {e}")
         messages.error(request, 'Sorry, your payment cannot be \
@@ -89,6 +88,34 @@ def checkout(request):
             order.stripe_pid = pid
             order.original_box = json.dumps(box)
             order.save()
+
+            # Ensure the user has a Stripe customer ID
+            user_profile = get_object_or_404(UserProfile, user=request.user)
+            if not user_profile.stripe_customer_id:
+                try:
+                    customer = stripe.Customer.create(email=request.user.email)
+                    user_profile.stripe_customer_id = customer.id
+                    user_profile.save()
+                except stripe.error.StripeError as e:
+                    messages.error(
+                        request, f"Stripe customer creation failed: {e}")
+                    return redirect('checkout')
+
+            # Create the subscription if needed
+            subscription_type = request.POST.get('subscription_type', 'one-off')
+            if subscription_type.subscription_type != "one-off":
+                try:
+                    subscription = stripe.Subscription.create(
+                        customer=user_profile.stripe_customer_id,
+                        items=[{"price": subscription_type.stripe_price_id}],
+                        expand=["latest_invoice.payment_intent"]
+                    )
+                    # Save the subscription ID in the session or the order if needed
+                    request.session['subscription_id'] = subscription.id
+                    messages.success(request, "Subscription started successfully.")
+                except stripe.error.StripeError as e:
+                    messages.error(request, f"Subscription creation failed: {e}")
+                    return redirect('checkout')
 
             try:
                 for subscription_id, details in box:

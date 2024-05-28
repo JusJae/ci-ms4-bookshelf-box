@@ -28,34 +28,8 @@ def create_subscription(request):
             user_subscription.select_books()
             user_subscription.calculate_and_save_price()
 
-            # Ensure the user has a Stripe customer ID
-            user_profile = get_object_or_404(UserProfile, user=request.user)
-            if not user_profile.stripe_customer_id:
-                try:
-                    customer = stripe.Customer.create(email=request.user.email)
-                    user_profile.stripe_customer_id = customer.id
-                    user_profile.save()
-                except stripe.error.StripeError as e:
-                    messages.error(request, f"Stripe customer creation failed: {e}")
-                    return redirect('view_subscription', pk=user_subscription.pk)
-
-            try:
-                if subscription_option.subscription_type != "one-off":
-                    subscription = stripe.Subscription.create(
-                        customer=user_profile.stripe_customer_id,
-                        items=[{"price": subscription_option.stripe_price_id}],
-                        expand=["latest_invoice.payment_intent"]
-                    )
-                    user_subscription.stripe_subscription_id = subscription.id
-                    user_subscription.save()
-                    messages.success(request, "Subscription started successfully.")
-                    return redirect('view_subscription', pk=user_subscription.pk)
-                else:
-                    messages.success(request, "One-off order created successfully.")
-                    return redirect('view_subscription', pk=user_subscription.pk)
-            except stripe.error.StripeError as e:
-                messages.error(request, f"Subscription creation failed: {e}")
-                return redirect('view_subscription', pk=user_subscription.pk)
+            messages.success(request, 'Subscription option selected successfully. Please proceed to the checkout.')
+            return redirect('checkout')
         else:
             messages.error(request, 'Subscription creation failed. Please ensure the form is valid.')
     else:
