@@ -99,9 +99,8 @@ def checkout(request):
                 order.delete()
                 return redirect(reverse('subscriptions'))
 
-            request.session['save_info'] = 'save-info' in request.POST
-            return redirect(reverse('checkout_success',
-                                    args=[order.order_number]))
+            request.session['save_info'] = 'save_info' in request.POST
+            return redirect(reverse('checkout_success', args=[order.order_number]))
         else:
             messages.error(request, 'There was an error with your form. \
                 Please double check your information.')
@@ -182,6 +181,7 @@ def checkout_success(request, order_number):
     if save_info:
         profile_data = {
             # we set the profile data to the order data
+            'full_name': order.full_name,
             'default_phone_number': order.phone_number,
             'default_country': order.country,
             'default_postcode': order.postcode,
