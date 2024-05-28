@@ -118,7 +118,8 @@ def checkout(request):
                     return redirect('checkout')
 
             try:
-                for subscription_id, details in box:
+                subscription_id = request.session['box'].get('subscription_option')
+                if subscription_id:
                     subscription = UserSubscriptionOption.objects.get(
                         pk=subscription_id)
                     order_line_item = OrderLineItem(
@@ -127,8 +128,8 @@ def checkout(request):
                         lineitem_total=subscription.calculated_price
                     )
                     order_line_item.save()
-                    if 'books' in details:
-                        order_line_item.selected_books.set(details['books'])
+                    if 'books' in request.session['box']:
+                        order_line_item.selected_books.set(request.session['box']['books'])
 
             except UserSubscriptionOption.DoesNotExist:
                 messages.error(request, 'There was an error with your order. \

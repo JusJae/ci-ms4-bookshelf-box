@@ -28,8 +28,15 @@ def create_subscription(request):
             user_subscription.select_books()
             user_subscription.calculate_and_save_price()
 
+            # Store the subscription option in the session
+            if 'box' not in request.session:
+                request.session['box'] = {}
+            request.session['box']['subscription_option'] = user_subscription.id
+            request.session.modified = True
+
             messages.success(request, 'Subscription option selected successfully. Please proceed to the checkout.')
             return redirect('checkout')
+
         else:
             messages.error(request, 'Subscription creation failed. Please ensure the form is valid.')
     else:
