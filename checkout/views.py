@@ -34,9 +34,12 @@ def cache_checkout_data(request):
         if 'subscription_id' in request.session:
             metadata['subscription_id'] = request.session['subscription_id']
 
+        print(f"Debug = Modfying payment intent {pid} with metadata: {metadata}")
+
         stripe.PaymentIntent.modify(pid, metadata=metadata)
         return HttpResponse(status=200)
     except Exception as e:
+        print(f"Error in cache_checkout_data: {e}")
         messages.error(request, 'Sorry, your payment cannot be \
             processed right now. Please try again later.')
         return HttpResponse(content=e, status=400)
