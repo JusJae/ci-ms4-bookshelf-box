@@ -32,6 +32,7 @@ def create_subscription(request):
             if 'box' not in request.session:
                 request.session['box'] = {}
             request.session['box']['subscription_option'] = user_subscription.id
+            request.session['box']['subscription_type'] = user_subscription.subscription_option.subscription_type
             request.session.modified = True
 
             messages.success(request, 'Subscription option selected successfully. Please proceed to the checkout.')
