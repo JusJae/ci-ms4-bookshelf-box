@@ -100,6 +100,24 @@ def checkout(request):
                         request, f"Stripe customer creation failed: {e}")
                     return redirect('checkout')
 
+            # Attach payment method to customer
+            payment_intent = stripe.PaymentIntent.retrieve(pid)
+            payment_method = payment_intent.payment_method
+            try:
+                stripe.PaymentMethod.attach(
+                    payment_method,
+                    customer=user_profile.stripe_customer_id
+                )
+                stripe.Customer.modify(
+                    user_profile.stripe_customer_id,
+                    invoice_settings={
+                        'default_payment_method': payment_method}
+                )
+            except stripe.error.StripeError as e:
+                messages.error(
+                    request, f"Payment method attachment failed: {e}")
+                return redirect('checkout')
+
             # Create the subscription if needed
             subscription_type = box.get('subscription_type', 'one-off')
             if subscription_type != "one-off":
