@@ -103,7 +103,7 @@ def checkout(request):
 
             # Create the subscription if needed
             subscription_type = request.POST.get('subscription_type', 'one-off')
-            if subscription_type.subscription_type != "one-off":
+            if subscription_type != "one-off":
                 try:
                     subscription = stripe.Subscription.create(
                         customer=user_profile.stripe_customer_id,
