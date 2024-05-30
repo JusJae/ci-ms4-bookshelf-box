@@ -103,20 +103,21 @@ def checkout(request):
             # Attach payment method to customer
             payment_intent = stripe.PaymentIntent.retrieve(pid)
             payment_method = payment_intent.payment_method
-            try:
-                stripe.PaymentMethod.attach(
-                    payment_method,
-                    customer=user_profile.stripe_customer_id
-                )
-                stripe.Customer.modify(
-                    user_profile.stripe_customer_id,
-                    invoice_settings={
-                        'default_payment_method': payment_method}
-                )
-            except stripe.error.StripeError as e:
-                messages.error(
-                    request, f"Payment method attachment failed: {e}")
-                return redirect('checkout')
+            if payment_method:
+                try:
+                    stripe.PaymentMethod.attach(
+                        payment_method,
+                        customer=user_profile.stripe_customer_id
+                    )
+                    stripe.Customer.modify(
+                        user_profile.stripe_customer_id,
+                        invoice_settings={
+                            'default_payment_method': payment_method}
+                    )
+                except stripe.error.StripeError as e:
+                    messages.error(
+                        request, f"Payment method attachment failed: {e}")
+                    return redirect('checkout')
 
             # Create the subscription if needed
             subscription_type = box.get('subscription_type', 'one-off')
@@ -177,6 +178,7 @@ def checkout(request):
         intent = stripe.PaymentIntent.create(
             amount=stripe_total,
             currency=settings.STRIPE_CURRENCY,
+            setup_future_usage='off_session'  # This is to ensure that the payment intent can be used for future payments
         )
 
         if request.user.is_authenticated:
