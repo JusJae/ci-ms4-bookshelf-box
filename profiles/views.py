@@ -8,6 +8,8 @@ from .forms import UserProfileForm
 
 import stripe
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 @login_required
 def profile(request):
@@ -25,13 +27,13 @@ def profile(request):
     else:
         form = UserProfileForm(instance=profile)
 
-    orders = profile.orders.all()
+    orders = profile.orders.filter(user_profile=profile)
+    subscriptions = UserSubscriptionOption.objects.filter(user=request.user)
 
-    stripe.api_key = settings.STRIPE_SECRET_KEY
     has_active_subscription = False
     if profile.stripe_customer_id:
-        subscriptions = stripe.Subscription.list(customer=profile.stripe_customer_id, status='active')
-        has_active_subscription = any(subscriptions.data)
+        stripe_subscriptions = stripe.Subscription.list(customer=profile.stripe_customer_id, status='active')
+        has_active_subscription = any(stripe_subscriptions.data)
 
     template = 'profiles/profile.html'
     context = {
