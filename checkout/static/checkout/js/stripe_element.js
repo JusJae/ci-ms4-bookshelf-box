@@ -60,7 +60,7 @@ form.addEventListener("submit", function (ev) {
 	
 	var saveInfo = Boolean($("#id-save-info").attr("checked"));
 	var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
-	var subscriptionType = document.querySelector('select[name="subscription"]').value;
+	var subscriptionType = document.querySelector('select[name="subscription_type"]').value;
 
 	var postData = {
 		csrfmiddlewaretoken: csrfToken,
