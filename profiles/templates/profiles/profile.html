@@ -51,7 +51,7 @@
                                                 {% for item in lineitems.all %}
                                                     {% for book in item.selected_books.all %}
                                                         <div class="d-flex align-items-center p-2">
-                                                            <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
+                                                            <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
                                                             {{ book.title }}
                                                         </div>
                                                     {% endfor %}
@@ -67,8 +67,6 @@
             <div class="row">
                 <div class="col">
                     <p class="text-muted">Subscription Information</p>
-
-                    </div>
                     {% if subscriptions %}
                         <div>
                             <table class="table table-hover">
@@ -83,20 +81,22 @@
                                 </thead>
                                 <tbody>
                                     {% for subscription in subscriptions %}
-                                        <tr>
-                                            <td>{{ subscription.subscription_option }}</td>
-                                            <td>{{ subscription.start_date }}</td>
-                                            <td>{{ subscription.end_date }}</td>
-                                            <td>{{ subscription.renewal_date }}</td>
-                                            <td>
-                                                {% for book in subscription.selected_books.all %}
-                                                    <div class="d-flex align-items-center p-2">
-                                                        <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
-                                                        {{ book.title }}
-                                                    </div>
-                                                {% endfor %}
-                                            </td>
-                                        </tr>
+                                        {% if subscription.stripe_subscription_id %}
+                                            <tr>
+                                                <td>{{ subscription.subscription_option }}</td>
+                                                <td>{{ subscription.start_date }}</td>
+                                                <td>{{ subscription.end_date }}</td>
+                                                <td>{{ subscription.renewal_date }}</td>
+                                                <td>
+                                                    {% for book in subscription.selected_books.all %}
+                                                        <div class="d-flex align-items-center p-2">
+                                                            <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
+                                                            {{ book.title }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
                                     {% endfor %}
                                 </tbody>
                             </table>
@@ -118,6 +118,7 @@
                     {% else %}
                         <p>No subscriptions</p>
                     {% endif %}
+                </div>
                 </div>
                 
             </div>
