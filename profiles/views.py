@@ -5,6 +5,7 @@ from django.conf import settings
 
 from .models import UserProfile
 from .forms import UserProfileForm
+from subscriptions.models import UserSubscriptionOption
 
 import stripe
 
