@@ -46,9 +46,9 @@
                                             <td>{{ order.order_number }}</td>
                                             <td>{{ order.date }}</td>
                                             <td>{{ order.grand_total }}</td>
-                                            <td>{{ order.subscription_option.subscription_type }}</td>
+                                            <td>{{ order.user_subscription_option}}</td>
                                             <td>
-                                                {% for item in lineitems.all %}
+                                                {% for item in order.lineitems.all %}
                                                     {% for book in item.selected_books.all %}
                                                         <div class="d-flex align-items-center p-2">
                                                             <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
@@ -81,7 +81,6 @@
                                 </thead>
                                 <tbody>
                                     {% for subscription in subscriptions %}
-                                        {% if subscription.stripe_subscription_id %}
                                             <tr>
                                                 <td>{{ subscription.subscription_option }}</td>
                                                 <td>{{ subscription.start_date }}</td>
@@ -95,32 +94,29 @@
                                                         </div>
                                                     {% endfor %}
                                                 </td>
+                                                <td>
+                                                    <form action="{% url 'update_subscription' subscription.id %}" method="POST" id="subscription-update-form" class="d-inline">
+                                                        {% csrf_token %} {{ subscription_form|crispy }}
+                                                        <button type="submit" class="btn btn-sm btn-primary text-uppercase">
+                                                            Update
+                                                        </button>
+                                                    </form>
+                                                    <form action="{% url 'cancel_subscription' subscription.id %}" method="POST" id="subscription-cancel-form" class="d-inline">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-sm btn-danger text-uppercase">
+                                                            Cancel
+                                                        </button>
+                                                    </form>
+                                                </td>
                                             </tr>
-                                        {% endif %}
                                     {% endfor %}
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="col">
-                            <form action="" method="POST" id="subscription-update-form" class="mt-3">
-                                {% csrf_token %} {{ subscription_form|crispy }}
-                                <button type="submit" class="btn btn-lg cta-btn border rounded text-uppercase float-right">
-                                    Update Subscription
-                                </button>
-                            </form>
-                            <form action="" method="POST" id="subscription-cancel-form" class="mt-3">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-lg btn-danger border rounded text-uppercase float-right">
-                                    Cancel Subscription
-                                </button>
-                            </form>
                         </div>
                     {% else %}
                         <p>No subscriptions</p>
                     {% endif %}
                 </div>
-                </div>
-                
             </div>
         </div>
     </main>
