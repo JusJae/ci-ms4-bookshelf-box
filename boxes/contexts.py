@@ -29,10 +29,11 @@ def box_contents(request):
     #     print("Debug - User not authenticated.")
 
     box = request.session.get('box', {})
+    subscription_id = box.get('subscription_option')
 
-    for subscription_id in box:
+    if subscription_id:
         subscription = get_object_or_404(
-            UserSubscriptionOption, pk=subscription_id)
+            UserSubscriptionOption, id=subscription_id)
         total += subscription.calculated_price
         box_count += 1
         selected_books = subscription.selected_books.all()
