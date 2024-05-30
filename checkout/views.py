@@ -22,17 +22,16 @@ def cache_checkout_data(request):
     """ A view to cache the checkout data """
 
     try:
-        print("Rar request body:", request.body)
-
-        # json_data = json.loads(request.body.decode('utf-8'))
         pid = request.POST.get('client_secret').split('_secret')[0]
         save_info = request.POST.get('save_info', False) == 'true'
-        subscription_type = request.POST.get('subscription_type', 'one-off')
+        
+        box = request.session.get('box', {})
+        subscription_type = box.get('subscription_type', 'one-off')
 
         username = request.user.username if request.user.is_authenticated else "AnonymousUser"
 
         metadata = {
-            'box': json.dumps(request.session.get('box', {})),
+            'box': json.dumps(box),
             'save_info': save_info,
             'username': username,
             'subscription_type': subscription_type
@@ -102,17 +101,21 @@ def checkout(request):
                     return redirect('checkout')
 
             # Create the subscription if needed
-            subscription_type = request.POST.get('subscription_type', 'one-off')
+            subscription_type = box.get('subscription_type', 'one-off')
             if subscription_type != "one-off":
                 try:
-                    subscription = stripe.Subscription.create(
-                        customer=user_profile.stripe_customer_id,
-                        items=[{"price": subscription_type.stripe_price_id}],
-                        expand=["latest_invoice.payment_intent"]
-                    )
-                    # Save the subscription ID in the session or the order if needed
-                    request.session['subscription_id'] = subscription.id
-                    messages.success(request, "Subscription started successfully.")
+                    subscription_option_id = box.get('subscription_option')
+                    if subscription_option_id:
+                        subscription_option = UserSubscriptionOption.objects.get(
+                            pk=subscription_option_id)
+                        subscription = stripe.Subscription.create(
+                            customer=user_profile.stripe_customer_id,
+                            items=[{"price": subscription_option.stripe_price_id}],
+                            expand=["latest_invoice.payment_intent"]
+                        )
+                        # Save the subscription ID in the session or the order if needed
+                        request.session['subscription_id'] = subscription.id
+                        messages.success(request, "Subscription started successfully.")
                 except stripe.error.StripeError as e:
                     messages.error(request, f"Subscription creation failed: {e}")
                     return redirect('checkout')
@@ -206,8 +209,6 @@ def checkout_success(request, order_number):
             subscriptions_books[subscription_identifier] = books
         else:
             subscriptions_books[subscription_identifier].extend(books)
-
-        # subscriptions_books[subscription_identifier].extend(list(lineitem.user_subscription_option.selected_books.all()))
 
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)
