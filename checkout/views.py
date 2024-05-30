@@ -6,7 +6,7 @@ from django.conf import settings
 
 from .forms import OrderForm
 from .models import Order, OrderLineItem
-from subscriptions.models import UserSubscriptionOption
+from subscriptions.models import UserSubscriptionOption, SubscriptionOption
 from profiles.models import UserProfile
 from profiles.forms import UserProfileForm
 from boxes.contexts import box_contents
@@ -106,7 +106,7 @@ def checkout(request):
                 try:
                     subscription_option_id = box.get('subscription_option')
                     if subscription_option_id:
-                        subscription_option = UserSubscriptionOption.objects.get(
+                        subscription_option = SubscriptionOption.objects.get(
                             pk=subscription_option_id)
                         subscription = stripe.Subscription.create(
                             customer=user_profile.stripe_customer_id,
