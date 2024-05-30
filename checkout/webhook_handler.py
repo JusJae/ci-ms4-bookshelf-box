@@ -184,7 +184,7 @@ class StripeWH_Handler:
         customer_id = subscription['customer']
         stripe_subscription_id = subscription['id']
         try:
-            user_subscription = UserSubscriptionOption.objects.get(user__userprofile__stripe_customer_id=customer_id)
+            user_subscription = UserSubscriptionOption.objects.filter(user__userprofile__stripe_customer_id=customer_id).latest('created_at')
             user_subscription.stripe_subscription_id = stripe_subscription_id
             user_subscription.save()
             print(f"Subscription {stripe_subscription_id} created for customer {customer_id}")

@@ -24,7 +24,7 @@ def cache_checkout_data(request):
     try:
         pid = request.POST.get('client_secret').split('_secret')[0]
         save_info = request.POST.get('save_info', False) == 'true'
-        
+
         box = request.session.get('box', {})
         subscription_type = box.get('subscription_type', 'one-off')
 
