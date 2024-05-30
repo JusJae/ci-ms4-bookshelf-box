@@ -39,6 +39,7 @@ def profile(request):
     context = {
         'form': form,
         'orders': orders,
+        'subscriptions': subscriptions,
         'on_profile_page': True,
         'has_active_subscription': has_active_subscription,
     }
