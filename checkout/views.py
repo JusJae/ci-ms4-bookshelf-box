@@ -236,24 +236,29 @@ def checkout_success(request, order_number):
         order.user_profile = profile
         order.save()
 
-    # Save the user's info
-    if save_info:
-        profile_data = {
-            # we set the profile data to the order data
-            'full_name': order.full_name,
-            'default_phone_number': order.phone_number,
-            'default_country': order.country,
-            'default_postcode': order.postcode,
-            'default_town_or_city': order.town_or_city,
-            'default_street_address1': order.street_address1,
-            'default_street_address2': order.street_address2,
-            'default_county': order.county,
-        }
-        # we create a user profile form instance with the profile data
-        user_profile_form = UserProfileForm(profile_data, instance=profile)
-        # we save the user profile form
-        if user_profile_form.is_valid():
-            user_profile_form.save()
+        # Save the user's info
+        if save_info:
+            profile_data = {
+                # we set the profile data to the order data
+                'full_name': order.full_name,
+                'default_phone_number': order.phone_number,
+                'default_country': order.country,
+                'default_postcode': order.postcode,
+                'default_town_or_city': order.town_or_city,
+                'default_street_address1': order.street_address1,
+                'default_street_address2': order.street_address2,
+                'default_county': order.county,
+            }
+            # we create a user profile form instance with the profile data
+            user_profile_form = UserProfileForm(profile_data, instance=profile)
+            # we save the user profile form
+            if user_profile_form.is_valid():
+                user_profile_form.save()
+
+        # Update the users subscription status
+        profile.has_active_subscription = UserSubscriptionOption.objects.filter(
+            user=request.user, is_active=True).exists()
+        profile.save()
 
     messages.success(request, f'Order successfully processed! \
         Your order number is {order_number}. A confirmation \

@@ -10,7 +10,7 @@ class SubscriptionOptionAdmin(admin.ModelAdmin):
 
 
 class UserSubscriptionOptionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'subscription_option', 'calculated_price', 'start_date', 'end_date', 'is_active')
+    list_display = ('user', 'subscription_option', 'calculated_price', 'start_date', 'end_date', 'stripe_subscription_id', 'is_active')
 
     def display_selected_books(self, obj):
         selected_books = obj.get_selected_books()

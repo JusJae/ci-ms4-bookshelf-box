@@ -39,6 +39,8 @@ class UserSubscriptionOption(models.Model):
     is_active = models.BooleanField(default=True)
     calculated_price = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
+    stripe_subscription_id = models.CharField(max_length=50, blank=True, null=True)
+    
 
     def set_end_date(self):
         if self.subscription_option.subscription_type == 'one-off':
@@ -60,19 +62,7 @@ class UserSubscriptionOption(models.Model):
             print("Selected books: ", selected_books)
 
     def calculate_and_save_price(self):
-        # # Get selected books
-        # selected_books = self.selected_books.all()
 
-        # # Calculate initial price based on base price per book times number of books
-        # initial_price = self.subscription_option.base_price_per_book * Decimal(self.subscription_option.number_of_books)
-
-        # # Calculate actual price as the sum of prices of selected books
-        # actual_price = sum(book.price for book in selected_books)
-
-        # # Use the higher of initial or actual price
-        # total_price = max(initial_price, actual_price)
-
-        # Mapping of category prices
         category_prices = {
             'Childrens': Decimal('7.50'),
             'Classics': Decimal('15.0'),
