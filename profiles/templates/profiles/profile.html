@@ -4,7 +4,7 @@
 {% block page_header %}
     <div class="container mt-3 mb-2 text-center">
         <hr>
-        <h2 class="header-font mb-4" style="text-transform: capitalize;">{{ user.full_name }}'s profile</h2>
+        <h2 class="header-font mb-4" style="text-transform: capitalize;">{{ request.user.profile.full_name }}'s profile</h2>
         <hr>
     </div>
 {% endblock %}
@@ -36,7 +36,7 @@
                                         <th scope="col">Order Number</th>
                                         <th scope="col">Date</th>
                                         <th scope="col">Total</th>
-                                        <th scope="col">Status</th>
+                                        <th scope="col">Type</th>
                                         <th scope="col">Selected Books</th>
                                     </tr>
                                 </thead>
@@ -46,9 +46,9 @@
                                             <td>{{ order.order_number }}</td>
                                             <td>{{ order.date }}</td>
                                             <td>{{ order.grand_total }}</td>
-                                            <td>{{ order.status }}</td>
+                                            <td>{{ orderlineitem.user_subscription_option }}</td>
                                             <td>
-                                                {% for item in order.lineitems.all %}
+                                                {% for item in orderlineitem.selected_books.all %}
                                                     <div class="d-flex align-items-center p-2">
                                                         <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
                                                         {{ item.book.title }}
@@ -65,26 +65,7 @@
             <div class="row">
                 <div class="col">
                     <p class="text-muted">Subscription Information</p>
-                    <div>
-                        <p class="text-muted">Active Subscription</p>
-                        {% if profiles.has_active_subscription %}
-                            <p class="text-uppercase">Yes</p>
-                        {% else %}
-                            <p class="text-uppercase">No</p>
-                        {% endif %}
-                        <form action="{% url 'profile' %}" method="POST" id="subscription-update-form" class="mt-3">
-                            {% csrf_token %} {{ subscription_form|crispy }}
-                            <button type="submit" class="btn btn-lg rounded text-uppercase float-right">
-                                Update Subscription
-                            </button>
-                        </form>
-                        <form action="" method="POST" id="subscription-cancel-form" class="mt-3">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-lg rounded text-uppercase float-right">
-                                Cancel Subscription
-                            </button>
-                        </form>
-                    </div>
+
                     </div>
                     {% if subscriptions %}
                         <div>
@@ -121,6 +102,20 @@
                     {% else %}
                         <p>No subscriptions</p>
                     {% endif %}
+                </div>
+                <div class="col">
+                    <form action="" method="POST" id="subscription-update-form" class="mt-3">
+                        {% csrf_token %} {{ subscription_form|crispy }}
+                        <button type="submit" class="btn btn-lg btn-cta border rounded text-uppercase float-right">
+                            Update Subscription
+                        </button>
+                    </form>
+                    <form action="" method="POST" id="subscription-cancel-form" class="mt-3">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-lg btn-danger border rounded text-uppercase float-right">
+                            Cancel Subscription
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
