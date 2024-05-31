@@ -29,18 +29,20 @@ def profile(request):
         form = UserProfileForm(instance=profile)
 
     orders = profile.orders.filter(user_profile=profile)
-    subscriptions = UserSubscriptionOption.objects.filter(user=request.user)
+    active_subscriptions = UserSubscriptionOption.objects.filter(user=request.user, is_active=True)
 
-    has_active_subscription = False
-    if profile.stripe_customer_id:
-        stripe_subscriptions = stripe.Subscription.list(customer=profile.stripe_customer_id, status='active')
-        has_active_subscription = any(stripe_subscriptions.data)
+    has_active_subscription = active_subscriptions.exists()
+
+    # has_active_subscription = False
+    # if profile.stripe_customer_id:
+    #     stripe_subscriptions = stripe.Subscription.list(customer=profile.stripe_customer_id, status='active')
+    #     has_active_subscription = active_subscriptions
 
     template = 'profiles/profile.html'
     context = {
         'form': form,
         'orders': orders,
-        'subscriptions': subscriptions,
+        'subscriptions': active_subscriptions,
         'on_profile_page': True,
         'has_active_subscription': has_active_subscription,
     }
