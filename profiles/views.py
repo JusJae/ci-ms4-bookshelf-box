@@ -29,14 +29,16 @@ def profile(request):
         form = UserProfileForm(instance=profile)
 
     orders = profile.orders.filter(user_profile=profile)
-    active_subscriptions = UserSubscriptionOption.objects.filter(user=request.user, is_active=True)
+    active_subscriptions = UserSubscriptionOption.objects.filter(
+        user=request.user, is_active=True)
 
-    has_active_subscription = active_subscriptions.exists()
+    # has_active_subscription = active_subscriptions.exists()
 
-    # has_active_subscription = False
-    # if profile.stripe_customer_id:
-    #     stripe_subscriptions = stripe.Subscription.list(customer=profile.stripe_customer_id, status='active')
-    #     has_active_subscription = active_subscriptions
+    has_active_subscription = False
+    if profile.stripe_customer_id:
+        stripe_subscriptions = stripe.Subscription.list(
+            customer=profile.stripe_customer_id, status='active')
+        has_active_subscription = any(stripe_subscriptions.data)
 
     template = 'profiles/profile.html'
     context = {
@@ -50,25 +52,25 @@ def profile(request):
     return render(request, template, context)
 
 
-@login_required
-def update_subscription(request, subscription_id):
-    """ Update the user's subscription. """
-    subscription = get_object_or_404(UserSubscriptionOption, id=subscription_id, user=request.user)
+# @login_required
+# def update_subscription(request, subscription_id):
+#     """ Update the user's subscription. """
+#     subscription = get_object_or_404(UserSubscriptionOption, id=subscription_id, user=request.user)
 
-    if request.method == 'POST':
-        try:
-            stripe.Subscription.modify(
-                subscription.stripe_subscription_id,
-                items=[{
-                    'id': subscription.stripe_subscription_item_id,
-                    'price': request.POST['price'],
-                }]
-            )
-            messages.success(request, 'Subscription updated successfully')
-        except stripe.error.StripeError as e:
-            messages.error(request, f'Failed to update subscription: {e}')
+#     if request.method == 'POST':
+#         try:
+#             stripe.Subscription.modify(
+#                 subscription.stripe_subscription_id,
+#                 items=[{
+#                     'id': subscription.stripe_subscription_item_id,
+#                     'price': request.POST['price'],
+#                 }]
+#             )
+#             messages.success(request, 'Subscription updated successfully')
+#         except stripe.error.StripeError as e:
+#             messages.error(request, f'Failed to update subscription: {e}')
 
-    return redirect('profile')
+#     return redirect('profile')
 
 
 @login_required
