@@ -59,7 +59,6 @@ def box_contents(request):
         'total': total,
         'box_count': box_count,
         'delivery': delivery,
-        # Ensure this is included in the context
         'subscription_type': subscription_type,
         'free_delivery_delta': free_delivery_delta,
         'free_delivery_threshold': settings.FREE_DELIVERY_THRESHOLD,

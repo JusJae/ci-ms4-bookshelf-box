@@ -39,8 +39,8 @@ class UserSubscriptionOption(models.Model):
     is_active = models.BooleanField(default=True)
     calculated_price = models.DecimalField(
         max_digits=10, decimal_places=2, null=True, blank=True)
-    stripe_subscription_id = models.CharField(max_length=50, blank=True, null=True)
-    
+    stripe_subscription_id = models.CharField(max_length=256, blank=True, null=True)
+    stripe_subscription_item_id = models.CharField(max_length=256, blank=True, null=True)
 
     def set_end_date(self):
         if self.subscription_option.subscription_type == 'one-off':

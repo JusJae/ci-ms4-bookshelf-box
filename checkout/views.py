@@ -130,10 +130,20 @@ def checkout(request):
                         subscription = stripe.Subscription.create(
                             customer=user_profile.stripe_customer_id,
                             items=[{"price": subscription_option.stripe_price_id}],
-                            expand=["latest_invoice.payment_intent"]
+                            expand=["latest_invoice.payment_intent", "items.data"]
                         )
                         # Save the subscription ID in the session or the order if needed
                         request.session['subscription_id'] = subscription.id
+                        subscription_item_id = subscription['items']['data'][0]['id']
+
+                        UserSubscriptionOption.objects.create(
+                            user=request.user,
+                            subscription_option=subscription_option,
+                            stripe_subscription_id=subscription.id,
+                            stripe_subscription_item_id=subscription_item_id,
+                            is_active=True
+                        )
+
                         messages.success(request, "Subscription started successfully.")
                 except stripe.error.StripeError as e:
                     messages.error(request, f"Subscription creation failed: {e}")

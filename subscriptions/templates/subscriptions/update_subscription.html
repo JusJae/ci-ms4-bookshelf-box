@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Create Subscription{% endblock %}
+{% block title %}Update Subscription{% endblock %}
 
 {% block page_header %}
     <div class="container mt-3 mb-2 text-center">
         <hr>
-        <h2 class="header-font">Create Subscription</h2>
+        <h2 class="header-font">Update Subscription</h2>
         <hr>
     </div>
 {% endblock %}
@@ -16,13 +16,13 @@
 <main class="container text-center">
     <div class="container ">
         <div class="col-12">
-            <p class="lead">Select your subscription options below</p>
+            <p class="lead">Update your subscription options below</p>
         </div>
         <div class="col-12 ">
-            <form method="POST" action="" id="create-subscription-form">
+            <form method="POST" action="{% url 'update_subscription' user_subscription.id %}" id="update-subscription-form">
                 {% csrf_token %}
                 {{ form | crispy }}
-                <button type="submit" class="btn btn-lg cta-btn mt-3" id="create-subscription-form">Create Subscription</button>
+                <button type="submit" class="btn btn-lg cta-btn mt-3" id="update-subscription-form">Save Changes</button>
             </form>
         </div>
     </div>

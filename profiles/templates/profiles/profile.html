@@ -95,11 +95,9 @@
                                                     {% endfor %}
                                                 </td>
                                                 <td>
-                                                    <form action="{% url 'update_subscription' subscription.id %}" method="POST" id="subscription-update-form" class="d-inline">
-                                                        {% csrf_token %} {{ subscription_form|crispy }}
-                                                        <button type="submit" class="btn btn-sm btn-primary text-uppercase">
-                                                            Update
-                                                        </button>
+                                                    <a href="{% url 'update_subscription' subscription.id %}" type="submit" class="btn btn-sm btn-primary text-uppercase">
+                                                        Update
+                                                    </a>
                                                     </form>
                                                     <form action="{% url 'cancel_subscription' subscription.id %}" method="POST" id="subscription-cancel-form" class="d-inline">
                                                         {% csrf_token %}

@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import SubscriptionOptionForm
-from .models import UserSubscriptionOption
+from .models import UserSubscriptionOption, SubscriptionOption
 from profiles.models import UserProfile
 
 import stripe
@@ -35,7 +35,7 @@ def create_subscription(request):
             request.session['box']['subscription_type'] = user_subscription.subscription_option.subscription_type
             request.session.modified = True
 
-            messages.success(request, 'Subscription option selected successfully. Please proceed to the checkout.')
+            messages.success(request, 'Subscription option selected successfully.')
             return redirect('checkout')
 
         else:
@@ -50,3 +50,40 @@ def create_subscription(request):
 def view_subscription(request, pk):
     user_subscription = get_object_or_404(UserSubscriptionOption, pk=pk)
     return render(request, 'subscriptions/view_subscription.html', {'user_subscription': user_subscription})
+
+
+@login_required
+def update_subscription(request, subscription_id):
+    """ Update the user's subscription."""
+    user_subscription = get_object_or_404(UserSubscriptionOption, id=subscription_id, user=request.user)
+
+    if request.method == 'POST':
+        form = SubscriptionOptionForm(request.POST, instance=user_subscription.subscription_option)
+        if form.is_valid():
+            subscription_option = form.save()
+
+            try:
+                stripe.Subscription.modify(
+                    user_subscription.stripe_subscription_id,
+                    items=[{
+                        'id': user_subscription.stripe_subscription_item_id,
+                        'price': subscription_option.stripe_price_id,
+                    }]
+                )
+                user_subscription.subscription_option = subscription_option
+                user_subscription.save()
+                messages.success(request, 'Subscription updated successfully')
+                return redirect('profile')
+            except stripe.error.StripeError as e:
+                messages.error(request, f'Failed to update subscription: {e}')
+        else:
+            messages.error(request, 'Update failed. Please ensure the form is valid.')
+    else:
+        form = SubscriptionOptionForm(instance=user_subscription.subscription_option)
+
+    context = {
+        'form': form,
+        'user_subscription': user_subscription,
+    }
+
+    return render(request, 'subscriptions/update_subscription.html', context)
