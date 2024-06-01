@@ -1,6 +1,7 @@
 import json
 from django.core.management.base import BaseCommand
 from subscriptions.models import SubscriptionOption
+from books.models import Category
 from django.conf import settings
 import os
 
@@ -27,7 +28,13 @@ class Command(BaseCommand):
             for entry in data:
                 pk = entry['pk']
                 fields = entry['fields']
-                subscription_option, created = SubscriptionOption.objects.update_or_create(  # noqa
+
+                category_name = fields.pop('category')
+                category, created = Category.objects.get_or_create(category=category_name)
+
+                fields['category'] = category
+
+                subscription_option, created = SubscriptionOption.objects.update_or_create(
                     pk=pk,
                     defaults=fields
                 )
