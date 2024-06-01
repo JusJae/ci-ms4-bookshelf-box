@@ -15,7 +15,6 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 def create_subscription(request):
     if request.method == 'GET':
         form = SubscriptionOptionForm()
-
     elif request.method == 'POST':
         form = SubscriptionOptionForm(request.POST)
         if form.is_valid():
@@ -23,7 +22,8 @@ def create_subscription(request):
             subscription_option.user = request.user
             subscription_option.save()
 
-            user_subscription = UserSubscriptionOption(user=request.user, subscription_option=subscription_option)
+            user_subscription = UserSubscriptionOption(
+                user=request.user, subscription_option=subscription_option)
             user_subscription.save()
             user_subscription.select_books()
             user_subscription.calculate_and_save_price()
@@ -31,34 +31,46 @@ def create_subscription(request):
             # Store the subscription option in the session
             if 'box' not in request.session:
                 request.session['box'] = {}
-            request.session['box']['subscription_option'] = user_subscription.id
-            request.session['box']['subscription_type'] = user_subscription.subscription_option.subscription_type
+            request.session['box']['subscription_option'] = \
+                user_subscription.subscription_option.id
+            request.session['box']['subscription_type'] = \
+                user_subscription.subscription_option.subscription_type
             request.session.modified = True
 
-            messages.success(request, 'Subscription option selected successfully.')
+            print("Debug - Session data after creating subscription:",
+                  request.session['box'])  # Debugging
+
+            messages.success(
+                request, 'Subscription option selected successfully.')
             return redirect('checkout')
 
         else:
-            messages.error(request, 'Subscription creation failed. Please ensure the form is valid.')
+            messages.error(
+                request, 'Subscription creation failed. '
+                         'Please ensure the form is valid.')
     else:
         form = SubscriptionOptionForm()
 
-    return render(request, 'subscriptions/create_subscription.html', {'form': form})
+    return render(request, 'subscriptions/create_subscription.html',
+                  {'form': form})
 
 
 @login_required
 def view_subscription(request, pk):
     user_subscription = get_object_or_404(UserSubscriptionOption, pk=pk)
-    return render(request, 'subscriptions/view_subscription.html', {'user_subscription': user_subscription})
+    return render(request, 'subscriptions/view_subscription.html', 
+                  {'user_subscription': user_subscription})
 
 
 @login_required
 def update_subscription(request, subscription_id):
     """ Update the user's subscription."""
-    user_subscription = get_object_or_404(UserSubscriptionOption, id=subscription_id, user=request.user)
+    user_subscription = get_object_or_404(
+        UserSubscriptionOption, id=subscription_id, user=request.user)
 
     if request.method == 'POST':
-        form = SubscriptionOptionForm(request.POST, instance=user_subscription.subscription_option)
+        form = SubscriptionOptionForm(
+            request.POST, instance=user_subscription.subscription_option)
         if form.is_valid():
             subscription_option = form.save()
 
@@ -77,9 +89,11 @@ def update_subscription(request, subscription_id):
             except stripe.error.StripeError as e:
                 messages.error(request, f'Failed to update subscription: {e}')
         else:
-            messages.error(request, 'Update failed. Please ensure the form is valid.')
+            messages.error(
+                request, 'Update failed. Please ensure the form is valid.')
     else:
-        form = SubscriptionOptionForm(instance=user_subscription.subscription_option)
+        form = SubscriptionOptionForm(
+            instance=user_subscription.subscription_option)
 
     context = {
         'form': form,
