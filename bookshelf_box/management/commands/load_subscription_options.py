@@ -1,6 +1,8 @@
 import json
 from django.core.management.base import BaseCommand
 from subscriptions.models import SubscriptionOption
+from django.conf import settings
+import os
 
 
 class Command(BaseCommand):
@@ -8,10 +10,18 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('json_file', type=str,
-                            help='subscriptions/fixtures/subscription_options.json')
+                            help='The path to the JSON file containing subscription options (e.g., subscriptions/fixtures/subscription_option.json)')
 
     def handle(self, *args, **kwargs):
         json_file = kwargs['json_file']
+        if not os.path.isabs(json_file):
+            json_file = os.path.join(settings.BASE_DIR, json_file)
+
+        if not os.path.exists(json_file):
+            self.stdout.write(self.style.ERROR(
+                f'File "{json_file}" does not exist'))
+            return
+
         with open(json_file, 'r') as f:
             data = json.load(f)
             for entry in data:
