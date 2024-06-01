@@ -135,25 +135,32 @@ def checkout(request):
                         print("Debug - Stripe Price ID:",
                               subscription_option.stripe_price_id)  # Debugging
 
-                    if subscription_option.stripe_price_id:
-                        subscription = stripe.Subscription.create(
-                            customer=user_profile.stripe_customer_id,
-                            items=[{"price": subscription_option.stripe_price_id}],
-                            expand=["latest_invoice.payment_intent"]
-                        )
-                        # Save the subscription ID in the session or the order if needed
-                        request.session['subscription_id'] = subscription.id
-                        subscription_item_id = subscription['items']['data'][0]['id']
+                        if subscription_option.stripe_price_id:
+                            try:
+                                subscription = stripe.Subscription.create(
+                                    customer=user_profile.stripe_customer_id,
+                                    items=[{"price": subscription_option.stripe_price_id}],
+                                    expand=["latest_invoice.payment_intent"]
+                                )
+                                # Save the subscription ID in the session or the order if needed
+                                request.session['subscription_id'] = subscription.id
+                                subscription_item_id = subscription['items']['data'][0]['id']
 
-                        UserSubscriptionOption.objects.create(
-                            user=request.user,
-                            subscription_option=subscription_option,
-                            stripe_subscription_id=subscription.id,
-                            stripe_subscription_item_id=subscription_item_id,
-                            is_active=True
-                        )
+                                UserSubscriptionOption.objects.create(
+                                    user=request.user,
+                                    subscription_option=subscription_option,
+                                    stripe_subscription_id=subscription.id,
+                                    stripe_subscription_item_id=subscription_item_id,
+                                    is_active=True
+                                )
 
-                        messages.success(request, "Subscription started successfully.")
+                                messages.success(request, "Subscription started successfully.")
+                            except stripe.error.StripeError as e:
+                                messages.error(request, f"Subscription creation failed: {e}")
+                                return redirect('checkout')
+                            else:
+                                messages.error(request, "Subscription did not have valid price ID.")
+                                return redirect('checkout')
                 except stripe.error.StripeError as e:
                     messages.error(request, f"Subscription creation failed: {e}")
                     return redirect('checkout')
