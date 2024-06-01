@@ -124,9 +124,18 @@ def checkout(request):
             if subscription_type != "one-off":
                 try:
                     subscription_option_id = box.get('subscription_option')
+                    print("Debug - Subscription Option ID:",
+                          subscription_option_id)  # Debugging
+
                     if subscription_option_id:
                         subscription_option = SubscriptionOption.objects.get(
                             pk=subscription_option_id)
+                        print("Debug - Subscription Option:",
+                              subscription_option)  # Debugging
+                        print("Debug - Stripe Price ID:",
+                              subscription_option.stripe_price_id)  # Debugging
+
+                    if subscription_option.stripe_price_id:
                         subscription = stripe.Subscription.create(
                             customer=user_profile.stripe_customer_id,
                             items=[{"price": subscription_option.stripe_price_id}],
@@ -266,8 +275,7 @@ def checkout_success(request, order_number):
                 user_profile_form.save()
 
         # Update the users subscription status
-        profile.has_active_subscription = UserSubscriptionOption.objects.filter(
-            user=request.user, is_active=True).exists()
+        profile.has_active_subscription = UserSubscriptionOption.objects.filter(user=request.user, is_active=True).exists()
         profile.save()
 
     messages.success(request, f'Order successfully processed! \
