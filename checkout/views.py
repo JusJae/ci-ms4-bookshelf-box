@@ -134,13 +134,13 @@ def checkout(request):
                         )
                         # Save the subscription ID in the session or the order if needed
                         request.session['subscription_id'] = subscription.id
-                        # subscription_item_id = subscription['items']['data'][0]['id']
+                        subscription_item_id = subscription['items']['data'][0]['id']
 
                         UserSubscriptionOption.objects.create(
                             user=request.user,
                             subscription_option=subscription_option,
                             stripe_subscription_id=subscription.id,
-                            # stripe_subscription_item_id=subscription_item_id,
+                            stripe_subscription_item_id=subscription_item_id,
                             is_active=True
                         )
 
