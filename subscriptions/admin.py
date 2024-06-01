@@ -3,7 +3,7 @@ from .models import SubscriptionOption, UserSubscriptionOption
 
 
 class SubscriptionOptionAdmin(admin.ModelAdmin):
-    list_display = ('category', 'number_of_books', 'subscription_type', 'stripe_price_id')  # noqa
+    list_display = ('pk', 'category', 'number_of_books', 'subscription_type', 'stripe_price_id')  # noqa
 
     list_filter = ('category', 'subscription_type')
     search_fields = ('category', 'subscription_type')
