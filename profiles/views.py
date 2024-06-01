@@ -6,6 +6,7 @@ from django.conf import settings
 from .models import UserProfile
 from .forms import UserProfileForm
 from subscriptions.models import UserSubscriptionOption
+from checkout.models import Order
 
 import stripe
 
@@ -29,10 +30,8 @@ def profile(request):
         form = UserProfileForm(instance=profile)
 
     orders = profile.orders.filter(user_profile=profile)
-    active_subscriptions = UserSubscriptionOption.objects.filter(
+    subscriptions = UserSubscriptionOption.objects.filter(
         user=request.user, is_active=True)
-
-    # has_active_subscription = active_subscriptions.exists()
 
     has_active_subscription = False
     if profile.stripe_customer_id:
@@ -43,8 +42,9 @@ def profile(request):
     template = 'profiles/profile.html'
     context = {
         'form': form,
+        'profile': profile,
         'orders': orders,
-        'subscriptions': active_subscriptions,
+        'subscriptions': subscriptions,
         'on_profile_page': True,
         'has_active_subscription': has_active_subscription,
     }
