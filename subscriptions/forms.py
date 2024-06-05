@@ -25,7 +25,7 @@ class SubscriptionOptionForm(forms.ModelForm):
 
         placeholders = {
             'category': 'Select Category',
-            'subscription_type': 'Subscription Type',
+            'subscription_type': 'Select Subscription Type',
         }
 
         self.fields['category'].widget = forms.Select(

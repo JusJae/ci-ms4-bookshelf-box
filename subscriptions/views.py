@@ -18,12 +18,31 @@ def create_subscription(request):
     elif request.method == 'POST':
         form = SubscriptionOptionForm(request.POST)
         if form.is_valid():
-            subscription_option = form.save(commit=False)
-            subscription_option.user = request.user
-            subscription_option.save()
+            # subscription_option = form.save(commit=False)
+            # subscription_option.user = request.user
+            # subscription_option.save()
+            category = form.cleaned_data['category']
+            number_of_books = form.cleaned_data['num_books']
+            subscription_type = form.cleaned_data['subscription_type']
+
+            # Try to find a matching subscription option
+            try:
+                subscription_option = SubscriptionOption.objects.get(
+                    category=category,
+                    number_of_books=number_of_books,
+                    subscription_type=subscription_type
+                )
+                print(f"Debug - Found matching subscription option: {subscription_option}")
+            except SubscriptionOption.DoesNotExist:
+                messages.error(
+                    request, 'Subscription option does not exist. '
+                             'Please try again.')
+                return redirect('create_subscription')
 
             user_subscription = UserSubscriptionOption(
-                user=request.user, subscription_option=subscription_option)
+                user=request.user,
+                subscription_option=subscription_option
+            )
             user_subscription.save()
             user_subscription.select_books()
             user_subscription.calculate_and_save_price()
@@ -59,7 +78,7 @@ def create_subscription(request):
 @login_required
 def view_subscription(request, pk):
     user_subscription = get_object_or_404(UserSubscriptionOption, pk=pk)
-    return render(request, 'subscriptions/view_subscription.html', 
+    return render(request, 'subscriptions/view_subscription.html',
                   {'user_subscription': user_subscription})
 
 
