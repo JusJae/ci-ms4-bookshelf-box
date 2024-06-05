@@ -22,7 +22,7 @@ def create_subscription(request):
             # subscription_option.user = request.user
             # subscription_option.save()
             category = form.cleaned_data['category']
-            number_of_books = form.cleaned_data['num_books']
+            number_of_books = form.cleaned_data['number_of_books']
             subscription_type = form.cleaned_data['subscription_type']
 
             # Try to find a matching subscription option
