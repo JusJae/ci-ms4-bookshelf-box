@@ -64,7 +64,8 @@ def checkout(request):
         print("Debug - Box contents on POST:", box)  # Debugging
 
         if not box:
-            messages.error(request, "There's nothing in your box at the moment")
+            messages.error(
+                request, "There's nothing in your box at the moment")
             return redirect(reverse('subscriptions'))
 
         form_data = {
@@ -94,7 +95,8 @@ def checkout(request):
                     user_profile.stripe_customer_id = customer.id
                     user_profile.save()
                 except stripe.error.StripeError as e:
-                    messages.error(request, f"Stripe customer creation failed: {e}")
+                    messages.error(
+                        request, f"Stripe customer creation failed: {e}")
                     return redirect('checkout')
 
             payment_intent = stripe.PaymentIntent.retrieve(pid)
@@ -111,25 +113,31 @@ def checkout(request):
                             'default_payment_method': payment_method}
                     )
                 except stripe.error.StripeError as e:
-                    messages.error(request, f"Payment method attachment failed: {e}")
+                    messages.error(
+                        request, f"Payment method attachment failed: {e}")
                     return redirect('checkout')
 
             subscription_type = box.get('subscription_type', 'one-off')
-            if subscription_type != "one-off":
-                try:
+            try:
+                if subscription_type != "one-off":
                     subscription_option_id = box.get('subscription_option')
-                    print("Debug - Subscription Option ID from session:", subscription_option_id)  # Debugging
+                    print("Debug - Subscription Option ID from session:",
+                          subscription_option_id)  # Debugging
 
                     if subscription_option_id:
-                        subscription_option = SubscriptionOption.objects.get(pk=subscription_option_id)
-                        print("Debug - Subscription Option from database:", subscription_option)  # Debugging
-                        print("Debug - Stripe Price ID:", subscription_option.stripe_price_id)  # Debugging
+                        subscription_option = SubscriptionOption.objects.get(
+                            pk=subscription_option_id)
+                        print("Debug - Subscription Option from database:",
+                              subscription_option)  # Debugging
+                        print("Debug - Stripe Price ID:",
+                              subscription_option.stripe_price_id)  # Debugging
 
                         if subscription_option.stripe_price_id:
                             try:
                                 subscription = stripe.Subscription.create(
                                     customer=user_profile.stripe_customer_id,
-                                    items=[{"price": subscription_option.stripe_price_id}],
+                                    items=[
+                                        {"price": subscription_option.stripe_price_id}],
                                     expand=["latest_invoice.payment_intent"]
                                 )
                                 request.session['subscription_id'] = subscription.id
@@ -140,46 +148,55 @@ def checkout(request):
                                     stripe_subscription_id=subscription.id,
                                     is_active=True
                                 )
-                                messages.success(request, "Subscription started successfully.")
+                                messages.success(
+                                    request, "Subscription started successfully.")
                             except stripe.error.StripeError as e:
-                                messages.error(request, f"Stripe subscription creation failed: {e}")
-                                print(f"Debug - Stripe subscription creation failed: {e}")  # Debugging
+                                messages.error(
+                                    request, f"Stripe subscription creation failed: {e}")
+                                # Debugging
+                                print(
+                                    f"Debug - Stripe subscription creation failed: {e}")
                                 return redirect('checkout')
                         else:
-                            messages.error(request, "Subscription option does not have a valid Stripe price ID.")
+                            messages.error(
+                                request, "Subscription option does not have a valid Stripe price ID.")
                             return redirect('checkout')
-                except stripe.error.StripeError as e:
-                    messages.error(request, f"Subscription creation failed: {e}")
-                    return redirect('checkout')
-
-            try:
-                subscription_id = box.get('subscription_option')
-                if subscription_id:
-                    subscription = UserSubscriptionOption.objects.get(pk=subscription_id)
-                    order_line_item = OrderLineItem(
-                        order=order,
-                        user_subscription_option=subscription,
-                        lineitem_total=subscription.calculated_price
-                    )
-                    order_line_item.save()
-                    if 'books' in box:
-                        order_line_item.selected_books.set(box['books'])
-
+                else:
+                    subscription_id = box.get('subscription_option')
+                    if subscription_id:
+                        subscription = UserSubscriptionOption.objects.get(
+                            pk=subscription_id)
+                        order_line_item = OrderLineItem(
+                            order=order,
+                            user_subscription_option=subscription,
+                            lineitem_total=subscription.calculated_price
+                        )
+                        order_line_item.save()
+                        if 'books' in box:
+                            order_line_item.selected_books.set(box['books'])
+                    else:
+                        messages.error(
+                            request, 'There was an error with your order. Please try again later.')
+                        order.delete()
+                        return redirect(reverse('subscriptions'))
             except UserSubscriptionOption.DoesNotExist:
-                messages.error(request, 'There was an error with your order. Please try again later.')
+                messages.error(
+                    request, 'There was an error with your order. Please try again later.')
                 order.delete()
                 return redirect(reverse('subscriptions'))
 
             request.session['save_info'] = 'save_info' in request.POST
             return redirect(reverse('checkout_success', args=[order.order_number]))
         else:
-            messages.error(request, 'There was an error with your form. Please double check your information.')
+            messages.error(
+                request, 'There was an error with your form. Please double check your information.')
     else:
         box = request.session.get('box', {})
         print("Debug - Box contents on GET:", box)  # Debugging
 
         if not box:
-            messages.error(request, "There's nothing in your box at the moment")
+            messages.error(
+                request, "There's nothing in your box at the moment")
             return redirect(reverse('subscriptions'))
 
         current_box = box_contents(request)
@@ -212,7 +229,8 @@ def checkout(request):
             order_form = OrderForm()
 
         if not stripe_public_key:
-            messages.warning(request, 'Stripe public key is missing. Did you forget to set it in your environment?')
+            messages.warning(
+                request, 'Stripe public key is missing. Did you forget to set it in your environment?')
 
         template = 'checkout/checkout.html'
         context = {
