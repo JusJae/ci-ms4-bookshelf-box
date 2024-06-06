@@ -3,10 +3,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 3,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4iCzG6iutubJZOJU77f13O"
         }
     },
@@ -14,21 +14,21 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 1,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 1,
             "subscription_type": "one-off",
-            "price": "",
-            "stripe_price_id": ""
+            "price": null,
+            "stripe_price_id": null
         }
     },
     {
         "model": "subscriptions.subscriptionoption",
         "pk": 6,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4j8LG6iutubJZOw3zVbU6J"
         }
     },
@@ -36,10 +36,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 4,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4iQSG6iutubJZOXtUujVBf"
         }
     },
@@ -47,21 +47,21 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 8,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 2,
             "subscription_type": "one-off",
-            "price": "",
-            "stripe_price_id": ""
+            "price": null,
+            "stripe_price_id": null
         }
     },
     {
         "model": "subscriptions.subscriptionoption",
         "pk": 7,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4iQSG6iutubJZOXtUujVBf"
         }
     },
@@ -69,10 +69,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 5,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4iQSG6iutubJZOB14APK8l"
         }
     },
@@ -80,21 +80,21 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 9,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 3,
             "subscription_type": "one-off",
-            "price": "",
-            "stripe_price_id": ""
+            "price": null,
+            "stripe_price_id": null
         }
     },
     {
         "model": "subscriptions.subscriptionoption",
         "pk": 2,
         "fields": {
-            "category": 1,
+            "category": "Childrens",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4iQSG6iutubJZOBuH4JK8t"
         }
     },
@@ -102,10 +102,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 13,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4il0G6iutubJZOGcgqucJV"
         }
     },
@@ -113,21 +113,21 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 10,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 1,
             "subscription_type": "one-off",
-            "price": "",
-            "stripe_price_id": ""
+            "price": null,
+            "stripe_price_id": null
         }
     },
     {
         "model": "subscriptions.subscriptionoption",
         "pk": 16,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jAYG6iutubJZOtk5Ee28R"
         }
     },
@@ -135,10 +135,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 14,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4j1gG6iutubJZOC5CjBCZu"
         }
     },
@@ -146,21 +146,21 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 11,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 2,
             "subscription_type": "one-off",
-            "price": "",
-            "stripe_price_id": ""
+            "price": null,
+            "stripe_price_id": null
         }
     },
     {
         "model": "subscriptions.subscriptionoption",
         "pk": 17,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4j1gG6iutubJZOpj4KrZ76"
         }
     },
@@ -168,10 +168,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 15,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4j1gG6iutubJZOx560VKiO"
         }
     },
@@ -179,21 +179,21 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 12,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 3,
             "subscription_type": "one-off",
-            "price": "",
-            "stripe_price_id": ""
+            "price": null,
+            "stripe_price_id": null
         }
     },
     {
         "model": "subscriptions.subscriptionoption",
         "pk": 18,
         "fields": {
-            "category": 2,
+            "category": "Classics",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4j1gG6iutubJZOp038AmYN"
         }
     },
@@ -201,10 +201,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 19,
         "fields": {
-            "category": 3,
+            "category": "Fantasy",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4itEG6iutubJZORQSUEhdn"
         }
     },
@@ -212,10 +212,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 22,
         "fields": {
-            "category": 3,
+            "category": "Fantasy",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jDZG6iutubJZOppBmJ59h"
         }
     },
@@ -223,10 +223,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 20,
         "fields": {
-            "category": 3,
+            "category": "Fantasy",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4j4yG6iutubJZOO2UAnD5A"
         }
     },
@@ -234,10 +234,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 23,
         "fields": {
-            "category": 3,
+            "category": "Fantasy",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jDZG6iutubJZO8ZD85FgR"
         }
     },
@@ -245,10 +245,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 21,
         "fields": {
-            "category": 3,
+            "category": "Fantasy",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4j4yG6iutubJZOKLJRs5tg"
         }
     },
@@ -256,10 +256,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 24,
         "fields": {
-            "category": 3,
+            "category": "Fantasy",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jDZG6iutubJZOUdq9ZOph"
         }
     },
@@ -267,10 +267,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 25,
         "fields": {
-            "category": 4,
+            "category": "Fiction",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4itsG6iutubJZOir8Lppfd"
         }
     },
@@ -278,10 +278,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 28,
         "fields": {
-            "category": 4,
+            "category": "Fiction",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jGKG6iutubJZOSIQnZMBc"
         }
     },
@@ -289,10 +289,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 26,
         "fields": {
-            "category": 4,
+            "category": "Fiction",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jGKG6iutubJZOPlDnHB8B"
         }
     },
@@ -300,10 +300,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 29,
         "fields": {
-            "category": 4,
+            "category": "Fiction",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jGKG6iutubJZOkPLGFA7C"
         }
     },
@@ -311,10 +311,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 27,
         "fields": {
-            "category": 4,
+            "category": "Fiction",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jGKG6iutubJZOphY4877o"
         }
     },
@@ -322,10 +322,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 30,
         "fields": {
-            "category": 4,
+            "category": "Fiction",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4jGKG6iutubJZOxZd4xmkT"
         }
     },
@@ -333,10 +333,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 31,
         "fields": {
-            "category": 5,
+            "category": "Horror",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4iunG6iutubJZOxbwNOQZK"
         }
     },
@@ -344,10 +344,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 34,
         "fields": {
-            "category": 5,
+            "category": "Horror",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4k0UG6iutubJZOelhCwlqK"
         }
     },
@@ -355,10 +355,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 32,
         "fields": {
-            "category": 5,
+            "category": "Horror",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4k0UG6iutubJZOZljLY6Lr"
         }
     },
@@ -366,10 +366,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 35,
         "fields": {
-            "category": 5,
+            "category": "Horror",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4k0UG6iutubJZOQNPOki3M"
         }
     },
@@ -377,10 +377,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 33,
         "fields": {
-            "category": 5,
+            "category": "Horror",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4k0UG6iutubJZOIGmoXCg3"
         }
     },
@@ -388,10 +388,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 36,
         "fields": {
-            "category": 5,
+            "category": "Horror",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4k0UG6iutubJZORggD57Df"
         }
     },
@@ -399,10 +399,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 37,
         "fields": {
-            "category": 6,
+            "category": "Humor",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4ivLG6iutubJZOxU1vSbYa"
         }
     },
@@ -410,10 +410,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 40,
         "fields": {
-            "category": 6,
+            "category": "Humor",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kHSG6iutubJZOzR2wW9ET"
         }
     },
@@ -421,10 +421,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 38,
         "fields": {
-            "category": 6,
+            "category": "Humor",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kHSG6iutubJZOm3jMh062"
         }
     },
@@ -432,10 +432,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 41,
         "fields": {
-            "category": 6,
+            "category": "Humor",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kHSG6iutubJZOrVEVrNd0"
         }
     },
@@ -443,10 +443,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 39,
         "fields": {
-            "category": 6,
+            "category": "Humor",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kHSG6iutubJZOBmSxZgp6"
         }
     },
@@ -454,10 +454,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 42,
         "fields": {
-            "category": 6,
+            "category": "Humor",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kHSG6iutubJZOGq6vAOwI"
         }
     },
@@ -465,10 +465,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 55,
         "fields": {
-            "category": 7,
+            "category": "Nonfiction",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4ivsG6iutubJZOxrUT6Jyt"
         }
     },
@@ -476,10 +476,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 58,
         "fields": {
-            "category": 7,
+            "category": "Nonfiction",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kYPG6iutubJZO5jOyednQ"
         }
     },
@@ -487,10 +487,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 56,
         "fields": {
-            "category": 7,
+            "category": "Nonfiction",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kYPG6iutubJZOnIxc8KHp"
         }
     },
@@ -498,10 +498,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 59,
         "fields": {
-            "category": 7,
+            "category": "Nonfiction",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kYPG6iutubJZOObDlLLm4"
         }
     },
@@ -509,10 +509,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 57,
         "fields": {
-            "category": 7,
+            "category": "Nonfiction",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kYPG6iutubJZOgcIoIulL"
         }
     },
@@ -520,10 +520,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 60,
         "fields": {
-            "category": 7,
+            "category": "Nonfiction",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4kYPG6iutubJZO5CkkPwR1"
         }
     },
@@ -531,10 +531,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 61,
         "fields": {
-            "category": 8,
+            "category": "Young Adult",
             "number_of_books": 1,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4iwvG6iutubJZO8mmLaZQA"
         }
     },
@@ -542,10 +542,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 64,
         "fields": {
-            "category": 8,
+            "category": "Young Adult",
             "number_of_books": 1,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4klBG6iutubJZOdM1pVuvu"
         }
     },
@@ -553,10 +553,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 62,
         "fields": {
-            "category": 8,
+            "category": "Young Adult",
             "number_of_books": 2,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4klBG6iutubJZO2HWFbQOv"
         }
     },
@@ -564,10 +564,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 65,
         "fields": {
-            "category": 8,
+            "category": "Young Adult",
             "number_of_books": 2,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4klBG6iutubJZOQmQPt3rS"
         }
     },
@@ -575,10 +575,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 63,
         "fields": {
-            "category": 8,
+            "category": "Young Adult",
             "number_of_books": 3,
             "subscription_type": "monthly",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4klBG6iutubJZOLMvswZDM"
         }
     },
@@ -586,10 +586,10 @@
         "model": "subscriptions.subscriptionoption",
         "pk": 66,
         "fields": {
-            "category": 8,
+            "category": "Young Adult",
             "number_of_books": 3,
             "subscription_type": "three_months",
-            "price": "",
+            "price": null,
             "stripe_price_id": "price_1P4klBG6iutubJZOIsnkXkXd"
         }
     }
