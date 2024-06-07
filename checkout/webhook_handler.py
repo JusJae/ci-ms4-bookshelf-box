@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 
@@ -43,8 +43,7 @@ class StripeWH_Handler:
             sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
             response = sg.send(message)
             if response.status_code == 202:
-                return HttpResponse(
-                content=f'Webhook received: {event["type"]} | SUCCESS: Email sent',status=200)
+                return HttpResponse(content=f'Webhook received: {event["type"]} | SUCCESS: Email sent',status=200)
             else:
                 return HttpResponse(
                     content=f'Webhook received: {event["type"]} | ERROR: Failed to send email', status=500)

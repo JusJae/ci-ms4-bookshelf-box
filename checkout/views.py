@@ -48,12 +48,10 @@ def cache_checkout_data(request):
 
         if 'subscription_id' in request.session:
             metadata['subscription_id'] = request.session['subscription_id']
-        print(f"Debug = Modfying payment intent {
-              pid} with metadata: {metadata}")
+        print(f"Debug = Modfying payment intent {pid} with metadata: {metadata}")
 
         stripe.PaymentIntent.modify(pid, metadata=metadata)
-        print(f"Debug: Modifying payment intent {
-              pid} with metadata: {metadata}")
+        print(f"Debug: Modifying payment intent {pid} with metadata: {metadata}")
 
         return HttpResponse(status=200)
     except Exception as e:
