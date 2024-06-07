@@ -65,11 +65,12 @@ class StripeWH_Handler:
         """ Handle the payment_intent.succeeded webhook from Stripe """
         intent = event.data.object
         pid = intent.id
-        box = intent.metadata.get('box', {})
-        save_info = intent.metadata.get('save_info', False)
-        stripe_charge = stripe.Charge.retrieve(intent.latest_charge)
-        username = intent.metadata.get('username', 'AnonymousUser')
+        metadata = intent.metadata
+        box = metadata.get('box', '{}')
+        save_info = metadata.get('save_info', 'false') == 'true'
+        username = metadata.get('username', 'AnonymousUser')
 
+        stripe_charge = stripe.Charge.retrieve(intent.latest_charge)
         billing_details = stripe_charge.billing_details
         shipping_details = intent.shipping or {}
         grand_total = round(stripe_charge.amount / 100, 2)
@@ -138,7 +139,7 @@ class StripeWH_Handler:
             order = None
             try:
                 order = Order.objects.create(
-                    full_name=address.get('name', ''),
+                    full_name=shipping_details.get('name', ''),
                     user_profile=profile,
                     email=billing_details.get('email', ''),
                     phone_number=shipping_details.get('phone', ''),
@@ -153,7 +154,7 @@ class StripeWH_Handler:
                     stripe_pid=pid,
                 )
 
-                for item_id, item_data in json.loads(box).items():  # box.keys():
+                for item_id, item_data in json.loads(box).items():
                     subscription = UserSubscriptionOption.objects.get(
                         id=item_id)
                     order_line_item = OrderLineItem(

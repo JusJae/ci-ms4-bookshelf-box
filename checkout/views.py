@@ -34,16 +34,26 @@ def cache_checkout_data(request):
             'box': json.dumps(box),
             'save_info': save_info,
             'username': username,
-            'subscription_type': subscription_type
+            'subscription_type': subscription_type,
+            'full_name': request.POST.get('full_name'),
+            'email': request.POST.get('email'),
+            'phone_number': request.POST.get('phone_number'),
+            'country': request.POST.get('country'),
+            'postcode': request.POST.get('postcode'),
+            'town_or_city': request.POST.get('town_or_city'),
+            'street_address1': request.POST.get('street_address1'),
+            'street_address2': request.POST.get('street_address2'),
+            'county': request.POST.get('county'),
         }
 
         if 'subscription_id' in request.session:
             metadata['subscription_id'] = request.session['subscription_id']
-
-        print(f"Debug = Modfying payment intent {pid} with metadata: {metadata}")
+        print(f"Debug = Modfying payment intent {
+              pid} with metadata: {metadata}")
 
         stripe.PaymentIntent.modify(pid, metadata=metadata)
-        print(f"Debug: Modifying payment intent {pid} with metadata: {metadata}")
+        print(f"Debug: Modifying payment intent {
+              pid} with metadata: {metadata}")
 
         return HttpResponse(status=200)
     except Exception as e:
@@ -130,14 +140,32 @@ def checkout(request):
                     if subscription_option_id:
                         subscription_option = SubscriptionOption.objects.get(
                             pk=subscription_option_id)
+                        print("Debug - Stripe Price ID:",
+                              subscription_option.stripe_price_id)  # Debugging
+                        # Ensure the stripe_price_id is not None or empty
+                        if not subscription_option.stripe_price_id:
+                            messages.error(
+                                request, "Subscription option does not have a valid Stripe price ID.")
+                            return redirect('checkout')
+
                         subscription = stripe.Subscription.create(
                             customer=user_profile.stripe_customer_id,
-                            items=[
-                                {"price": subscription_option.stripe_price_id}],
+                            items=[{"price": subscription_option.stripe_price_id}],
                             expand=["latest_invoice.payment_intent"]
                         )
+
                         # Save the subscription ID in the session or the order if needed
                         request.session['subscription_id'] = subscription.id
+                        subscription_item_id = subscription['items']['data'][0]['id']
+
+                        UserSubscriptionOption.objects.create(
+                            user=request.user,
+                            subscription_option=subscription_option,
+                            stripe_subscription_id=subscription.id,
+                            stripe_subscription_item_id=subscription_item_id,
+                            is_active=True
+                        )
+
                         messages.success(
                             request, "Subscription started successfully.")
                 except stripe.error.StripeError as e:
@@ -186,7 +214,6 @@ def checkout(request):
         intent = stripe.PaymentIntent.create(
             amount=stripe_total,
             currency=settings.STRIPE_CURRENCY,
-            # This is to ensure that the payment intent can be used for future payments
             setup_future_usage='off_session'
         )
 
@@ -265,8 +292,18 @@ def checkout_success(request, order_number):
                 user_profile_form.save()
 
         # Update the users subscription status
-        profile.has_active_subscription = UserSubscriptionOption.objects.filter(user=request.user, is_active=True).exists()
+        profile.has_active_subscription = UserSubscriptionOption.objects.filter(
+            user=request.user, is_active=True).exists()
         profile.save()
+
+    # Retrieve subscription details if available
+    subscription_id = request.session.get('subscription_id')
+    subscription_details = None
+    if subscription_id:
+        try:
+            subscription_details = stripe.Subscription.retrieve(subscription_id)
+        except stripe.error.StripeError as e:
+            messages.error(request, f"Subscription retrieval failed: {e}")
 
     messages.success(request, f'Order successfully processed! \
         Your order number is {order_number}. A confirmation \
@@ -274,11 +311,14 @@ def checkout_success(request, order_number):
 
     if 'box' in request.session:
         del request.session['box']
+    if 'subscription_id' in request.session:
+        del request.session['subscription_id']
 
     template = 'checkout/checkout_success.html'
     context = {
         'order': order,
         'subscriptions_books': subscriptions_books,
+        'subscription_details': subscription_details,
     }
 
     return render(request, template, context)
