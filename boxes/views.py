@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from subscriptions.models import SubscriptionOption, UserSubscriptionOption
 from django.contrib.auth.decorators import login_required
@@ -6,8 +6,24 @@ from django.contrib.auth.decorators import login_required
 
 def view_box(request):
     """ A view that renders the box contents page """
+    box_items = []
+    box = request.session.get('box', {})
 
-    return render(request, 'boxes/box.html')
+    for subscription_id in box.keys():
+        user_subscription = get_object_or_404(
+            UserSubscriptionOption, pk=subscription_id)
+        selected_books = user_subscription.selected_books.all()
+        box_items.append({
+            'subscription_option': user_subscription.subscription_option,
+            'user_subscription': user_subscription,
+            'selected_books': selected_books,
+        })
+
+    context = {
+        'box_items': box_items,
+    }
+
+    return render(request, 'boxes/box.html', context)
 
 
 # # def add_to_box(request, pk):
@@ -42,14 +58,14 @@ def add_to_box(request, subscription_id):
     for book in selected_books:
         if book.availability <= 0:
             messages.error(request, f"Sorry, {book.title} is out of stock.")
-            return redirect(reverse('view_subscription', args=[subscription_id]))
+            return redirect('view_subscription', pk=subscription_id)
         elif book.availability < 3:
             messages.warning (request, f"Hurry! Only {book.availability} copies of {book.title} left in stock.")
 
         if str(book.id) in request.session['box']:
             if request.session['box'][str(book.id)] + 1 > book.availability:
                 messages.error(request, f"Sorry only {book.availability} copies of {book.title} are available.")
-                return redirect(reverse('view_subscription', args=[subscription_id]))
+                return redirect('view_subscription', pk=subscription_id)
             request.session['box'][str(book.id)] += 1
         else:
             request.session['box'][str(book.id)] = 1
