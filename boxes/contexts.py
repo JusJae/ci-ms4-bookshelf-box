@@ -13,7 +13,7 @@ def box_contents(request):
     if request.user.is_authenticated:
         box = request.session.get('box', {})
         user_subscription_id = box.get('user_subscription_option')
-        
+
         if user_subscription_id:
             user_subscription = get_object_or_404(UserSubscriptionOption, pk=user_subscription_id)
             subscription_option = user_subscription.subscription_option

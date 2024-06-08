@@ -19,17 +19,18 @@
                         <table class="rounded-3">
                             <thead class="text-center align-middle">
                                 <tr>
-                                    <th class="p-2" scope="col">Subscription Option</th>
+                                    <th class="p-2" scope="col">Subscription</th>
                                     <th scope="col">Selected Books</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Start Date</th>
                                     <th scope="col">End Date</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class=" table-group-divider align-middle">
                                 {% for item in box_items %}
                                     <tr>
-                                        <td>{{ item.subscription.subscription_option }}</td>
+                                        <td>{{ item.subscription_option }}</td>
                                         <td class="border-left">
                                             {% for book in item.selected_books %}
                                                 <div class="d-flex align-items-center p-2">
@@ -38,9 +39,16 @@
                                                 </div>
                                             {% endfor %}
                                         </td>
-                                        <td class="border-left">£{{ item.subscription.calculated_price }}</td>
-                                        <td class="border-left">{{ item.subscription.start_date }}</td>
-                                        <td class="border-left">{{ item.subscription.end_date }}</td>
+                                        <td class="border-left">£{{ item.user_subscription.calculated_price }}</td>
+                                        <td class="border-left">{{ item.user_subscription.start_date }}</td>
+                                        <td class="border-left">{{ item.user_subscription.end_date }}</td>
+                                        <td class="border-left">
+                                            <a href="{% url 'view_subscription' item.user_subscription.pk %}" class="btn btn-primary mb-2">Edit</a>
+                                            <form method="POST" action="{% url 'remove_from_box' item.user_subscription.pk %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Remove</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -62,7 +70,9 @@
                     <div class="alert alert-info" role="alert">
                         <h4 class="alert-heading">No items in the box</h4>
                         <p>Please add items to the box.</p>
-                        
+                        <button type="button" class="cta-btn btn btn-block btn-lg" onclick="location.href='{% url 'subscriptions' %}'">
+                            <h4 class="p-md-1 mb-0">Add to Box</h4>
+                        </button>
                     </div>
                 {% endif %}
             </div>

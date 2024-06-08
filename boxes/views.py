@@ -33,14 +33,30 @@ def add_to_box(request, subscription_id):
     subscription = get_object_or_404(
         UserSubscriptionOption, pk=subscription_id)
     print("Subscription: ", subscription)
+    selected_books = subscription.selected_books.all()
 
     # Initialize the session key if it doesn't exist
     if 'box' not in request.session:
-        request.session['box'] = []
+        request.session['box'] = {}
+
+    for book in selected_books:
+        if book.availability <= 0:
+            messages.error(request, f"Sorry, {book.title} is out of stock.")
+            return redirect('view_subscription', pk=subscription_id)
+        elif book.availability < 3:
+            messages.warning (request, f"Hurry! Only {book.availability} copies of {book.title} left in stock.")
+
+        if str(book.id) in request.session['box']:
+            if request.session['box'][str(book.id)] + 1 > book.availability:
+                messages.error(request, f"Sorry only {book.availability} copies of {book.title} are available.")
+                return redirect('view_subscription', pk=subscription_id)
+            request.session['box'][str(book.id)] += 1
+        else:
+            request.session['box'][str(book.id)] = 1
 
     # Add the subscription ID if it's not already in the session
-    if subscription_id not in request.session['box']:
-        request.session['box'].append(subscription_id)
+    if str(subscription_id) not in request.session['box']:
+        request.session['box'][str(subscription_id)] = 1
         request.session.modified = True  # Make sure Django saves the session change
         messages.success(request, "Subscription added successfully.")
     else:
@@ -72,22 +88,48 @@ def add_to_box(request, subscription_id):
 #     return redirect('view_box')
 
 
+@login_required
+def remove_from_box(request, subscription_id):
+    """Remove the subscription from the box"""
+
+    try:
+        subscription = get_object_or_404(
+            UserSubscriptionOption, pk=subscription_id)
+        box = request.session.get('box', {})
+
+        # Remove the subscription ID from the box
+        if str(subscription_id) in box:
+            box.pop(str(subscription_id))
+            messages.success(request, f'Removed {subscription.subscription_option} from your box')
+        else:
+            messages.error(request, 'Subscription not found in your box.')
+
+        # Update the session
+        request.session['box'] = box
+        return redirect('view_box')
+        # return HttpResponse(status=200)
+
+    except Exception as e:
+        messages.error(request, f'Error removing item: {e}')
+        return redirect('view_box')
+        # return HttpResponse(status=500)
+
+# @login_required
 # def remove_from_box(request, subscription_id):
-#     """Remove the subscription from the box"""
-
+#     """ Remove the subscription option from the box """
 #     try:
-#         subscription = get_object_or_404(
-#             UserSubscriptionOption, pk=subscription_id)
 #         box = request.session.get('box', {})
+#         if str(subscription_id) in box:
+#             del box[str(subscription_id)]
+#             request.session['box'] = box
+#             request.session.modified = True
+#             messages.success(
+#                 request, "Subscription option removed successfully.")
+#         else:
+#             messages.error(
+#                 request, "Subscription option not found in your box.")
 
-#         box.pop(subscription_id)
-#         messages.success(request, f'Removed {subscription.name} from your box')
-
-#         request.session['box'] = box
 #         return redirect('view_box')
-#         # return HttpResponse(status=200)
-
 #     except Exception as e:
-#         messages.error(request, f'Error removing item: {e}')
+#         messages.error(request, f'Error removing subscription option: {e}')
 #         return redirect('view_box')
-#         # return HttpResponse(status=500)
