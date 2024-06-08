@@ -15,9 +15,12 @@ def box_contents(request):
         user_subscriptions = UserSubscriptionOption.objects.filter(
             user=request.user, is_active=True)
         if user_subscriptions.exists():
-            subscription_option = user_subscriptions.last().subscription_option
+            last_subscription = user_subscriptions.last()
+            subscription_option = last_subscription.subscription_option
             if subscription_option:  # Check if subscription_option is not None
                 subscription_type = subscription_option.subscription_type
+                if last_subscription.calculated_price is not None:
+                    total += last_subscription.calculated_price
             # Enhanced debugging prints
             print("Debug - Subscription Option ID:", subscription_option.id)
             print("Debug - Subscription Type:", subscription_type)
@@ -33,8 +36,9 @@ def box_contents(request):
 
     if subscription_option_id:
         subscription_option = get_object_or_404(
-            SubscriptionOption, id=subscription_option_id)
-        total += user_subscriptions.calculated_price  # subscription_option.price
+            UserSubscriptionOption, id=subscription_option_id)
+        if subscription_option.calculated_price is not None:
+            total += subscription_option.calculated_price
         box_count += 1
         selected_books = subscription_option.selected_books.all()
         box_items.append({
