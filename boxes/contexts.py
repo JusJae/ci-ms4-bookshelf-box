@@ -34,7 +34,7 @@ def box_contents(request):
     if subscription_option_id:
         subscription_option = get_object_or_404(
             SubscriptionOption, id=subscription_option_id)
-        total += subscription_option.price
+        total += user_subscriptions.calculated_price  # subscription_option.price
         box_count += 1
         selected_books = subscription_option.selected_books.all()
         box_items.append({
