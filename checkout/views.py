@@ -176,7 +176,7 @@ def checkout(request):
                     return redirect('checkout')
 
             try:
-                subscription_id = request.session['box'].get('subscription_option')
+                subscription_id = box.get('subscription_option')
                 if subscription_id:
                     subscription = UserSubscriptionOption.objects.get(
                         pk=subscription_id)
