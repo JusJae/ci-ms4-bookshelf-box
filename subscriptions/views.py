@@ -54,7 +54,7 @@ def create_subscription(request):
             if 'box' not in request.session:
                 request.session['box'] = {}
             request.session['box']['user_subscription_option'] = user_subscription.id
-            request.session['box']['subscription_type'] = user_subscription.subscription_type
+            request.session['box']['subscription_type'] = subscription_option.subscription_type
             request.session.modified = True
 
             print("Debug - Session data after creating subscription:",
