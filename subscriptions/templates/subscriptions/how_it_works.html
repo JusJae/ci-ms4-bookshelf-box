@@ -12,7 +12,8 @@
 {% block content %}
 <div class="container mt-4">
     <h3 id="how-it-works">Creating a Subscription</h3>
-    <p>Welcome to our Bookshelf Box subscription service! Here's how it works:</p>
+    <p>Welcome to our Bookshelf Box subscription service!</p>
+    <p>Here's how it works:</p>
     <ol>
         <li>Create a subscription option by deciding whether you want a one-off box or a recurring subscription (monthly
             or every 3 months).</li>
@@ -26,23 +27,94 @@
     <p>Here are the available categories and their prices per book:</p>
     <ul>
         {% for category, price in category_prices.items %}
-        <li><strong>{{ category }}:</strong> ${{ price }}</li>
+        <table class="rounded">
+            <thead>
+            <tr>
+                <th class="font-weight-bold">Category</th>
+                <th class="font-weight-bold">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category, price in category_prices.items %}
+            <tr>
+                <td><strong>{{ category }}</strong></td>
+                <td>£{{ price }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% endfor %}
     </ul>
 
     <h4>Subscription Types</h4>
-    <ul>
-        <li><strong>One-off Box:</strong> Pay once and receive your box.</li>
-        <li><strong>Monthly Subscription:</strong> Receive a box every month with a discount.</li>
-        <li><strong>Every 3 Months Subscription:</strong> Receive a box every 3 months with a larger discount.</li>
-    </ul>
+    <table class="rounded">
+        <thead>
+            <tr>
+                <th class="font-weight-bold">Subscription Type</th>
+                <th class="font-weight-bold">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>One-off Box</strong></td>
+                <td>Pay once and receive your box.</td>
+            </tr>
+            <tr>
+                <td><strong>Monthly Subscription</strong></td>
+                <td>Receive a box every month with a discount.</td>
+            </tr>
+            <tr>
+                <td><strong>Every 3 Months Subscription</strong></td>
+                <td>Receive a box every 3 months with a discount.</td>
+            </tr>
+        </tbody>
+    </table>
 
     <h4>Discounts</h4>
     <p>The discounts applied are as follows:</p>
+    <table class="rounded">
+        <thead>
+            <tr>
+                <th class="font-weight-bold">Subscription Type</th>
+                <th class="font-weight-bold">Discount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>One-off Box</strong></td>
+                <td>No discount</td>
+            </tr>
+            <tr>
+                <td><strong>Monthly Subscription</strong></td>
+                <td>10% discount</td>
+            </tr>
+            <tr>
+                <td><strong>Every 3 Months Subscription</strong></td>
+                <td>5% discount</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 id="why-choose-us">Why Choose Us?</h3>
+    <p>At Bookshelf Box, we believe in providing an exceptional reading experience tailored to your preferences. Here are a
+        few reasons why you should choose us as your subscription service:</p>
     <ul>
-        <li><strong>One-off Box:</strong> No discount.</li>
-        <li><strong>Monthly Subscription:</strong> 10% discount.</li>
-        <li><strong>Every 3 Months Subscription:</strong> 5% discount.</li>
+        <li><strong>Curated Selection:</strong> Our team of experts handpicks each book to ensure a diverse and exciting
+            selection for every box.</li>
+        <li><strong>Flexible Subscription Plans:</strong> Whether you want a one-off box or a recurring subscription, we
+            have plans to suit your needs.</li>
+        <li><strong>Wide Range of Categories:</strong> From classics to contemporary fiction, we offer a variety of genres
+            to match your reading taste.</li>
+        <li><strong>Personalized Experience:</strong> Customize your box by choosing the number of books and your preferred
+            genres.</li>
+        <li><strong>Great Value:</strong> Enjoy significant discounts on multi-month subscriptions and save on your favorite
+            books.</li>
+        <li><strong>Exclusive Content:</strong> Get access to author interviews, book reviews, and special literary content
+            with each box.</li>
+        <li><strong>Gift Subscriptions:</strong> Surprise your loved ones with a gift that keeps on giving - a subscription
+            to Bookshelf Box.</li>
+        <li><strong>Satisfaction Guarantee:</strong> We are committed to your satisfaction. If you're not happy with a book,
+            let us know, and we'll make it right.</li>
     </ul>
 </div>
 {% endblock %}
