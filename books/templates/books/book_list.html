@@ -54,7 +54,7 @@
         </div>
 
         <!-- Manage Books Section (for superusers and staff) -->
-        {% if user.is_authenticated and (user.is_superuser or user.is_staff) %}
+        {% if user.is_authenticated and user.is_superuser or user.is_staff %}
         <div class="row mb-4">
             <div class="col-12">
                 <h3>Manage Books</h3>
