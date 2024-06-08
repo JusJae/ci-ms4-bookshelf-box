@@ -23,7 +23,7 @@ class Book(models.Model):
     description = models.TextField()
     upc = models.CharField(max_length=25, null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    availability = models.CharField(max_length=50)
+    availability = models.IntegerField(default=0)
     reviews = models.IntegerField(default=0, blank=True, null=True)
 
     def __str__(self):
