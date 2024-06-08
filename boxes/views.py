@@ -10,14 +10,19 @@ def view_box(request):
     box = request.session.get('box', {})
 
     for subscription_id in box.keys():
-        user_subscription = get_object_or_404(
-            UserSubscriptionOption, pk=subscription_id)
-        selected_books = user_subscription.selected_books.all()
-        box_items.append({
-            'subscription_option': user_subscription.subscription_option,
-            'user_subscription': user_subscription,
-            'selected_books': selected_books,
-        })
+        try:
+            subscription_id = int(subscription_id)
+            user_subscription = get_object_or_404(
+                UserSubscriptionOption, pk=subscription_id)
+            selected_books = user_subscription.selected_books.all()
+            box_items.append({
+                'subscription_option': user_subscription.subscription_option,
+                'user_subscription': user_subscription,
+                'selected_books': selected_books,
+            })
+        except ValueError:
+            messages.error(request, "Invalid subscription ID found in your box.")
+            continue
 
     context = {
         'box_items': box_items,
@@ -60,7 +65,7 @@ def add_to_box(request, subscription_id):
             messages.error(request, f"Sorry, {book.title} is out of stock.")
             return redirect('view_subscription', pk=subscription_id)
         elif book.availability < 3:
-            messages.warning (request, f"Hurry! Only {book.availability} copies of {book.title} left in stock.")
+            messages.warning(request, f"Hurry! Only {book.availability} copies of {book.title} left in stock.")
 
         if str(book.id) in request.session['box']:
             if request.session['box'][str(book.id)] + 1 > book.availability:
