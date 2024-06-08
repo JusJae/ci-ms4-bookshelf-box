@@ -34,13 +34,32 @@ class Command(BaseCommand):
 
                 fields['category'] = category
 
-                subscription_option, created = SubscriptionOption.objects.update_or_create(
-                    pk=pk,
-                    defaults=fields
-                )
-                if created:
+                try:
+                    subscription_option = SubscriptionOption.objects.get(pk=pk)
+                    updated = False
+                    for field, value in fields.items():
+                        if getattr(subscription_option, field) != value:
+                            setattr(subscription_option, field, value)
+                            updated = True
+                    if updated:
+                        subscription_option.save()
+                        self.stdout.write(self.style.SUCCESS(
+                            f'Updated subscription option {pk}'))
+                    else:
+                        self.stdout.write(self.style.SUCCESS(
+                            f'Subscription option {pk} already exists'))
+                except SubscriptionOption.DoesNotExist:
+                    SubscriptionOption.objects.create(pk=pk, **fields)
                     self.stdout.write(self.style.SUCCESS(
                         f'Created subscription option {pk}'))
-                else:
-                    self.stdout.write(self.style.SUCCESS(
-                        f'Updated subscription option {pk}'))
+                    
+                #     subscription_option, created = SubscriptionOption.objects.update_or_create(
+                #     pk=pk,
+                #     defaults=fields
+                # )
+                # if created:
+                #     self.stdout.write(self.style.SUCCESS(
+                #         f'Created subscription option {pk}'))
+                # else:
+                #     self.stdout.write(self.style.SUCCESS(
+                #         f'Updated subscription option {pk}'))
