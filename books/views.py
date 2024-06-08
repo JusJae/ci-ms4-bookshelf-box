@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.db.models.functions import Lower
 from .models import Book, Category
+from .forms import BookForm, StockForm
 
 
 # book_list
@@ -64,8 +65,71 @@ def book_detail(request, book_id):
     }
     return render(request, 'books/book_detail.html', context)
 
-# search_books
+
 # add_book
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Book added successfully!')
+            return redirect('manage_books')
+        else:
+            messages.error(
+                request, 'Failed to add book. Please ensure the form is valid.')
+    else:
+        form = BookForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'books/add_book.html', context)
+
+
 # edit_book
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES, instance=book)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Book updated successfully!')
+            return redirect('manage_books')
+        else:
+            messages.error(
+                request, 'Failed to update book. Please ensure the form is valid.')
+    else:
+        form = BookForm(instance=book)
+    context = {
+        'form': form,
+        'book': book,
+    }
+    return render(request, 'books/edit_book.html', context)
+
+
 # delete_book
-# list_categories
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    book.delete()
+    messages.success(request, 'Book deleted successfully!')
+    return redirect('manage_books')
+
+
+# manage_stock
+def manage_stock(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == 'POST':
+        form = StockForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Stock updated successfully!')
+            return redirect('manage_books')
+        else:
+            messages.error(
+                request, 'Failed to update stock. Please ensure the form is valid.')
+    else:
+        form = StockForm(instance=book)
+    context = {
+        'form': form,
+        'book': book,
+    }
+    return render(request, 'books/manage_stock.html', context)
