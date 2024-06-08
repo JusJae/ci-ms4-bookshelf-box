@@ -56,8 +56,6 @@ def book_list(request):
     return render(request, 'books/book_list.html', context)
 
 
-# views that need to be created for the books app:
-# book_details
 def book_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     context = {
@@ -66,7 +64,6 @@ def book_detail(request, book_id):
     return render(request, 'books/book_detail.html', context)
 
 
-# add_book
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
@@ -85,7 +82,6 @@ def add_book(request):
     return render(request, 'books/add_book.html', context)
 
 
-# edit_book
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
@@ -106,7 +102,6 @@ def edit_book(request, book_id):
     return render(request, 'books/edit_book.html', context)
 
 
-# delete_book
 def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
@@ -114,8 +109,12 @@ def delete_book(request, book_id):
     return redirect('manage_books')
 
 
-# manage_stock
-def manage_stock(request, book_id):
+def stock_management(request):
+    """ A view to show instructions for stock management """
+    return render(request, 'books/stock_management.html')
+
+
+def update_stock(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == 'POST':
         form = StockForm(request.POST, instance=book)
@@ -132,4 +131,4 @@ def manage_stock(request, book_id):
         'form': form,
         'book': book,
     }
-    return render(request, 'books/manage_stock.html', context)
+    return render(request, 'books/update_stock.html', context)

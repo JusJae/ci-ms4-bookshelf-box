@@ -80,7 +80,7 @@
                             <a href="{% url 'edit_book' book.id %}" class="btn btn-warning">Edit</a>
                             <a href="{% url 'delete_book' book.id %}" class="btn btn-danger"
                                 onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
-                            <a href="{% url 'manage_stock' book.id %}" class="btn btn-info">Manage Stock</a>
+                            <a href="{% url 'update_stock' book.id %}" class="btn btn-info">Update Stock</a>
                         {% endif %}
                     </div>
                 </div>
