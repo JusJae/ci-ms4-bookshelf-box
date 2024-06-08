@@ -26,7 +26,7 @@ def how_it_works(request):
     context = {
         'category_prices': category_prices
     }
-    return render(request, 'home/how_it_works.html', context)
+    return render(request, 'subscriptions/how_it_works.html', context)
 
 
 @login_required
