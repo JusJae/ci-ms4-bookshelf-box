@@ -163,7 +163,7 @@ def checkout(request):
                             stripe_subscription_item_id=subscription_item_id,
                             is_active=True
                         )
-                        
+
                         # Update the session to store the user's subscription option ID
                         request.session['box']['subscription_option'] = user_subscription.id
                         request.session.modified = True
