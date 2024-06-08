@@ -180,10 +180,11 @@ def checkout(request):
                 if subscription_id:
                     subscription = UserSubscriptionOption.objects.get(
                         pk=subscription_id)
+                    lineitem_total = subscription.calculated_price
                     order_line_item = OrderLineItem(
                         order=order,
                         user_subscription_option=subscription,
-                        lineitem_total=subscription.calculated_price
+                        lineitem_total=lineitem_total
                     )
                     order_line_item.save()
                     if 'books' in box:
