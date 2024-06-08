@@ -10,111 +10,122 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h3 id="how-it-works">Creating a Subscription</h3>
-    <p>Welcome to our Bookshelf Box subscription service!</p>
-    <p>Here's how it works:</p>
-    <ol>
-        <li>Create a subscription option by deciding whether you want a one-off box or a recurring subscription (monthly
-            or every 3 months).</li>
-        <li>Choose how many books you would like in your box (1, 2, or 3 books).</li>
-        <li>Create your subscription and proceed to make the payment.</li>
-    </ol>
-    <p>The price of your subscription is based on the category of books you choose and the number of books you select.
-        You will also receive a discount depending on the type of subscription you choose.</p>
+<div class="background-mask"></div>
+<main>
+    <div class="container mt-4">
+        <div>
+            <h3 id="how-it-works">Creating a Subscription</h3>
+            <p>Welcome to our Bookshelf Box subscription service!</p>
+            <p>Here's how it works:</p>
+            <ol>
+                <li>Create a subscription option by deciding whether you want a one-off box or a recurring subscription (monthly
+                    or every 3 months).</li>
+                <li>Choose how many books you would like in your box (1, 2, or 3 books).</li>
+                <li>Create your subscription and proceed to make the payment.</li>
+            </ol>
+            <p>The price of your subscription is based on the category of books you choose and the number of books you select.
+                You will also receive a discount depending on the type of subscription you choose.</p>
+        </div>
 
-    <h3 id="subscription-plans">Subscription Plans</h3>
-    <p>Here are the available categories and their prices per book:</p>
-    <ul>
-        {% for category, price in category_prices.items %}
-        <table class="rounded">
-            <thead>
-            <tr>
-                <th class="font-weight-bold">Category</th>
-                <th class="font-weight-bold">Price</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for category, price in category_prices.items %}
-            <tr>
-                <td><strong>{{ category }}</strong></td>
-                <td>£{{ price }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% endfor %}
-    </ul>
+        <div>
+            <h3 id="subscription-plans">Subscription Plans</h3>
+            <p>Here are the available categories and their prices per book:</p>
+            <ul>
+                <table class="table table-bordered rounded-3">
+                    <thead>
+                    <tr>
+                        <th class="font-weight-bold">Category</th>
+                        <th class="font-weight-bold">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for category, price in category_prices.items %}
+                    <tr>
+                        <td><strong>{{ category }}</strong></td>
+                        <td>£{{ price }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </ul>
+        </div>
 
-    <h4>Subscription Types</h4>
-    <table class="rounded">
-        <thead>
-            <tr>
-                <th class="font-weight-bold">Subscription Type</th>
-                <th class="font-weight-bold">Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>One-off Box</strong></td>
-                <td>Pay once and receive your box.</td>
-            </tr>
-            <tr>
-                <td><strong>Monthly Subscription</strong></td>
-                <td>Receive a box every month with a discount.</td>
-            </tr>
-            <tr>
-                <td><strong>Every 3 Months Subscription</strong></td>
-                <td>Receive a box every 3 months with a discount.</td>
-            </tr>
-        </tbody>
-    </table>
+        <div>
+            <h4>Subscription Types</h4>
+            <table class="table rounded">
+                <thead>
+                    <tr>
+                        <th class="font-weight-bold">Subscription Type</th>
+                        <th class="font-weight-bold">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>One-off Box</strong></td>
+                        <td>Pay once and receive your box.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Monthly Subscription</strong></td>
+                        <td>Receive a box every month with a discount.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Every 3 Months Subscription</strong></td>
+                        <td>Receive a box every 3 months with a discount.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <h4>Discounts</h4>
-    <p>The discounts applied are as follows:</p>
-    <table class="rounded">
-        <thead>
-            <tr>
-                <th class="font-weight-bold">Subscription Type</th>
-                <th class="font-weight-bold">Discount</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><strong>One-off Box</strong></td>
-                <td>No discount</td>
-            </tr>
-            <tr>
-                <td><strong>Monthly Subscription</strong></td>
-                <td>10% discount</td>
-            </tr>
-            <tr>
-                <td><strong>Every 3 Months Subscription</strong></td>
-                <td>5% discount</td>
-            </tr>
-        </tbody>
-    </table>
+        <div>
+            <h4>Discounts</h4>
+            <p>The discounts applied are as follows:</p>
+            <table class="table rounded">
+                <thead>
+                    <tr>
+                        <th class="font-weight-bold">Subscription Type</th>
+                        <th class="font-weight-bold">Discount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>One-off Box</strong></td>
+                        <td>No discount</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Monthly Subscription</strong></td>
+                        <td>10% discount</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Every 3 Months Subscription</strong></td>
+                        <td>5% discount</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <h3 id="why-choose-us">Why Choose Us?</h3>
-    <p>At Bookshelf Box, we believe in providing an exceptional reading experience tailored to your preferences. Here are a
-        few reasons why you should choose us as your subscription service:</p>
-    <ul>
-        <li><strong>Curated Selection:</strong> Our team of experts handpicks each book to ensure a diverse and exciting
-            selection for every box.</li>
-        <li><strong>Flexible Subscription Plans:</strong> Whether you want a one-off box or a recurring subscription, we
-            have plans to suit your needs.</li>
-        <li><strong>Wide Range of Categories:</strong> From classics to contemporary fiction, we offer a variety of genres
-            to match your reading taste.</li>
-        <li><strong>Personalized Experience:</strong> Customize your box by choosing the number of books and your preferred
-            genres.</li>
-        <li><strong>Great Value:</strong> Enjoy significant discounts on multi-month subscriptions and save on your favorite
-            books.</li>
-        <li><strong>Exclusive Content:</strong> Get access to author interviews, book reviews, and special literary content
-            with each box.</li>
-        <li><strong>Gift Subscriptions:</strong> Surprise your loved ones with a gift that keeps on giving - a subscription
-            to Bookshelf Box.</li>
-        <li><strong>Satisfaction Guarantee:</strong> We are committed to your satisfaction. If you're not happy with a book,
-            let us know, and we'll make it right.</li>
-    </ul>
-</div>
+        <div>
+        <h3 id="why-choose-us">Why Choose Us?</h3>
+        <p>At Bookshelf Box, we believe in providing an exceptional reading experience tailored to your preferences. Here are a
+            few reasons why you should choose us as your subscription service:</p>
+        <ul>
+            <li><strong>Curated Selection:</strong> Our team of experts handpicks each book to ensure a diverse and exciting
+                selection for every box.</li>
+            <li><strong>Flexible Subscription Plans:</strong> Whether you want a one-off box or a recurring subscription, we
+                have plans to suit your needs.</li>
+            <li><strong>Wide Range of Categories:</strong> From classics to contemporary fiction, we offer a variety of genres
+                to match your reading taste.</li>
+            <li><strong>Personalized Experience:</strong> Customize your box by choosing the number of books and your preferred
+                genres.</li>
+            <li><strong>Great Value:</strong> Enjoy significant discounts on multi-month subscriptions and save on your favorite
+                books.</li>
+            <li><strong>Exclusive Content:</strong> Get access to author interviews, book reviews, and special literary content
+                with each box.</li>
+            <li><strong>Gift Subscriptions:</strong> Surprise your loved ones with a gift that keeps on giving - a subscription
+                to Bookshelf Box.</li>
+            <li><strong>Satisfaction Guarantee:</strong> We are committed to your satisfaction. If you're not happy with a book,
+                let us know, and we'll make it right.</li>
+        </ul>
+        </div>
+    </div>
+</main>
 {% endblock %}
