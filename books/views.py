@@ -70,7 +70,7 @@ def add_book(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Book added successfully!')
-            return redirect('manage_books')
+            return redirect('update_books')
         else:
             messages.error(
                 request, 'Failed to add book. Please ensure the form is valid.')
@@ -89,7 +89,7 @@ def edit_book(request, book_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Book updated successfully!')
-            return redirect('manage_books')
+            return redirect('update_books')
         else:
             messages.error(
                 request, 'Failed to update book. Please ensure the form is valid.')
@@ -106,7 +106,7 @@ def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
     messages.success(request, 'Book deleted successfully!')
-    return redirect('manage_books')
+    return redirect('books')
 
 
 def stock_management(request):
@@ -121,7 +121,7 @@ def update_stock(request, book_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Stock updated successfully!')
-            return redirect('manage_books')
+            return redirect('update_books')
         else:
             messages.error(
                 request, 'Failed to update stock. Please ensure the form is valid.')

@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block page_header %}
+<div class="container mt-3 mb-2 text-center">
+    <hr>
+    <h2>Manage Stock for {{ book.title }}</h2>
+    <hr>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h1>Manage Stock for {{ book.title }}</h1>
     <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}

@@ -22,7 +22,6 @@ class BookForm(forms.ModelForm):
             'description',
             'upc',
             'price',
-            'availability',
             'reviews',
             Submit('submit', 'Save', css_class='btn btn-primary')
         )
