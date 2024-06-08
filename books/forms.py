@@ -11,10 +11,7 @@ class BookForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        categories = Category.objects.all()
-        friendly_names = [(c.id, c.get_friendly_name()) for c in categories]
-
-        self.fields['category'].choices = friendly_names
+        self.fields['category'].queryset = Category.objects.all()
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
         self.helper.layout = Layout(
