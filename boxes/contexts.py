@@ -15,13 +15,13 @@ def box_contents(request):
         user_subscriptions = UserSubscriptionOption.objects.filter(
             user=request.user, is_active=True)
         if user_subscriptions.exists():
-            user_subscription = user_subscriptions.last()
+            user_subscription = user_subscriptions.order_by('-start_date').first()
             subscription_option = user_subscription.subscription_option
             if subscription_option:
                 subscription_type = subscription_option.subscription_type
                 total += user_subscription.calculated_price or 0
                 box_count += 1
-                selected_books = subscription_option.selected_books.all()
+                selected_books = user_subscription.selected_books.all()
                 box_items.append({
                     'subscription_option_id': subscription_option.id,
                     'subscription_option': subscription_option,
