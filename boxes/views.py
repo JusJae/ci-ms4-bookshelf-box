@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, reverse get_object_or_404
 from django.contrib import messages
 from subscriptions.models import SubscriptionOption, UserSubscriptionOption
 from django.contrib.auth.decorators import login_required
@@ -42,14 +42,14 @@ def add_to_box(request, subscription_id):
     for book in selected_books:
         if book.availability <= 0:
             messages.error(request, f"Sorry, {book.title} is out of stock.")
-            return redirect('view_subscription', pk=subscription_id)
+            return redirect(reverse('view_subscription', args=[subscription_id]))
         elif book.availability < 3:
             messages.warning (request, f"Hurry! Only {book.availability} copies of {book.title} left in stock.")
 
         if str(book.id) in request.session['box']:
             if request.session['box'][str(book.id)] + 1 > book.availability:
                 messages.error(request, f"Sorry only {book.availability} copies of {book.title} are available.")
-                return redirect('view_subscription', pk=subscription_id)
+                return redirect(reverse('view_subscription', args=[subscription_id]))
             request.session['box'][str(book.id)] += 1
         else:
             request.session['box'][str(book.id)] = 1
