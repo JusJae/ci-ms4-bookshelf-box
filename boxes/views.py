@@ -42,14 +42,14 @@ def add_to_box(request, subscription_id):
     for book in selected_books:
         if book.availability <= 0:
             messages.error(request, f"Sorry, {book.title} is out of stock.")
-            return redirect('view_subscription')
+            return redirect('view_subscription', pk=subscription_id)
         elif book.availability < 3:
             messages.warning (request, f"Hurry! Only {book.availability} copies of {book.title} left in stock.")
 
         if str(book.id) in request.session['box']:
             if request.session['box'][str(book.id)] + 1 > book.availability:
                 messages.error(request, f"Sorry only {book.availability} copies of {book.title} are available.")
-                return redirect('view_subscription')
+                return redirect('view_subscription', pk=subscription_id)
             request.session['box'][str(book.id)] += 1
         else:
             request.session['box'][str(book.id)] = 1
@@ -66,7 +66,7 @@ def add_to_box(request, subscription_id):
 
     # Redirect to a specified path or the same page to show confirmation
     # Fallback to home if no redirect_url provided
-    return redirect(request.POST.get('redirect_url', '/'))
+    return redirect(request.POST.get('redirect_url', reverse('view_subscription', args=[subscription_id])))
 
 
 # def adjust_box(request, subscription_id):
