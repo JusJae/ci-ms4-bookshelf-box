@@ -80,7 +80,7 @@ def create_subscription(request):
 
             messages.success(
                 request, 'Subscription option selected successfully.')
-            return redirect('checkout')
+            return redirect('view_box')
 
         else:
             messages.error(
