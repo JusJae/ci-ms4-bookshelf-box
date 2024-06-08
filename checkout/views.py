@@ -156,13 +156,17 @@ def checkout(request):
                         request.session['subscription_id'] = subscription.id
                         subscription_item_id = subscription['items']['data'][0]['id']
 
-                        UserSubscriptionOption.objects.create(
+                        user_subscription = UserSubscriptionOption.objects.create(
                             user=request.user,
                             subscription_option=subscription_option,
                             stripe_subscription_id=subscription.id,
                             stripe_subscription_item_id=subscription_item_id,
                             is_active=True
                         )
+                        
+                        # Update the session to store the user's subscription option ID
+                        request.session['box']['subscription_option'] = user_subscription.id
+                        request.session.modified = True
 
                         messages.success(
                             request, "Subscription started successfully.")
@@ -172,7 +176,7 @@ def checkout(request):
                     return redirect('checkout')
 
             try:
-                subscription_id = box.get('subscription_option')
+                subscription_id = request.session['box'].get('subscription_option')
                 if subscription_id:
                     subscription = UserSubscriptionOption.objects.get(
                         pk=subscription_id)

@@ -1,7 +1,7 @@
 from decimal import Decimal
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from subscriptions.models import UserSubscriptionOption
+from subscriptions.models import SubscriptionOption, UserSubscriptionOption
 
 
 def box_contents(request):
@@ -29,17 +29,17 @@ def box_contents(request):
     #     print("Debug - User not authenticated.")
 
     box = request.session.get('box', {})
-    subscription_id = box.get('subscription_option')
+    subscription_option_id = box.get('subscription_option')
 
-    if subscription_id:
-        subscription = get_object_or_404(
-            UserSubscriptionOption, id=subscription_id)
-        total += subscription.calculated_price
+    if subscription_option_id:
+        subscription_option = get_object_or_404(
+            SubscriptionOption, id=subscription_option_id)
+        total += subscription_option.price
         box_count += 1
-        selected_books = subscription.selected_books.all()
+        selected_books = subscription_option.selected_books.all()
         box_items.append({
-            'subscription_id': subscription_id,
-            'subscription': subscription,
+            'subscription_option_id': subscription_option_id,
+            'subscription_option': subscription_option,
             'selected_books': list(selected_books),
         })
 

@@ -39,22 +39,22 @@ def create_subscription(request):
                              'Please try again.')
                 return redirect('create_subscription')
 
-            user_subscription = UserSubscriptionOption(
-                user=request.user,
-                subscription_option=subscription_option
-            )
-            user_subscription.save()
-            user_subscription.select_books()
-            user_subscription.calculate_and_save_price()
+            # user_subscription = UserSubscriptionOption(
+            #     user=request.user,
+            #     subscription_option=subscription_option
+            # )
+            # user_subscription.save()
+            # user_subscription.select_books()
+            # user_subscription.calculate_and_save_price()
 
             # Debugging information
-            print(f"Debug - Created UserSubscriptionOption with ID: {user_subscription.id}")
+            # print(f"Debug - Created UserSubscriptionOption with ID: {user_subscription.id}")
 
             # Store the subscription option in the session
             if 'box' not in request.session:
                 request.session['box'] = {}
-            request.session['box']['subscription_option'] = user_subscription.id
-            request.session['box']['subscription_type'] = user_subscription.subscription_option.subscription_type
+            request.session['box']['subscription_option'] = subscription_option.id
+            request.session['box']['subscription_type'] = subscription_option.subscription_type
             request.session.modified = True
 
             print("Debug - Session data after creating subscription:",
