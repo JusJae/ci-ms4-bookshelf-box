@@ -70,7 +70,7 @@ def add_book(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Book added successfully!')
-            return redirect('update_books')
+            return redirect('add_book')
         else:
             messages.error(
                 request, 'Failed to add book. Please ensure the form is valid.')
@@ -89,7 +89,7 @@ def edit_book(request, book_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Book updated successfully!')
-            return redirect('update_books')
+            return redirect('edit_book', book_id=book.id)
         else:
             messages.error(
                 request, 'Failed to update book. Please ensure the form is valid.')
@@ -121,7 +121,7 @@ def update_stock(request, book_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Stock updated successfully!')
-            return redirect('update_books')
+            return redirect('update_stock', book_id=book.id)
         else:
             messages.error(
                 request, 'Failed to update stock. Please ensure the form is valid.')
