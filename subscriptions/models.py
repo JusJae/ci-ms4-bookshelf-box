@@ -17,7 +17,7 @@ class SubscriptionOption(models.Model):
     number_of_books = models.IntegerField()
     subscription_type = models.CharField(
         max_length=20, choices=SUBSCRIPTION_TYPES)
-    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0.00)
     stripe_price_id = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
