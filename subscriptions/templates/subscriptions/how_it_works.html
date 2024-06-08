@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_header %}
+<div class="container mt-3 mb-2 text-center">
+    <hr>
+    <h2 class="header-font">How It Works</h2>
+    <hr>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 id="how-it-works">Creating a Subscription</h3>
+    <p>Welcome to our Bookshelf Box subscription service! Here's how it works:</p>
+    <ol>
+        <li>Create a subscription option by deciding whether you want a one-off box or a recurring subscription (monthly
+            or every 3 months).</li>
+        <li>Choose how many books you would like in your box (1, 2, or 3 books).</li>
+        <li>Create your subscription and proceed to make the payment.</li>
+    </ol>
+    <p>The price of your subscription is based on the category of books you choose and the number of books you select.
+        You will also receive a discount depending on the type of subscription you choose.</p>
+
+    <h3 id="subscription-plans">Subscription Plans</h3>
+    <p>Here are the available categories and their prices per book:</p>
+    <ul>
+        {% for category, price in category_prices.items %}
+        <li><strong>{{ category }}:</strong> ${{ price }}</li>
+        {% endfor %}
+    </ul>
+
+    <h4>Subscription Types</h4>
+    <ul>
+        <li><strong>One-off Box:</strong> Pay once and receive your box.</li>
+        <li><strong>Monthly Subscription:</strong> Receive a box every month with a discount.</li>
+        <li><strong>Every 3 Months Subscription:</strong> Receive a box every 3 months with a larger discount.</li>
+    </ul>
+
+    <h4>Discounts</h4>
+    <p>The discounts applied are as follows:</p>
+    <ul>
+        <li><strong>One-off Box:</strong> No discount.</li>
+        <li><strong>Monthly Subscription:</strong> 10% discount.</li>
+        <li><strong>Every 3 Months Subscription:</strong> 5% discount.</li>
+    </ul>
+</div>
+{% endblock %}

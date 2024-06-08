@@ -11,6 +11,24 @@ import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
+def how_it_works(request):
+    """ A view to show how the site works and subscription plans """
+    category_prices = {
+        'Childrens': 7.50,
+        'Classics': 15.0,
+        'Fantasy': 12.50,
+        'Fiction': 10.00,
+        'Horror': 15.00,
+        'Humor': 10.00,
+        'Non-Fiction': 12.50,
+        'Young Adult': 10.00,
+    }
+    context = {
+        'category_prices': category_prices
+    }
+    return render(request, 'home/how_it_works.html', context)
+
+
 @login_required
 def create_subscription(request):
     if request.method == 'GET':
