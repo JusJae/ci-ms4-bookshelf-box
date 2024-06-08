@@ -53,8 +53,8 @@ def create_subscription(request):
             # Store the subscription option in the session
             if 'box' not in request.session:
                 request.session['box'] = {}
-            request.session['box']['subscription_option'] = subscription_option.id
-            request.session['box']['subscription_type'] = subscription_option.subscription_type
+            request.session['box']['user_subscription_option'] = user_subscription.id
+            request.session['box']['subscription_type'] = user_subscription.subscription_type
             request.session.modified = True
 
             print("Debug - Session data after creating subscription:",

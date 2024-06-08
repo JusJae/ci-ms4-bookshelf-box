@@ -8,14 +8,14 @@ def box_contents(request):
     box_items = []
     total = 0
     box_count = 0
-    # Default to "one-off" if not authenticated or no active subscription
     subscription_type = "one-off"
 
     if request.user.is_authenticated:
-        user_subscriptions = UserSubscriptionOption.objects.filter(
-            user=request.user, is_active=True)
-        if user_subscriptions.exists():
-            user_subscription = user_subscriptions.order_by('-start_date').first()
+        box = request.session.get('box', {})
+        user_subscription_id = box.get('user_subscription_option')
+        
+        if user_subscription_id:
+            user_subscription = get_object_or_404(UserSubscriptionOption, pk=user_subscription_id)
             subscription_option = user_subscription.subscription_option
             if subscription_option:
                 subscription_type = subscription_option.subscription_type
@@ -27,6 +27,21 @@ def box_contents(request):
                     'subscription_option': subscription_option,
                     'selected_books': list(selected_books),
                 })
+        # user_subscriptions = UserSubscriptionOption.objects.filter(
+        #     user=request.user, is_active=True)
+        # if user_subscriptions.exists():
+        #     user_subscription = user_subscriptions.order_by('-start_date').first()
+        #     subscription_option = user_subscription.subscription_option
+        #     if subscription_option:
+        #         subscription_type = subscription_option.subscription_type
+        #         total += user_subscription.calculated_price or 0
+        #         box_count += 1
+        #         selected_books = user_subscription.selected_books.all()
+        #         box_items.append({
+        #             'subscription_option_id': subscription_option.id,
+        #             'subscription_option': subscription_option,
+        #             'selected_books': list(selected_books),
+        #         })
             # Enhanced debugging prints
             print("Debug - Subscription Option ID:", subscription_option.id)
             print("Debug - Subscription Type:", subscription_type)

@@ -131,13 +131,14 @@ def checkout(request):
             subscription_type = box.get('subscription_type', 'one-off')
             if subscription_type != "one-off":
                 try:
-                    subscription_option_id = box.get('subscription_option')
+                    user_subscription_id = box.get('user_subscription_option')
                     print("Debug - Subscription Option ID from session:",
-                          subscription_option_id)  # Debugging
+                          user_subscription_id)  # Debugging
 
-                    if subscription_option_id:
-                        subscription_option = SubscriptionOption.objects.get(
-                            pk=subscription_option_id)
+                    if user_subscription_id:
+                        user_subscription = UserSubscriptionOption.objects.get(
+                            pk=user_subscription_id)
+                        subscription_option = user_subscription.subscription_option
                         print("Debug - Stripe Price ID:",
                               subscription_option.stripe_price_id)  # Debugging
                         # Ensure the stripe_price_id is not None or empty
@@ -155,18 +156,23 @@ def checkout(request):
                         # Save the subscription ID in the session or the order if needed
                         request.session['subscription_id'] = subscription.id
                         subscription_item_id = subscription['items']['data'][0]['id']
+                        print("Debug - Subscription Item ID:", subscription_item_id)  # Debugging
 
-                        user_subscription = UserSubscriptionOption.objects.create(
-                            user=request.user,
-                            subscription_option=subscription_option,
-                            stripe_subscription_id=subscription.id,
-                            stripe_subscription_item_id=subscription_item_id,
-                            is_active=True
-                        )
+                        user_subscription.stripe_subscription_id = subscription.id
+                        user_subscription.stripe_subscription_item_id = subscription_item_id
+                        user_subscription.save()
+
+                        # user_subscription = UserSubscriptionOption.objects.create(
+                        #     user=request.user,
+                        #     subscription_option=subscription_option,
+                        #     stripe_subscription_id=subscription.id,
+                        #     stripe_subscription_item_id=subscription_item_id,
+                        #     is_active=True
+                        # )
 
                         # Update the session to store the user's subscription option ID
-                        request.session['box']['subscription_option'] = user_subscription.id
-                        request.session.modified = True
+                        # request.session['box']['subscription_option'] = user_subscription.id
+                        # request.session.modified = True
 
                         messages.success(
                             request, "Subscription started successfully.")
@@ -176,14 +182,14 @@ def checkout(request):
                     return redirect('checkout')
 
             try:
-                subscription_id = box.get('subscription_option')
-                if subscription_id:
-                    subscription = UserSubscriptionOption.objects.get(
-                        pk=subscription_id)
-                    lineitem_total = subscription.calculated_price
+                user_subscription_id = box.get('user_subscription_option')
+                if user_subscription_id:
+                    user_subscription = UserSubscriptionOption.objects.get(
+                        pk=user_subscription_id)
+                    lineitem_total = user_subscription.calculated_price
                     order_line_item = OrderLineItem(
                         order=order,
-                        user_subscription_option=subscription,
+                        user_subscription_option=user_subscription,
                         lineitem_total=lineitem_total
                     )
                     order_line_item.save()
