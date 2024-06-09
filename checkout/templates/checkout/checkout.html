@@ -27,16 +27,14 @@
                                         <th class="p-2" scope="col">Subscription</th>
                                         <th scope="col">Selected Books</th>
                                         <th scope="col">Start Date</th>
-                                        {% if subscription_type == "one-off" %}
-                                            <th scope="col">End Date</th>
-                                        {% endif %}
+                                        <th scope="col">End Date</th>
                                         <th scope="col">Renewal Date</th>
                                     </tr>
                                 </thead>
                                 <tbody class=" table-group-divider align-middle">
                                     {% for item in box_items %}
                                         <tr>
-                                            <td>{{ item.subscription.subscription_option }}</td>
+                                            <td>{{ item.subscription_option }}</td>
                                             <td class="border-left">
                                                 {% for book in item.selected_books %}
                                                     <div class="d-flex align-items-center p-2">
@@ -45,8 +43,11 @@
                                                     </div>
                                                 {% endfor %}
                                             </td>
-                                            <td class="border-left">{{ item.subscription.start_date }}</td>
-                                            <td class="border-left">{{ item.subscription.end_date }}</td>
+                                            <td class="border-left">{{ item.user_subscription.start_date }}</td>
+                                            <td class="border-left">{{ item.user_subscription.end_date }}</td>
+                                            {% if subscription_type == "one-off" %}
+                                                <td class="border-left">One-off</td>
+                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                 </tbody>

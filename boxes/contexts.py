@@ -23,7 +23,7 @@ def box_contents(request):
                 box_count += 1
                 selected_books = user_subscription.selected_books.all()
                 box_items.append({
-                    'subscription_option_id': subscription_option.id,
+                    'user_subscription': user_subscription,
                     'subscription_option': subscription_option,
                     'selected_books': list(selected_books),
                 })
