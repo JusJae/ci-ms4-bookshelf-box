@@ -84,7 +84,7 @@ class UserSubscriptionOption(models.Model):
         # Apply discount based on subscription type
         discount_rate = {
             'one-off': Decimal('1.0'),  # no discount
-            'monthly': Decimal('0.9'),  # 10% discount, not implemented yet
+            'monthly': Decimal('0.9'),  # 10% discount
             'three_months': Decimal('0.95'),  # 5% discount
         }
         rate = discount_rate.get(

@@ -50,25 +50,6 @@ def add_to_box(request, subscription_id):
     return redirect(request.POST.get('redirect_url', reverse('view_subscription', args=[subscription_id])))
 
 
-# def adjust_box(request, subscription_id):
-#     """Adjust the quantity of the specified subscription to the specified amount"""
-
-#     subscription = get_object_or_404(
-#         UserSubscriptionOption, pk=subscription_id)
-#     quantity = int(request.POST.get('quantity'))
-#     box = request.session.get('box', {})
-
-#     if quantity > 0:
-#         box[subscription_id] = quantity
-#         messages.success(request, f'Updated {subscription.name} quantity to {quantity}')
-#     else:
-#         box.pop(subscription_id)
-#         messages.success(request, f'Removed {subscription.name} from your box')
-
-#     request.session['box'] = box
-#     return redirect('view_box')
-
-
 @login_required
 def remove_from_box(request, subscription_id):
     """Remove the subscription from the box"""
@@ -88,29 +69,8 @@ def remove_from_box(request, subscription_id):
         # Update the session
         request.session['box'] = box
         return redirect('view_box')
-        # return HttpResponse(status=200)
+
 
     except Exception as e:
         messages.error(request, f'Error removing item: {e}')
         return redirect('view_box')
-        # return HttpResponse(status=500)
-
-# @login_required
-# def remove_from_box(request, subscription_id):
-#     """ Remove the subscription option from the box """
-#     try:
-#         box = request.session.get('box', {})
-#         if str(subscription_id) in box:
-#             del box[str(subscription_id)]
-#             request.session['box'] = box
-#             request.session.modified = True
-#             messages.success(
-#                 request, "Subscription option removed successfully.")
-#         else:
-#             messages.error(
-#                 request, "Subscription option not found in your box.")
-
-#         return redirect('view_box')
-#     except Exception as e:
-#         messages.error(request, f'Error removing subscription option: {e}')
-#         return redirect('view_box')

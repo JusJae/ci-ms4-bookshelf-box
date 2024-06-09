@@ -54,8 +54,6 @@ class StripeWH_Handler:
         """
         Handle a generic/unknown/unexpected webhook event
         """
-        # we return an HTTP response object indicating it was received
-        # successfully
         return HttpResponse(
             content=f'Unhandled Webhook received: {event["type"]}',
             status=200)
@@ -98,12 +96,10 @@ class StripeWH_Handler:
                 profile.default_county = address.get('state')
                 profile.save()
 
-        order_exists = False  # we set the order exists variable to false
-        attempt = 1  # we set the attempt variable to 1
-        while attempt <= 5:  # as long as the attempt is <=5
+        order_exists = False
+        attempt = 1
+        while attempt <= 5:
             try:
-                # if not shipping_details.name or not billing_details.email:
-                #     raise ValueError("Required shipping or billing information missing.")
                 order = Order.objects.get(
                     full_name__iexact=shipping_details.get('name', ''),
                     email__iexact=billing_details.email,
@@ -118,14 +114,9 @@ class StripeWH_Handler:
                     original_box=box,
                     stripe_pid=pid,
                 )
-                # we check if the order exists
                 order_exists = True
-                # if it does, we break out of the loop
                 break
             except Order.DoesNotExist:
-                # if the order does not exist, we create a delay
-                # for 1 second
-                # and increment the attempt variable
                 attempt += 1
                 time.sleep(1)
         if order_exists:
@@ -209,7 +200,6 @@ class StripeWH_Handler:
     def handle_subscription_deleted(event):
         subscription = event['data']['object']
         stripe_subscription_id = subscription['id']
-        # Clean up or adjust your database following a subscription cancellation
         try:
             user_subscription = UserSubscriptionOption.objects.get(stripe_subscription_id=stripe_subscription_id)
             user_subscription.is_active = False

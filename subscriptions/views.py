@@ -36,9 +36,6 @@ def create_subscription(request):
     elif request.method == 'POST':
         form = SubscriptionOptionForm(request.POST)
         if form.is_valid():
-            # subscription_option = form.save(commit=False)
-            # subscription_option.user = request.user
-            # subscription_option.save()
             category = form.cleaned_data['category']
             number_of_books = form.cleaned_data['number_of_books']
             subscription_type = form.cleaned_data['subscription_type']

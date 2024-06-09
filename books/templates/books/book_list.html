@@ -72,7 +72,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ book.title }}</h5>
                         <p class="card-text">
-                            <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }} %}">Category: {{ book.category }}</a></p>
+                            <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }}">Category: {{ book.category }}</a></p>
                         <p class="card-text">Rating: {{ book.rating|stars }}</p>
                         <a href="{% url 'book_detail' book.id %}" class="btn btn-info">View Details</a>
                         {% if user.is_authenticated and user.is_superuser or user.is_staff %}

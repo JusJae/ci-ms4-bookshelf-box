@@ -11,7 +11,7 @@ def user_profile(request):
         form = UserProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile_view')  # Redirect to the profile view
+            return redirect('profile_view')
     else:
         form = UserProfileForm(instance=profile)
     return render(request, 'users/user_profile.html', {'form': form})

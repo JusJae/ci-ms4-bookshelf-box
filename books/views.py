@@ -23,7 +23,6 @@ def book_list(request):
 
             if sortkey == 'name':
                 sortkey = 'lower_name' if direction == 'asc' else '-lower_name'
-                # Assuming 'title' is the field name for book names
                 books = books.annotate(lower_name=Lower('title'))
             elif sortkey in ['category', 'price']:
                 sortkey = f'{sortkey}' if direction == 'asc' else f'-{sortkey}'
@@ -49,7 +48,7 @@ def book_list(request):
     context = {
         'books': books,
         'search_term': query,
-        'categories': categories,  # Add categories to context
+        'categories': categories,
         'current_sorting': current_sorting,
     }
 

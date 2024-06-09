@@ -133,14 +133,14 @@ def checkout(request):
                 try:
                     user_subscription_id = box.get('user_subscription_option')
                     print("Debug - Subscription Option ID from session:",
-                          user_subscription_id)  # Debugging
+                          user_subscription_id)
 
                     if user_subscription_id:
                         user_subscription = UserSubscriptionOption.objects.get(
                             pk=user_subscription_id)
                         subscription_option = user_subscription.subscription_option
                         print("Debug - Stripe Price ID:",
-                              subscription_option.stripe_price_id)  # Debugging
+                              subscription_option.stripe_price_id)
                         # Ensure the stripe_price_id is not None or empty
                         if not subscription_option.stripe_price_id:
                             messages.error(
@@ -161,18 +161,6 @@ def checkout(request):
                         user_subscription.stripe_subscription_id = subscription.id
                         user_subscription.stripe_subscription_item_id = subscription_item_id
                         user_subscription.save()
-
-                        # user_subscription = UserSubscriptionOption.objects.create(
-                        #     user=request.user,
-                        #     subscription_option=subscription_option,
-                        #     stripe_subscription_id=subscription.id,
-                        #     stripe_subscription_item_id=subscription_item_id,
-                        #     is_active=True
-                        # )
-
-                        # Update the session to store the user's subscription option ID
-                        # request.session['box']['subscription_option'] = user_subscription.id
-                        # request.session.modified = True
 
                         messages.success(
                             request, "Subscription started successfully.")
@@ -209,7 +197,7 @@ def checkout(request):
                 Please double check your information.')
     else:
         box = request.session.get('box', {})
-        print("Debug - Box contents on GET:", box)  # Debugging
+        print("Debug - Box contents on GET:", box)
 
         if not box:
             messages.error(
