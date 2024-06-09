@@ -1,0 +1,70 @@
+1c1ecbf fix: update profile order and subscription information display
+f79de9e fix: update box.html and checkout.html to display subscription ino and edit and remove buttons updated and remove url shortened
+f0aba56 refactor: remove URLs to check if fix for reverse match issue
+c75b9c7 fix: update form action URL in box.html to use correct subscription ID variable
+a63e6d4 fix: update Edit button URL in box.html to use correct subscription ID variable
+e91c800 fix: update box.html to fix URL in Edit button and handle missing subscription ID
+f8c9b17 refactor: view_box to try fix no box content showing
+e767987 fix: update remove_from_box URL in boxes/urls.py and ensure valid data in view_box view
+94effc6 fix: redirect URLs in add_to_box view
+7992965 fix: redirect URLs in add_to_box view
+429e8c1 fix: update add_to_box redirects to remove arguments
+0305d27 fix: update home/index.html to fix button onclick URL and table styling
+18cb524 fix: update redirect URL after successful subscription creation
+d576aed fix: update template path for "How It Works" page in subscriptions
+cc4199b fix: update redirect URLs in book views
+8cb919e fix: invalid view link in edit/add/update books and remove 'availability' field from BookForm
+3357d20 fix: update category choices in BookForm to use queryset instead of choices list
+dbe7c1f fix: remove parantheses from if statement for managing books
+7098ead fix: remove parantheses from if statement for managing books
+a902d8c fix: remove user tag from books/book_list.html
+e73b4d2 fix: correcting availability typo in books/forms.py
+40f01a3 fix: attribute error in subscription view
+660232d fix: update subscription creation process to use correct user subscription option ID in box contexts and checkout view
+7f9c8e5 refactor: remove redundant code and fix syntax error in contexts.py and views.py
+f2a02d1 fix: syntax error in contexts.py and add debugging
+f174c7d fix: add corrected subscription options JSON file
+d1a2cb4 fix: remove unnecessary code from checkout/admin.py
+6e0644e fix: keyerror in create_subscription
+5a8c253 fix: update checkout view for debugging
+298baf2 fix: save subscription item ID in session during checkout
+49d6a25 fix: update subscription_options.json stripe price ids
+ae18dd7 fix: update management command to handle category assignment
+36b9d6b fix: update stripe price id for duplicate found
+5434326 fix: test to check stripe price id issue
+abbd67f fix: syntax error of missing endif
+22790fc fix: removal of duplicate url path and update cancel url path
+7faa7e7 fix: update userprofile and usersubscriptionoption models, admin config and webhook handling
+1999d64 fix: update profiles view to include user's subscription option
+9c392fd fix: update profile view to include subscriptions in the context
+faa480f fix: update profile.html to display the user's subscription options and form submission handling
+3d79b99 fix: update UserSubscriptionOption retrieval in webhook_handler.py to use latest created_at
+6be43ba fix: setup payment intent for future use in checkout view
+8cbf515 fix: attach payment method to customer in checkout view
+4ebb89b fix: Import SubscriptionOption model in checkout/views.py and retrieval
+f0cc2f5 fix: update checkout view to use session data for subscription type and subscription option
+2cef431 fix: update profile.html to display the user's subscription option in the order table
+7f81e5b fix: update checkout/view and subscriptions/view to store subscription type in session
+03b671e fix: update subscription_type check in checkout view
+592115e fix: handle missing subscription_type element in stripe_element.js
+25792e5 fix: update subscription_type variable name in stripe_element.js
+2828460 fix: update boxes/contexts.py to resolve value error
+530936e fix: store subs option in session and retrieve in checkout
+fd93d68 fix: typo in print in checkout view
+592492a fix: update js code and view for stripe subscription creation
+d94e05a fix: save info checkbox not saving details bug
+10a45e7 feat: fix typo in checkout/admin.py and update profiles/forms.py
+71b5b71 fix: update urls.py to serve static and media files
+15674fb fix: add static and media file serving in urls.py
+9ffd99c fix: static files and media files settings
+648ca29 fix: static files settings using whitenoise
+c4c2f59 fix: update webhook URL in checkout/urls.py
+ca69048 fix: update checkout admin order line item fields
+e49b900 fix: box_contents delivery charge issue and add debug prints
+1520489 fix: create user subscription as deletd all from admin
+b4fec85 fix: update message alert in base.html to show messages
+ed18b92 fix: update base.html to show messages
+b7c11d5 fix: end date not setting, selected books  and calculated price not showing
+cc86b34 feat: update subscription view template and todo's for fixes needed
+fcf883b refactor: book_detail.html and book_list.html templates to fix render issue
+71eebe3 fix: add media context processor to settings.py
