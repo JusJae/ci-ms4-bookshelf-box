@@ -10,6 +10,10 @@ class OrderLineItemAdminInline(admin.TabularInline):
     extra = 0
 
 
+class OrderLineItemAdmin(admin.ModelAdmin):
+    filter_horizontal = ('selected_books',)
+
+
 class OrderAdmin(admin.ModelAdmin):
     inlines = (OrderLineItemAdminInline,)
     readonly_fields = ('order_number', 'date',
@@ -29,3 +33,4 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderLineItem, OrderLineItemAdmin)
