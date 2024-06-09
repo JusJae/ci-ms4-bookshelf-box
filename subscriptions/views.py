@@ -119,6 +119,13 @@ def update_subscription(request, subscription_id):
             subscription_option = form.save()
 
             try:
+                # Debugging: Print the values being passed to Stripe
+                print("Debug - Stripe Subscription ID:",
+                      user_subscription.stripe_subscription_id)
+                print("Debug - Stripe Subscription Item ID:",
+                      user_subscription.stripe_subscription_item_id)
+                print("Debug - Stripe Price ID:",
+                      subscription_option.stripe_price_id)
                 stripe.Subscription.modify(
                     user_subscription.stripe_subscription_id,
                     items=[{
