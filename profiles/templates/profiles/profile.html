@@ -48,20 +48,16 @@
                                             <td>{{ order.grand_total }}</td>
                                             <td>
                                                 {% for lineitem in order.lineitems.all %}
-                                                    {% for subscription in lineitem.user_subscription.all %}
-                                                        {{ subscription.subscription_option }}
-                                                    {% endfor %}
+                                                    {{ lineitem.user_subscription_option.subscription_option }}
                                                 {% endfor %}
                                             </td>
                                             <td>
                                                 {% for lineitem in order.lineitems.all %}
-                                                    {% for subscription in lineitem.user_subscription.all %}
-                                                        {% for book in subscription.selected_books.all %}
+                                                    {% for book in lineitem.selected_books.all %}
                                                             <div class="d-flex align-items-center p-2">
                                                                 <img src="{{ book.image_url }}" alt="{{ book.title }}" style="width: 50px; height: auto; margin-right: 10px;">
                                                                 {{ book.title }}
                                                             </div>
-                                                        {% endfor %}
                                                     {% endfor %}
                                                 {% endfor %}
                                             </td>
@@ -93,9 +89,13 @@
                                     <tr>
                                         <td>{{ subscription.subscription_option }}</td>
                                         <td>{{ subscription.start_date }}</td>
-                                        {% if subscription.subscription_option == 'monthly' or subscription.subscription_option == '3-months' %}
-                                        <td>{{ subscription.end_date }}</td>
-                                        {% endif %}
+                                        <td>
+                                            {% if subscription.subscription_option == "One-off" %}
+                                                One-off
+                                            {% else %}
+                                                {{ subscription.end_date }}
+                                            {% endif %}
+                                        </td>
                                         <td>{{ subscription.end_date }}</td>
                                         <td>
                                             {% for book in subscription.selected_books.all %}
