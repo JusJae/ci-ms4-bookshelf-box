@@ -1,53 +1,13 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
-from subscriptions.models import SubscriptionOption, UserSubscriptionOption
+from subscriptions.models import UserSubscriptionOption
 from django.contrib.auth.decorators import login_required
 
 
 def view_box(request):
     """ A view that renders the box contents page """
-    # box_items = []
-    # box = request.session.get('box', {})
-
-    # for subscription_id in box.keys():
-    #     try:
-    #         subscription_id = int(subscription_id)
-    #         user_subscription = get_object_or_404(
-    #             UserSubscriptionOption, pk=subscription_id)
-    #         selected_books = user_subscription.selected_books.all()
-    #         box_items.append({
-    #             'subscription_option': user_subscription.subscription_option,
-    #             'user_subscription': user_subscription,
-    #             'selected_books': selected_books,
-    #         })
-    #     except ValueError:
-    #         messages.error(request, "Invalid subscription ID found in your box.")
-    #         continue
-
-    # context = {
-    #     'box_items': box_items,
-    # }
 
     return render(request, 'boxes/box.html')
-
-
-# # def add_to_box(request, pk):
-#     """ Add user subscription option to box content """
-#     subscription = get_object_or_404(UserSubscriptionOption, pk=pk)
-#     # redirect_url = request.POST.get('redirect_url')
-#     box = request.session.get('box', {})
-    
-#     if pk in box:
-#         box[pk] += 1
-#         messages.success(request, f'Added another {subscription.name} to your box')
-#     else:
-#         box[pk] = 1
-#         messages.success(request, f'Added {subscription.name} to your box')
-    
-#     request.session['box'] = box
-#     print(request.session['box'])
-#     # return redirect(redirect_url)
-#     return redirect('view_subscription', pk=pk)
 
 
 def add_to_box(request, subscription_id):
@@ -78,7 +38,7 @@ def add_to_box(request, subscription_id):
     # Add the subscription ID if it's not already in the session
     if str(subscription_id) not in request.session['box']:
         request.session['box'][str(subscription_id)] = 1
-        request.session.modified = True  # Make sure Django saves the session change
+        request.session.modified = True
         messages.success(request, "Subscription added successfully.")
     else:
         messages.info(request, "This subscription is already in your session.")
@@ -119,8 +79,8 @@ def remove_from_box(request, subscription_id):
         box = request.session.get('box', {})
 
         # Remove the subscription ID from the box
-        if str(subscription_id) in box:
-            box.pop(str(subscription_id))
+        if 'user_subscription_option' in box and box['user_subscription_option'] == subscription_id:
+            box.pop('user_subscription_option')
             messages.success(request, f'Removed {subscription.subscription_option} from your box')
         else:
             messages.error(request, 'Subscription not found in your box.')
