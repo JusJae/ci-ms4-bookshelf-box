@@ -6,29 +6,29 @@ from django.contrib.auth.decorators import login_required
 
 def view_box(request):
     """ A view that renders the box contents page """
-    box_items = []
-    box = request.session.get('box', {})
+    # box_items = []
+    # box = request.session.get('box', {})
 
-    for subscription_id in box.keys():
-        try:
-            subscription_id = int(subscription_id)
-            user_subscription = get_object_or_404(
-                UserSubscriptionOption, pk=subscription_id)
-            selected_books = user_subscription.selected_books.all()
-            box_items.append({
-                'subscription_option': user_subscription.subscription_option,
-                'user_subscription': user_subscription,
-                'selected_books': selected_books,
-            })
-        except ValueError:
-            messages.error(request, "Invalid subscription ID found in your box.")
-            continue
+    # for subscription_id in box.keys():
+    #     try:
+    #         subscription_id = int(subscription_id)
+    #         user_subscription = get_object_or_404(
+    #             UserSubscriptionOption, pk=subscription_id)
+    #         selected_books = user_subscription.selected_books.all()
+    #         box_items.append({
+    #             'subscription_option': user_subscription.subscription_option,
+    #             'user_subscription': user_subscription,
+    #             'selected_books': selected_books,
+    #         })
+    #     except ValueError:
+    #         messages.error(request, "Invalid subscription ID found in your box.")
+    #         continue
 
-    context = {
-        'box_items': box_items,
-    }
+    # context = {
+    #     'box_items': box_items,
+    # }
 
-    return render(request, 'boxes/box.html', context)
+    return render(request, 'boxes/box.html')
 
 
 # # def add_to_box(request, pk):
