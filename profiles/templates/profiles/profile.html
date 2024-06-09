@@ -27,7 +27,7 @@
                         </button>
                     </form>
                 </div>
-                <div class="col-12 col-lg-6">
+                <!-- <div class="col-12 col-lg-6">
                     <p class="text-muted">Order History</p>
                         <div>
                             <table class="table table-hover">
@@ -66,9 +66,9 @@
                                 </tbody>
                             </table>
                         </div>
-                </div>
+                </div> -->
             </div>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col">
                     <p class="text-muted">Subscription Information</p>
                     {% if subscriptions %}
@@ -130,7 +130,147 @@
                         <p>No subscriptions</p>
                     {% endif %}
                 </div>
-            </div>
+            </div> -->
+                <div class="col-12 col-lg-6">
+                    <p class="text-muted">Order History</p>
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Order Number</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Subscription</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">Selected Books</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>{{ order.order_number }}</td>
+                                    <td>{{ order.date }}</td>
+                                    <td>{{ order.grand_total }}</td>
+                                    <td>
+                                        {% for lineitem in order.lineitems.all %}
+                                        {{ lineitem.user_subscription_option.subscription_option }}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for lineitem in order.lineitems.all %}
+                                        {{ lineitem.user_subscription_option.start_date }}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for lineitem in order.lineitems.all %}
+                                        {{ lineitem.user_subscription_option.end_date }}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for lineitem in order.lineitems.all %}
+                                        {% for book in lineitem.selected_books.all %}
+                                        <div class="d-flex align-items-center p-2">
+                                            <img src="{{ book.image_url }}" alt="{{ book.title }}"
+                                                style="width: 50px; height: auto; margin-right: 10px;">
+                                            {{ book.title }}
+                                        </div>
+                                        {% endfor %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% for lineitem in order.lineitems.all %}
+                                        {% if lineitem.user_subscription_option.is_active %}
+                                        <a href="{% url 'update_subscription' lineitem.user_subscription_option.id %}" type="submit"
+                                            class="btn btn-sm btn-primary text-uppercase">
+                                            Update
+                                        </a>
+                                        <form action="{% url 'cancel_subscription' lineitem.user_subscription_option.id %}"
+                                            method="POST" id="subscription-cancel-form" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger text-uppercase">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        <a href="{% url 'update_subscription' lineitem.user_subscription_option.id %}" type="submit"
+                                            class="btn btn-sm btn-primary text-uppercase"> Update </a>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <!-- <div class="row">
+                <div class="col">
+                    <p class="text-muted">Subscription Information</p>
+                    {% if subscriptions %}
+                    <div>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Subscription</th>
+                                    <th scope="col">Start Date</th>
+                                    <th scope="col">Renewal Date</th>
+                                    <th scope="col">End Date</th>
+                                    <th scope="col">Selected Books</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subscription in subscriptions %}
+                                <tr>
+                                    <td>{{ subscription.subscription_option }}</td>
+                                    <td>{{ subscription.start_date }}</td>
+                                    <td>
+                                        {% if subscription.subscription_option == "One-off" %}
+                                        One-off
+                                        {% else %}
+                                        {{ subscription.end_date }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ subscription.end_date }}</td>
+                                    <td>
+                                        {% for book in subscription.selected_books.all %}
+                                        <div class="d-flex align-items-center p-2">
+                                            <img src="{{ book.image_url }}" alt="{{ book.title }}"
+                                                style="width: 50px; height: auto; margin-right: 10px;">
+                                            {{ book.title }}
+                                        </div>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {% if subscription.is_active %}
+                                        <a href="{% url 'update_subscription' subscription.id %}" type="submit"
+                                            class="btn btn-sm btn-primary text-uppercase">
+                                            Update
+                                        </a>
+                                        <form action="{% url 'cancel_subscription' subscription.id %}" method="POST"
+                                            id="subscription-cancel-form" class="d-inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger text-uppercase">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        <a href="{% url 'update_subscription' subscription.id %}" type="submit"
+                                            class="btn btn-sm btn-primary text-uppercase"> Update </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p>No subscriptions</p>
+                    {% endif %}
+                </div>
+            </div> -->
         </div>
     </main>
 {% endblock %}
