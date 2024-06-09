@@ -44,9 +44,9 @@
                                         <td class="border-left">{{ item.user_subscription.end_date }}</td>
                                         <td class="border-left">
                                             {% if item.user_subscription.pk %}
-                                                <a href="{% url 'view_subscription' subscription.pk %}" class="btn btn-primary mb-2">Edit</a>
+                                                <a href="" class="btn btn-primary mb-2">Edit</a>
                                             {% endif %}
-                                            <form method="POST" action="{% url 'remove_from_box' subscription.pk %}" class="d-inline">
+                                            <form method="POST" action="" class="d-inline">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn btn-danger">Remove</button>
                                             </form>
