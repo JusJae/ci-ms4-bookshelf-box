@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import SubscriptionOptionForm
 from .models import UserSubscriptionOption, SubscriptionOption
-from profiles.models import UserProfile
+
 
 import stripe
 
@@ -48,9 +48,10 @@ def create_subscription(request):
                 subscription_option = SubscriptionOption.objects.get(
                     category=category,
                     number_of_books=number_of_books,
-                    subscription_type=subscription_type
+                    subscription_type=subscription_type,
                 )
-                print(f"Debug - Found matching subscription option: {subscription_option}")
+                print("Debug - Found matching subscription option:")
+                print(subscription_option)
             except SubscriptionOption.DoesNotExist:
                 messages.error(
                     request, 'Subscription option does not exist. '
@@ -66,13 +67,18 @@ def create_subscription(request):
             user_subscription.calculate_and_save_price()
 
             # Debugging information
-            print(f"Debug - Created UserSubscriptionOption with ID: {user_subscription.id}")
+            print("Debug - Created UserSubscriptionOption with ID:")
+            print(user_subscription.id)
 
             # Store the subscription option in the session
             if 'box' not in request.session:
                 request.session['box'] = {}
-            request.session['box']['user_subscription_option'] = user_subscription.id
-            request.session['box']['subscription_type'] = subscription_option.subscription_type
+            request.session['box']['user_subscription_option'] = (
+                user_subscription.id
+            )
+            request.session['box']['subscription_type'] = (
+                subscription_option.subscription_type
+            )
             request.session.modified = True
 
             print("Debug - Session data after creating subscription:",
@@ -139,3 +145,21 @@ def update_subscription(request, subscription_id):
     }
 
     return render(request, 'subscriptions/update_subscription.html', context)
+
+
+@login_required
+def cancel_subscription(request, subscription_id):
+    """ Cancel the user's subscription. """
+    subscription = get_object_or_404(
+        UserSubscriptionOption, id=subscription_id, user=request.user)
+
+    if request.method == 'POST':
+        try:
+            stripe.Subscription.delete(subscription.stripe_subscription_id)
+            subscription.is_active = False
+            subscription.save()
+            messages.success(request, 'Subscription cancelled successfully')
+        except stripe.error.StripeError as e:
+            messages.error(request, f'Failed to cancel subscription: {e}')
+
+    return redirect('profile')

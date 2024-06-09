@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -6,7 +6,6 @@ from django.conf import settings
 from .models import UserProfile
 from .forms import UserProfileForm
 from subscriptions.models import UserSubscriptionOption
-from checkout.models import Order
 
 import stripe
 
@@ -55,7 +54,8 @@ def profile(request):
 # @login_required
 # def update_subscription(request, subscription_id):
 #     """ Update the user's subscription. """
-#     subscription = get_object_or_404(UserSubscriptionOption, id=subscription_id, user=request.user)
+#     subscription = get_object_or_404(
+#       UserSubscriptionOption, id=subscription_id, user=request.user)
 
 #     if request.method == 'POST':
 #         try:
@@ -73,18 +73,19 @@ def profile(request):
 #     return redirect('profile')
 
 
-@login_required
-def cancel_subscription(request, subscription_id):
-    """ Cancel the user's subscription. """
-    subscription = get_object_or_404(UserSubscriptionOption, id=subscription_id, user=request.user)
+# @login_required
+# def cancel_subscription(request, subscription_id):
+#     """ Cancel the user's subscription. """
+#     subscription = get_object_or_404(
+#       UserSubscriptionOption, id=subscription_id, user=request.user)
 
-    if request.method == 'POST':
-        try:
-            stripe.Subscription.delete(subscription.stripe_subscription_id)
-            subscription.is_active = False
-            subscription.save()
-            messages.success(request, 'Subscription cancelled successfully')
-        except stripe.error.StripeError as e:
-            messages.error(request, f'Failed to cancel subscription: {e}')
+#     if request.method == 'POST':
+#         try:
+#             stripe.Subscription.delete(subscription.stripe_subscription_id)
+#             subscription.is_active = False
+#             subscription.save()
+#             messages.success(request, 'Subscription cancelled successfully')
+#         except stripe.error.StripeError as e:
+#             messages.error(request, f'Failed to cancel subscription: {e}')
 
-    return redirect('profile')
+#     return redirect('profile')
