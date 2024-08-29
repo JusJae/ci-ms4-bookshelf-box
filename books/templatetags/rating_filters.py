@@ -1,4 +1,3 @@
-from django import template
 from django.utils.safestring import mark_safe
 
 register = template.Library()
@@ -33,4 +32,16 @@ string_to_number = {
 @register.filter(name='stars')
 def string_to_stars(value):
     # Simplified filter logic for demonstration
-    return mark_safe('<i class="fa-solid fa-star"></i>' * int(value))
+    if value is None:
+        return '' # Return an empty string if value is None
+    try:
+        number = int(value)
+        stars_html
+        = ''.join(['<i class="fa-solid fa-star"></i>' for _ in range(number)])
+        return mark_safe(stars_html)
+    except (ValueError, TypeError) as e:
+        # Log the error or handle it appropriately
+        return ''  # Return an empty string in case of error
+        
+        # ('<i class="fa-solid fa-star"></i>' * int(value))
+"
