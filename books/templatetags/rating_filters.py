@@ -1,3 +1,4 @@
+from django import template
 from django.utils.safestring import mark_safe
 
 register = template.Library()
@@ -12,36 +13,13 @@ string_to_number = {
 }
 
 
-# @register.filter(name='stars')
-# def string_to_stars(value):
-#     print(f"Converting value: {value}")
-#     # Convert the string number to an integer
-#     number = string_to_number.get(value.lower(), 0)
-#     # Return that number of stars as FA icon
-#     stars_html = ''.join(
-#         ['<i class="fa-solid fa-star"></i>' for _ in range(number)])
-#     return mark_safe(stars_html)
-#     # mark safe tells django not to escape html
-
-
-# @register.filter(name='test_stars')
-# def test_stars(value):
-#     return "✩✩✩✩✩"
-
-
 @register.filter(name='stars')
 def string_to_stars(value):
-    # Simplified filter logic for demonstration
     if value is None:
-        return '' # Return an empty string if value is None
+        return ''  # Return an empty string if value is None
     try:
-        number = int(value)
-        stars_html
-        = ''.join(['<i class="fa-solid fa-star"></i>' for _ in range(number)])
-        return mark_safe(stars_html)
-    except (ValueError, TypeError) as e:
+        value = int(value)  # Convert the value to an integer
+    except (ValueError, TypeError):
         # Log the error or handle it appropriately
         return ''  # Return an empty string in case of error
-        
-        # ('<i class="fa-solid fa-star"></i>' * int(value))
-"
+    return mark_safe('<i class="fa-solid fa-star"></i>' * value)
