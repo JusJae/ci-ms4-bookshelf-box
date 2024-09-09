@@ -33,7 +33,7 @@
                             <li><a class="dropdown-item" href="{% url 'books' %}">All Books</a></li>
                             {% get_categories as categories %}
                             {% for category in categories %}
-                            <li><a class="dropdown-item" href="{% url 'books' %}?category_name={{ category.category|urlencode }}">{{ category.category }}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'books' %}?category={{ category.category|urlencode }}">{{ category.category }}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
