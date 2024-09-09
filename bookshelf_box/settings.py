@@ -34,7 +34,7 @@ if not SECRET_KEY:
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1', 'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com']
+    '127.0.0.1', 'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com', 'localhost']
 
 # Application definition
 
@@ -197,8 +197,15 @@ STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET', '')
 
 # Email
 if 'DEVELOPMENT' in os.environ:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'bookshelf-box@example.com'
+    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    # DEFAULT_FROM_EMAIL = 'bookshelf-box@example.com'
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.sendgrid.net'
+    EMAIL_HOST_USER = 'apikey'
+    EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')
+    DEFAULT_FROM_EMAIL = 'jusjae.dev+ci@gmail.com'
 else:
     SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
@@ -208,6 +215,7 @@ else:
     EMAIL_HOST = 'smtp.sendgrid.net'
     EMAIL_HOST_USER = 'apikey'
     EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+    DEFAULT_FROM_EMAIL = 'jusjae.dev+ci@gmail.com'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
