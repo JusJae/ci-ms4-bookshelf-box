@@ -1,5 +1,6 @@
 from django import forms
 from .models import Book, Category
+from django.core.exceptions import ValidationError
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 
@@ -22,9 +23,28 @@ class BookForm(forms.ModelForm):
             'description',
             'upc',
             'price',
+            'availability',
             'reviews',
             Submit('submit', 'Save', css_class='btn btn-primary')
         )
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if len(title) < 3:
+            raise ValidationError('Title must be at least 3 characters long.')
+        return title
+
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price is None or price < 0:
+            raise ValidationError('Price cannot be negative.')
+        return price
+
+    def clean_quantity(self):
+        availability = self.cleaned_data.get('availability')
+        if availability is None or availability < 0:
+            raise ValidationError('Availability cannot be negative.')
+        return availability
 
 
 class StockForm(forms.ModelForm):
