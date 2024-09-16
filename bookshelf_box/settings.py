@@ -197,25 +197,29 @@ STRIPE_WH_SECRET = os.environ.get('STRIPE_WH_SECRET', '')
 
 # Email
 if 'DEVELOPMENT' in os.environ:
-    # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    # DEFAULT_FROM_EMAIL = 'bookshelf-box@example.com'
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    # Log emails to console in development
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'bookshelf-box@example.com'
+
+    # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    # EMAIL_USE_TLS = True
+    # EMAIL_PORT = 587
+    # EMAIL_HOST = 'smtp.sendgrid.net'
+    # EMAIL_HOST_USER = 'apikey'
+    # EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')
+    # DEFAULT_FROM_EMAIL = 'jusjae.dev+ci@gmail.com'
+
+else:
+    # SendGrid email service in production
+    EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+    SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+
     EMAIL_USE_TLS = True
     EMAIL_PORT = 587
     EMAIL_HOST = 'smtp.sendgrid.net'
     EMAIL_HOST_USER = 'apikey'
     EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')
-    DEFAULT_FROM_EMAIL = 'jusjae.dev+ci@gmail.com'
-else:
-    SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_USE_TLS = True
-    EMAIL_PORT = 587
-    EMAIL_HOST = 'smtp.sendgrid.net'
-    EMAIL_HOST_USER = 'apikey'
-    EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-    DEFAULT_FROM_EMAIL = 'jusjae.dev+ci@gmail.com'
+    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
