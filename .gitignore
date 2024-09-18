@@ -11,4 +11,3 @@ cloudinary_python.txt
 *.pyc
 .DS_Store
 *.log
-staticfiles/
