@@ -1,6 +1,8 @@
 :root {
     --primary-color: #2678b8;
     --secondary-color: #b66426;
+    --tertiary-color: #fdca40;
+    --quaternary-color: #b7adcf;
 
     --primary-font: 'Montserrat', sans-serif;
     --secondary-font: 'Roboto', sans-serif;
@@ -155,6 +157,38 @@ p {
     color: var(--bs-dark);
 }
 
+.cta-btn-light {
+    background-color: var(--quaternary-color);
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cta-btn-light:hover {
+    background-color: var(--tertiary-color);
+    color: #000;
+}
+
+.btn-account {
+    background-color: none;
+    color: var(--primary-color);
+    border-bottom: var(--primary-color) 1px solid;
+    border-radius: 0%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--third-font);
+    font-size: 16px !important;
+}
+
+.btn-account:hover, 
+.btn-account:focus, 
+.btn-account:active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: .25rem;
+}
+
 .home-btn {
     background-color: var(--secondary-color);
     color: var(--bs-light);
@@ -186,6 +220,11 @@ p {
     object-fit: cover;
     /* Cover the entire card image area */
 }
+
+.card-body {
+    border-top: 1px solid var(--bs-dark);
+}
+
 #div_id_number_of_books>div {
     background-color: #fff;
     padding: 0.3rem;
