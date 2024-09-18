@@ -28,7 +28,9 @@ urlpatterns = [
     path('boxes/', include('boxes.urls')),
     path('checkout/', include('checkout.urls')),
     path('profiles/', include('profiles.urls')),
-] 
+]
+
+handler404 = 'home.views.custom_404'
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
