@@ -10,9 +10,12 @@ from profiles.models import UserProfile
 import time
 import json
 import stripe
+import logging
 
-import sendgrid
-from sendgrid.helpers.mail import Mail, Email, To, Content
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+logger = logging.getLogger(__name__)
 
 
 class StripeWH_Handler:
@@ -21,7 +24,7 @@ class StripeWH_Handler:
     def __init__(self, request):
         self.request = request
 
-    def _send_confirmation_email(self, order):
+    def _send_confirmation_email(self, order, event):
         """Send the user a confirmation email"""
 
         cust_email = order.email
@@ -31,23 +34,35 @@ class StripeWH_Handler:
         body = render_to_string(
             'checkout/confirmation_emails/confirmation_email_body.txt',
             {'order': order, 'contact_email': settings.DEFAULT_FROM_EMAIL})
+        # send_mail(
+        #     subject,
+        #     body,
+        #     settings.DEFAULT_FROM_EMAIL,
+        #     [cust_email]
+        # )
 
         message = Mail(
-            from_email=Email(settings.DEFAULT_FROM_EMAIL),
-            to_email=To(cust_email),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to_emails=cust_email,
             subject=subject,
-            plain_text_content=Content('text.plain', body),
+            plain_text_content=body,
         )
 
         try:
-            sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
+            sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
             response = sg.send(message)
+            logger.info(
+                f'Email send response status code: {response.status_code}')
             if response.status_code == 202:
-                return HttpResponse(content=f'Webhook received: {event["type"]} | SUCCESS: Email sent',status=200)
+                logger.info(f'Email sent successfully to {cust_email}')
+                return HttpResponse(content=f'Webhook received: {event["type"]} | SUCCESS: Email sent', status=200)
             else:
+                logger.error(
+                    f'Failed to send email to {cust_email}: {response.status_code}')
                 return HttpResponse(
                     content=f'Webhook received: {event["type"]} | ERROR: Failed to send email', status=500)
         except Exception as e:
+            logger.error(f'Error sending email: {e}')
             return HttpResponse(content=f'Webhook received: {event["type"]} | ERROR: {e}', status=500)
 
     def handle_event(self, event):
@@ -84,7 +99,6 @@ class StripeWH_Handler:
         profile = None
         if username != 'AnonymousUser':
             profile = UserProfile.objects.get(user__username=username)
-            # we check if the save info was checked
             if save_info:
                 profile.full_name = shipping_details.get('name')
                 profile.default_phone_number = shipping_details.get('phone')
@@ -120,7 +134,7 @@ class StripeWH_Handler:
                 attempt += 1
                 time.sleep(1)
         if order_exists:
-            self._send_confirmation_email(order)
+            self._send_confirmation_email(order, event["type"])
             return HttpResponse(
                     content=f'Webhook received: {event["type"]} | SUCCESS: \
                         Verified order already in database',
@@ -145,8 +159,7 @@ class StripeWH_Handler:
                 )
 
                 for item_id, item_data in json.loads(box).items():
-                    subscription = UserSubscriptionOption.objects.get(
-                        id=item_id)
+                    subscription = UserSubscriptionOption.objects.get(id=item_id)
                     order_line_item = OrderLineItem(
                         order=order,
                         user_subscription_option=subscription
@@ -160,6 +173,7 @@ class StripeWH_Handler:
                     order.delete()
                 return HttpResponse(content=f'Webhook received: {event["type"]} | ERROR: {e}', status=500)
 
+        self._send_confirmation_email(order, event["type"])
         return HttpResponse(content=f'Webhook received: {event["type"]} | SUCCESS: Created order in database', status=200)
 
     def handle_payment_intent_payment_failed(self, event):
@@ -179,11 +193,20 @@ class StripeWH_Handler:
             user_subscription.stripe_subscription_id = stripe_subscription_id
             user_subscription.save()
             print(f"Subscription {stripe_subscription_id} created for customer {customer_id}")
+            # Send subscription confirmation email
+            order = Order.objects.create(
+                user_profile=user_subscription.user.userprofile,
+                email=user_subscription.user.email,
+                full_name=user_subscription.user.get_full_name(),
+                grand_total=user_subscription.price,
+                stripe_pid=stripe_subscription_id,
+            )
+            self._send_confirmation_email(order, event["type"])
         except UserSubscriptionOption.DoesNotExist:
             print(f"No matching UserSubscriptionOption found for customer {customer_id}")
         return HttpResponse(status=200)
 
-    def handle_subscription_updated(event):
+    def handle_subscription_updated(self, event):
         subscription = event['data']['object']
         stripe_subscription_id = subscription['id']
         # Update subscription details in your database
@@ -197,7 +220,7 @@ class StripeWH_Handler:
             print(f"No matching UserSubscriptionOption found for subscription {stripe_subscription_id}")
         return HttpResponse(status=200)
 
-    def handle_subscription_deleted(event):
+    def handle_subscription_deleted(self, event):
         subscription = event['data']['object']
         stripe_subscription_id = subscription['id']
         try:
