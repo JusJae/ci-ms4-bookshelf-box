@@ -5,7 +5,25 @@ document.addEventListener("DOMContentLoaded", function () {
 		form.addEventListener(
 			"submit",
 			function (event) {
-				if (!form.checkValidity()) {
+				const priceField = document.getElementById("#id_price");
+				const availabilityField = document.getElementById("#id_availability");
+				let valid = true;
+
+				if (priceField && priceField.value < 0) {
+					priceField.setCustomValidity("Price must be greater than 0.");
+					valid = false;
+				} else if (priceField) {
+					priceField.setCustomValidity("");
+				}
+
+				if (availabilityField && parseInt(availabilityField.value) < 0) {
+					availabilityField.setCustomValidity("Availability must be greater than 0.");
+					valid = false;
+				} else if (availabilityField) {
+					availabilityField.setCustomValidity("");
+				}
+
+				if (!form.checkValidity() || !valid) {
 					event.preventDefault();
 					event.stopPropagation();
 				}
