@@ -56,9 +56,9 @@
         <!-- Manage Books Section (for superusers and staff) -->
         {% if user.is_authenticated and user.is_superuser or user.is_staff %}
         <div class="row mb-4">
-            <div class="col-12">
+            <div class="col-12 text-center">
                 <h3>Manage Books</h3>
-                <a href="{% url 'add_book' %}" class="btn btn-primary mb-3">Add Book</a>
+                <a href="{% url 'add_book' %}" class="btn cta-btn-light mb-3">Add Book</a>
             </div>
         </div>
         {% endif %}
@@ -66,24 +66,30 @@
         <!-- Books Display -->
         <div class="row">
             {% for book in books %}
-            <div class="col-md-4 col-sm-6 mb-3">
-                <div class="card border-black">
-                    <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}" style="height: 300px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="card-text">
-                            <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }}">Category: {{ book.category }}</a></p>
-                        <p class="card-text">Rating: {{ book.rating|stars }}</p>
-                        <a href="{% url 'book_detail' book.id %}" class="btn btn-info">View Details</a>
-                        {% if user.is_authenticated and user.is_superuser or user.is_staff %}
-                            <a href="{% url 'edit_book' book.id %}" class="btn btn-warning">Edit</a>
-                            <a href="{% url 'delete_book' book.id %}" class="btn btn-danger"
-                                onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
-                            <a href="{% url 'update_stock' book.id %}" class="btn btn-info">Update Stock</a>
-                        {% endif %}
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="card border-black">
+                        <img src="{{ book.image_url }}" class="card-img-top border-bottom" alt="{{ book.title }}" style="height: 300px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">{{ book.title }}</h5>
+                            <p class="card-text">
+                                <a class="text-black text-decoration-none" href="{% url 'books' %}?category={{ book.category }}"><strong>Category:</strong> {{ book.category }}</a>
+                            </p>
+                            <p class="card-text"><strong>Rating:</strong> {{ book.rating|stars }}</p>
+                            <a href="{% url 'book_detail' book.id %}" class="btn cta-btn mb-1">View Details 
+                                <i class="fas fa-book-open"></i>
+                            </a>
+                            {% if user.is_authenticated and user.is_superuser or user.is_staff %}
+                                <a href="{% url 'edit_book' book.id %}" class="btn cta-btn mb-1">Edit Book <i class="fas fa-pen-to-square"></i>
+                                </a>
+                                <a href="{% url 'update_stock' book.id %}" class="btn cta-btn-light mb-1">Update Stock <i class="fa fa-sort-numeric-asc" aria-hidden="true"></i>
+                                </a>
+                                <a href="{% url 'delete_book' book.id %}" class="btn btn-danger mb-1" onclick="return confirm('Are you sure you want to delete this book?');">Delete <i class="fas fa-trash"></i>
+                                    </a>
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
             {% empty %}
             <div class="col-12">
                 <p>No books found.</p>

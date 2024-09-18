@@ -11,22 +11,37 @@ class BookForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.all()
         self.helper = FormHelper()
         self.helper.form_method = 'POST'
-        self.helper.layout = Layout(
+        layout = Layout(
             'title',
             'category',
             'image_url',
             'rating',
             'description',
-            'upc',
-            'price',
-            'availability',
-            'reviews',
             Submit('submit', 'Save', css_class='btn btn-primary')
         )
+        #  if user and (user.is_superuser or user_has_made_purchase):
+            #  layout.append('reviews')
+
+        if user and user.is_superuser:
+            layout = Layout(
+                'title',
+                'category',
+                'image_url',
+                'rating',
+                'description',
+                'upc',
+                'price',
+                'availability',
+                'reviews',
+                Submit('submit', 'Save', css_class='btn btn-primary')
+            )
+
+        self.helper.layout = layout
 
     def clean_title(self):
         title = self.cleaned_data.get('title')
@@ -40,7 +55,7 @@ class BookForm(forms.ModelForm):
             raise ValidationError('Price cannot be negative.')
         return price
 
-    def clean_quantity(self):
+    def clean_availability(self):
         availability = self.cleaned_data.get('availability')
         if availability is None or availability < 0:
             raise ValidationError('Availability cannot be negative.')
@@ -60,3 +75,9 @@ class StockForm(forms.ModelForm):
             'availability',
             Submit('submit', 'Update Stock', css_class='btn btn-primary')
         )
+
+    def clean_availability(self):
+        availability = self.cleaned_data.get('availability')
+        if availability is None or availability < 0:
+            raise ValidationError('Availability cannot be negative.')
+        return availability

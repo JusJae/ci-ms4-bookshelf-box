@@ -15,19 +15,36 @@
 <main class="flex-shrink-0">
     <div class="container mt-4">
         <div class="container card mb-3">
-            <div class="row">
+                                
+            <div class="row p-2">
+                <h3 class="text-md-center">{{ book.title }}</h3>
+                <hr>
                 <div class="col-md-6">
                     <img src="{{ book.image_url }}" class="img-fluid" alt="{{ book.title }}">
                 </div>
                 <div class="col-md-6">
-                    <h2>{{ book.title }}</h2>
+
                     <p class="card-text">
-                        <a class="text-black text-decoration-none" href="{% url 'books' %}?category_name={{ category.category }} %}">Category: {{ book.category }}</a>
+                        <a class="text-black text-decoration-none" href="{% url 'books' %}?category={{ category.category }}"><strong>Category:</strong> {{ book.category }}</a>
                     </p>
-                    <p><strong>Price:</strong> £{{ book.price }}</p>
                     <p><strong>Description:</strong> {{ book.description }}</p>
-                    <p class="card-text">Rating: {{ book.rating|stars }}</p>
-                    <a href="{% url 'books' %}" class="btn btn-primary mb-3">Back to list</a>
+                    <p class="card-text"><strong>Rating:</strong> {{ book.rating|stars }}</p>
+                    <div>
+                        {% if user.is_authenticated and user.is_superuser or user.is_staff %}
+                            <p><strong>Books in Stock:</strong> {{ book.availability }}</p>
+                            <p><strong>Price: £</strong> {{ book.price }}</p>
+                            <div class="col mb-3">
+                            {% if book.id %}
+                            <a href="{% url 'edit_book' book.id %}" class="btn cta-btn">Edit Book <i class="fas fa-pen-to-square"></i></a>
+                            <a href="{% url 'delete_book' book.id %}" class="btn btn-danger border-0">Delete Book</a>
+                            {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col mb-3">
+                        <a href="{% url 'books' %}" class="btn cta-btn-light mr-1">Back to Books <i class="fas fa-rotate-left"></i></a>
+                        <!-- <a href="{% url 'books' %}" class="btn cta-btn">Back to Books <i class="fa fa-book" aria-hidden="true"></i></a> -->
+                    </div>
                 </div>
             </div>
         </div>
