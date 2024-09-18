@@ -10,3 +10,5 @@ cloudinary_python.txt
 *.sqlite3
 *.pyc
 .DS_Store
+*.log
+staticfiles/
