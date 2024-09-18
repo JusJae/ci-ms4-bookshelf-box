@@ -15,7 +15,6 @@ string_to_number = {
 
 @register.filter(name='stars')
 def string_to_stars(value):
-    # Simplified filter logic for demonstration
     if value is None:
         return ''  # Return an empty string if value is None
     try:
