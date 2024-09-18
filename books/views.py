@@ -10,10 +10,10 @@ from .forms import BookForm, StockForm
 def book_list(request):
     """ A view to show all books, including sorting and search queries """
     books = Book.objects.all()
+    categories = Category.objects.all()
     query = None
     sort = None
     direction = None
-    categories = Category.objects.all()
 
     if request.GET:
         if 'sort' in request.GET:
@@ -37,7 +37,13 @@ def book_list(request):
             if not query:
                 messages.error(
                     request, "You didn't enter any search criteria!")
-                return redirect(reverse('books'))
+                referer = request.GET.get(
+                    'next', request.META.get('HTTP_REFERER'))
+                print(f"HTTP_REFERER: {referer}")
+                if referer and referer != 'None' and referer != '':
+                    return redirect(referer)
+                else:
+                    return redirect(reverse('books'))
 
             queries = Q(title__icontains=query) | Q(
                 description__icontains=query)
@@ -57,8 +63,11 @@ def book_list(request):
 
 def book_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
+    # referer = request.META.get('HTTP_REFERER')
+    referer = request.GET.get('next', request.META.get('HTTP_REFERER'))
     context = {
         'book': book,
+        'referer': referer,
     }
     return render(request, 'books/book_detail.html', context)
 
@@ -72,7 +81,7 @@ def add_book(request):
             return redirect('add_book')
         else:
             messages.error(
-                request, 'Failed to add book. Please ensure the form is valid.')
+                request, 'Failed to add book. Please ensure the form is valid. Check the highlighted field and try again.')
     else:
         form = BookForm()
     context = {
@@ -91,9 +100,10 @@ def edit_book(request, book_id):
             return redirect('edit_book', book_id=book.id)
         else:
             messages.error(
-                request, 'Failed to update book. Please ensure the form is valid.')
+                request, 'Failed to update book. Please ensure the form is valid. Check the highlighted field and try again.')
     else:
         form = BookForm(instance=book)
+
     context = {
         'form': form,
         'book': book,
