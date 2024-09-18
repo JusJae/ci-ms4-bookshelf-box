@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_header %}
+<div class="container mt-3 mb-2 text-center">
+    <hr>
+    <h2 class="header-font">Page Not Found</h2>
+    <hr>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4"></div>
+    <div class="container card mb-3">
+        <div class="row p-2">
+            <h3 class="text-md-center">404 Error</h3>
+            <hr>
+            <div class="col-md-6">
+                <!-- <img src="{% static 'img/404.jpg' %}" class="img-fluid" alt="404 Error"> -->
+                Te<i class="fas fa-chain"></i>
+            </div>
+            <div class="col-md-6">
+                <p class="card-text">The page you are looking for does not exist.</p>
+                <p class="card-text">Please check the URL and try again.</p>
+                <div class="col mb-3">
+                    <a href="{% url 'home' %}" class="btn cta-btn-light mr-1">Back to Home <i class="fas fa-rotate-left"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
