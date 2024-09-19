@@ -52,3 +52,4 @@ The 'Bookshelf Box' book subscription service website was tested through the fol
 - The majority of the bugs that i faced were resolved however a few bugs still remain in the code and they are as follows:
 - - Subscription can not be updated when the user tries to click on update subscription button
   - Order confirmation email is not sending to user even though it says rthat it has sent the email to the user.
+- Order history is not sorted by date of order but ratehr by the order number.
