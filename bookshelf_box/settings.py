@@ -31,7 +31,7 @@ if not SECRET_KEY:
     raise ValueError("The SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEVELOPMENT', False)
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '127.0.0.1', 'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com', 'localhost']
