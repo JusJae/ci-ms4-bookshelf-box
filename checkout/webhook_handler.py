@@ -10,10 +10,13 @@ from profiles.models import UserProfile
 import time
 import json
 import stripe
+import sendgrid
+import os
 import logging
 
+
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import Mail, Email, Content
 
 logger = logging.getLogger(__name__)
 
@@ -33,24 +36,23 @@ class StripeWH_Handler:
             {'order': order})
         body = render_to_string(
             'checkout/confirmation_emails/confirmation_email_body.txt',
-            {'order': order, 'contact_email': settings.DEFAULT_FROM_EMAIL})
-        # send_mail(
-        #     subject,
-        #     body,
-        #     settings.DEFAULT_FROM_EMAIL,
-        #     [cust_email]
-        # )
-
-        message = Mail(
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to_emails=cust_email,
-            subject=subject,
-            plain_text_content=body,
+            {'order': order, 'contact_email': settings.DEFAULT_FROM_EMAIL}
         )
 
+        # Create the email content
+        from_email = Email(settings.DEFAULT_FROM_EMAIL),
+        to_email = Email(cust_email),
+        content = Content(body),
+
+        message = Mail(from_email, to_email, subject, content)
+        message_json = message.get()
+
         try:
-            sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
-            response = sg.send(message)
+            sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+            response = sg.client.mail.send.post(request_body=message_json)
+            print(response.status_code)
+            print(response.headers)
+
             logger.info(
                 f'Email send response status code: {response.status_code}')
             if response.status_code == 202:
@@ -196,7 +198,7 @@ class StripeWH_Handler:
             # Send subscription confirmation email
             order = Order.objects.create(
                 user_profile=user_subscription.user.userprofile,
-                email=user_subscription.user.email,
+                email=user_subscription.user.email if hasattr(user_subscription.user, 'email') else user_subscription.user.userprofile.email,
                 full_name=user_subscription.user.get_full_name(),
                 grand_total=user_subscription.price,
                 stripe_pid=stripe_subscription_id,

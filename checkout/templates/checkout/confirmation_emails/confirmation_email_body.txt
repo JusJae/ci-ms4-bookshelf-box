@@ -15,8 +15,9 @@ Subscription Type: {% for item in order.lineitems.all %}
                     {% endfor %}
 Books in Order: {% for subscription, books in subscriptions_books.items %}
                     {% for book in books %}
-                        <p>{{ book.title }}</p>
+                        - {{ book.title }}
                     {% endfor %}
+                {% endfor %}
 Order Total: £{{ order.order_total }}
 Delivery: £{{ order.delivery_cost }}
 Grand Total: £{{ order.grand_total }}
