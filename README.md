@@ -156,6 +156,9 @@ links to all pages.
 - HTML
 - SQL
 
+- Amazon AWS S3:
+    I used this sfr statis files and media files storage in production.
+
 - Bootstrap v5.3:
     Bootstrap has been used for overall responsiveness of the website, and for the layout to include navigation, cards, and footer within the relevant sections of the website.
 
@@ -182,6 +185,9 @@ links to all pages.
 
 - Font Awesome:
     Font Awesome was used to apply icons in the Exercises page and Footer section.
+
+- SendGrid API
+    I used SendGrid API for email sending when in production.
 
 ---
 ---
@@ -214,6 +220,161 @@ links to all pages.
 8. Click "Review", check your details, and then click “Create instance”.
 9. Return to the ElephantSQL dashboard and copy the database URL.
 
+### AWS S3
+
+1. Sign in to the [AWS Management Console](https://aws.amazon.com/console/).
+2. Go to the S3 service and click “Create bucket”.
+3. Name your bucket and choose a region, then click "Create bucket".
+4. Configure the bucket for public access:
+    - Go to the “Permissions” tab.
+    - Edit the “Block public access” settings and uncheck “Block all public access”.
+    - Save changes.
+Configure the bucket for static website hosting:
+    - Under Properties > Static website hosting, enable it.
+    - Set `index.html` as the index document.
+    - Save the changes.
+5. Set up CORS policy:
+    - Under Permissions > CORS, use the following configuration:
+        ```json
+        [
+            {
+                "AllowedHeaders": ["Authorization"],
+                "AllowedMethods": ["GET"],
+                "AllowedOrigins": ["*"],
+                "ExposeHeaders": []
+            }
+        ]
+        ```
+6. Set up a bucket policy:
+    - Under Permissions > Bucket Policy, click "Generate Bucket Policy".
+    - Choose S3 Bucket Policy as the Type of Policy.
+    - Enter `*` for Principal.
+    - Enter your bucket's ARN (noted earlier).
+    - Add Statement and Generate Policy.
+    - Copy the generated Policy JSON Document and paste it into the Edit Bucket Policy field on the previous tab.
+    - Save the changes.
+7. Configure the Access Control List (ACL):
+    - Under Access Control List (ACL), for Everyone (public access), tick List.
+    - Accept the warning that everyone in the world may access the Bucket.
+    - Save changes.
+
+#### Setting up AWS IAM
+
+1. From the IAM dashboard within AWS, select User Groups:
+    - Create a new group (e.g., `manage-bookshelf-box`).
+    - Click through without adding a policy and create the group.
+2. Create and attach a policy:
+    - Go to Policies > Create policy.
+    - Under the JSON tab, click "Import managed policy".
+    - Choose `AmazonS3FullAccess`.
+    - Edit the resource to include your bucket's ARN:
+        ```json
+        "Resource": [
+            "arn:aws:s3:::bookshelf-box",
+            "arn:aws:s3:::bookshelf-box/*"
+        ]
+        ```
+    - Click next step, go to Review policy, and give the policy a name (e.g., `bookshelf-box-policy`).
+    - Create the policy.
+3. Attach the policy to the user group:
+    - Go back to User Groups and choose the group created earlier.
+    - Under Permissions > Add permissions, choose "Attach Policies" and select the one just created.
+    - Add permissions.
+4. Create an IAM user:
+    - Under Users, create a new user (e.g., `bookshelf-box-admin-user`).
+    - Select "Programmatic access" as the Access type.
+    - Add the user to the group just created.
+    - Create the user and download the .csv file containing the access key and secret access key. This file will NOT be available to download again.
+
+#### Connecting Django up to S3
+
+1. Install the necessary packages:
+    ```shell
+    pip install boto3
+    pip install django-storages
+    pip freeze > requirements.txt
+    ```
+2. Add the values from the .csv file to your Heroku Config Vars under Settings:
+    - `AWS_ACCESS_KEY_ID`
+    - `AWS_SECRET_ACCESS_KEY`
+    - `AWS_STORAGE_BUCKET_NAME` (e.g., `bookshelf-box`)
+    - `USE_AWS` (set this to any value, e.g., `True` to enable AWS settings)
+3. Delete the `DISABLE_COLLECTSTATIC` variable from your Config Vars if it exists, and deploy your Heroku app. If you have enabled automatic deployment in Heroku, this will happen automatically the next time you push to GitHub.
+4. In your S3 bucket, create a new folder called `media` (at the same level as the newly added `static` folder) and upload any required media files to it, ensuring they are publicly accessible under Permissions.
+
+5. Update your `settings.py` with the following configurations:
+
+    ```python
+    # settings.py
+
+    import os
+
+    if 'USE_AWS' in os.environ:
+    # Cache control
+    AWS_S3_OBJECT_PARAMETERS = {
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+        'CacheControl': 'max-age=94608000'
+    }
+
+    # Bucket Config
+    AWS_STORAGE_BUCKET_NAME = 'bookshelf-box'
+    AWS_S3_REGION_NAME = 'eu-west-2'
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_S3_CUSTOM_DOMAIN = (
+        f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+    )
+
+    # Static and media files
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+    STATICFILES_LOCATION = 'static'
+    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+    MEDIAFILES_LOCATION = 'media'
+
+    # Override static and media URLs in production
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
+    ```
+
+6. Set the required environment variables on Heroku:
+
+    ```shell
+    heroku config:set AWS_ACCESS_KEY_ID='your-access-key-id'
+    heroku config:set AWS_SECRET_ACCESS_KEY='your-secret-access-key'
+    heroku config:set AWS_STORAGE_BUCKET_NAME='your-bucket-name'
+    ```
+
+### SendGrid
+
+1. Sign up for a free account at [SendGrid](https://sendgrid.com/).
+2. Create an API key by navigating to Settings > API Keys > Create API Key.
+3. Name your API key and assign it full access, then click "Create & View" to see your API key. Copy the key for later use.
+4. Install the SendGrid package:
+    ```shell
+    pip install sendgrid
+    ```
+5. Update your `settings.py` with the following configurations:
+    ```python
+    # settings.py
+
+    if 'DEVELOPMENT' in os.environ:
+        EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+        DEFAULT_FROM_EMAIL = 'bookshelf-box@example.com'
+    else:
+        SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+        EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+        EMAIL_HOST = 'smtp.sendgrid.net'
+        EMAIL_PORT = 587
+        EMAIL_USE_TLS = True
+        EMAIL_HOST_USER = 'apikey'
+        EMAIL_HOST_PASSWORD = os.getenv('SENDGRID_API_KEY')
+        DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+    ```
+6. Set the required environment variables on Heroku:
+    ```shell
+    heroku config:set SENDGRID_API_KEY='your-sendgrid-api-key'
+    ```
+
 ### Heroku
 
 1. Install dependencies for Postgres:
@@ -245,12 +406,15 @@ links to all pages.
     |KEY|VALUE|
     |---|---|
     |DATABASE_URL|`your variable here`*|
-    |EMAIL_HOST_PASS|`your variable here`|
-    |EMAIL_HOST_USER|`your variable here`|
+    |DEFAULT_FROM_EMAIL|`your variable here`|
+    |SENDGRID_API_KEY|`your variable here`|
     |SECRET_KEY|`your variable here`|
     |STRIPE_PUBLIC_KEY|`your variable here`|
     |STRIPE_SECRET_KEY|`your variable here`|
     |STRIPE_WH_SECRET|`your variable here`|
+    |AWS_ACCESS_KEY_ID|`your variable here`|
+    |AWS_SECRET_ACCESS_KEY|`your variable here`|
+    |AWS_STORAGE_BUCKET_NAME|`your variable here`|
     |DEVELOPMENT|True**|
 
     *Paste the URL from the ElephantSQL step.
