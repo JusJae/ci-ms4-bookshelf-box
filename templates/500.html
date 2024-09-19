@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_header %}
+<div class="container mt-3 mb-2 text-center">
+    <hr>
+    <h2 class="header-font">Server Error</h2>
+    <hr>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4"></div>
+<div class="container card mb-3">
+    <div class="row p-2">
+        <h3 class="text-md-center">500 Error</h3>
+        <hr>
+        <div class="col-md-6">
+            <p class="card-text">Sorry, but there was an error on the server.</p>
+            <p class="card-text">Please check the URL and try again.</p>
+            <div class="col mb-3">
+                <a href="{% url 'home' %}" class="btn cta-btn-light mr-1">Back to Home <i
+                        class="fas fa-rotate-left"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
