@@ -68,3 +68,7 @@ b7c11d5 fix: end date not setting, selected books  and calculated price not show
 cc86b34 feat: update subscription view template and todo's for fixes needed
 fcf883b refactor: book_detail.html and book_list.html templates to fix render issue
 71eebe3 fix: add media context processor to settings.py
+
+- Fixed form validation and submission issues
+- Fixed URL paths and redirects
+- Fixed being able to apply negative quantities to stock availability and price
