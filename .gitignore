@@ -11,3 +11,4 @@ cloudinary_python.txt
 *.pyc
 .DS_Store
 *.log
+.venv/
