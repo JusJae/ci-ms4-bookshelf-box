@@ -31,7 +31,7 @@ if not SECRET_KEY:
     raise ValueError("The SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1', 'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com', 'localhost']
@@ -126,10 +126,9 @@ WSGI_APPLICATION = 'bookshelf_box.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-    }
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
 else:
     DATABASES = {
         'default': {
