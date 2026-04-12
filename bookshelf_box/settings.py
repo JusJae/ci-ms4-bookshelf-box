@@ -33,8 +33,7 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '127.0.0.1', 'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com', 'bookshelf-box.onrender.com', 'localhost']
 
 # Application definition
 
