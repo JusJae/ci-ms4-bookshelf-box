@@ -33,7 +33,20 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['127.0.0.1', 'bookshelf-box.onrender.com', 'localhost']
+=======
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'ci-ms4-bookshelf-box-b9e87b1c4324.herokuapp.com',
+]
+
+# Add RENDER_EXTERNAL_HOSTNAME if set (covers any Render URL automatically)
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+>>>>>>> 58e4df17c25713700d5becbb46ffe1ca8f7efb86
 
 # Application definition
 
