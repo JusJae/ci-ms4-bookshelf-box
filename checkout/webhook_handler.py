@@ -125,7 +125,7 @@ class StripeWH_Handler:
                 order = Order.objects.create(
                     full_name=shipping_details.get('name', ''),
                     user_profile=profile,
-                    email=billing_details.get('email', ''),
+                    email=billing_details.email or '',
                     phone_number=shipping_details.get('phone', ''),
                     country=address.get('country', ''),
                     postcode=address.get('postal_code', ''),
