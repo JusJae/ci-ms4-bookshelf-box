@@ -7,16 +7,16 @@ def add_subscription_options(apps, schema_editor):
     SubscriptionOption = apps.get_model('subscriptions', 'SubscriptionOption')
     Category = apps.get_model('books', 'Category')
 
-    category1 = Category.objects.get(category='Childrens')
-    category2 = Category.objects.get(category='Classics')
-    category3 = Category.objects.get(category='Fantasy')
-    category4 = Category.objects.get(category='Fiction')
-    category5 = Category.objects.get(category='Horror')
-    category6 = Category.objects.get(category='Humor')
-    category7 = Category.objects.get(category='Nonfiction')
-    category8 = Category.objects.get(category='Young Adult')
+    # Changed from .get() to .get_or_create() so fresh databases work
+    category1, _ = Category.objects.get_or_create(category='Childrens')
+    category2, _ = Category.objects.get_or_create(category='Classics')
+    category3, _ = Category.objects.get_or_create(category='Fantasy')
+    category4, _ = Category.objects.get_or_create(category='Fiction')
+    category5, _ = Category.objects.get_or_create(category='Horror')
+    category6, _ = Category.objects.get_or_create(category='Humor')
+    category7, _ = Category.objects.get_or_create(category='Nonfiction')
+    category8, _ = Category.objects.get_or_create(category='Young Adult')
 
-    # Define a list of new or updated subscription options
     new_or_updated_subscription_options = [
         {'category': category1, 'number_of_books': 1,
             'subscription_type': 'Monthly', 'stripe_price_id': 'price_1P4iCzG6iutubJZOJU77f13O'},
@@ -116,7 +116,6 @@ def add_subscription_options(apps, schema_editor):
             'subscription_type': '3-Months', 'stripe_price_id': 'price_1P4kYPG6iutubJZO5CkkPwR1'},
     ]
 
-    # Update existing entries or create new ones
     for option_data in new_or_updated_subscription_options:
         subscription_option, created = SubscriptionOption.objects.update_or_create(
             category=option_data['category'],
@@ -129,13 +128,14 @@ def add_subscription_options(apps, schema_editor):
         if created:
             print(f"Created new SubscriptionOption: {subscription_option}")
         else:
-            print(f"Updated existing SubscriptionOption: {subscription_option}")
+            print(
+                f"Updated existing SubscriptionOption: {subscription_option}")
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0006_auto_20240413_1126'),  # previous migration file  # noqa
+        ('subscriptions', '0006_auto_20240413_1126'),
     ]
 
     operations = [
